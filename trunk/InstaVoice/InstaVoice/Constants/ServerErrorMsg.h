@@ -1,0 +1,108 @@
+//
+//  ServerErrorMsg.h
+//  InstaVoice
+//
+//  Created by Vivek Mudgil on 27/08/13.
+//  Copyright (c) 2013 EninovUser. All rights reserved.
+//
+
+#ifndef InstaVoice_ServerErrorMsg_h
+#define InstaVoice_ServerErrorMsg_h
+
+//server error code
+#define ERROR_CODE_1A   @"System internal error."
+#define ERROR_CODE_1B   @"Unsupported command parameter"
+#define ERROR_CODE_2    @"Invalid application secure key."
+#define ERROR_CODE_3    @"Invalid registration secure key."
+#define ERROR_CODE_4    @"Invalid user secure key."
+#define ERROR_CODE_5    @"The required parameter is missing"
+#define ERROR_CODE_6    @"Audio message cannot be empty."
+#define ERROR_CODE_7    @"Validation PIN Expired. Request another PIN?"
+#define ERROR_CODE_8    @"Wrong registration secure key is used."
+#define ERROR_CODE_9    @"Invalid Validation PIN. Try Again"
+#define ERROR_CODE_10   @"Invalid JSON data"
+#define ERROR_CODE_11   @"Unsupported Network MCC-MNC"
+#define ERROR_CODE_12   @"Unsupported Country ISO"
+#define ERROR_CODE_13   @"Unsupported cmd"
+#define ERROR_CODE_14   @"PCM to a-law conversion error"
+#define ERROR_CODE_15   @"Connection Error. Sending again"
+#define ERROR_CODE_16   @"The IV id does not exist or not allowed."
+#define ERROR_CODE_17   @"Contact has not registered any device."
+#define ERROR_CODE_18   @"All recipient ids are invalid."
+#define ERROR_CODE_19   @"No Country found."
+#define ERROR_CODE_20   @"No Carrier data found."
+#define ERROR_CODE_21   @"Invalid Country Code"
+#define ERROR_CODE_22   @"Invalid contact operation specifier"
+#define ERROR_CODE_23   @"Error in contact deletion:"
+#define ERROR_CODE_24   @"Error in contact updation:"
+#define ERROR_CODE_25   @"Error in contact creation:"
+#define ERROR_CODE_26   @"Both phone_num and email_id cannot be NULL"
+#define ERROR_CODE_27   @"One of phone_num and email_id must be NULL"
+#define ERROR_CODE_28   @"No user found with the given credentials"
+#define ERROR_CODE_29   @"Message and User mismatch:"
+#define ERROR_CODE_30   @"user_secure_key or device_id is must for Log In"
+#define ERROR_CODE_31   @"This device is already assigned to another InstaVoice User"
+#define ERROR_CODE_32   @"User device not found"
+#define ERROR_CODE_33   @"Mobile number already in use"
+#define ERROR_CODE_34   @"Validation Code expired. Request another Validation Code?"
+#define ERROR_CODE_35   @"Error in generating user secure key."
+#define ERROR_CODE_36   @"Unable to disconnect from Facebook. Please try later"
+
+#define ERROR_CODE_37   @"Unable to post on Facebook. Please try later"
+#define ERROR_CODE_38   @"You are not connected to Facebook. Please connect from Settings"
+#define ERROR_CODE_39   @"No contact found with contact Id:"
+#define ERROR_CODE_40   @"Invalid date format"
+#define ERROR_CODE_41   @"Invalid Password"
+#define ERROR_CODE_42   @"Error in App Type specification."
+#define ERROR_CODE_43   @"Unable to disconnect from Twitter. Please try later"
+#define ERROR_CODE_44   @"You are not connected to Twitter. Please connect from Settings"
+#define ERROR_CODE_45   @"You are not connected to"
+#define ERROR_CODE_46   @"No celebrity found for country"
+#define ERROR_CODE_47   @"No message exists with message id"
+#define ERROR_CODE_48   @"Profile picture content is empty"
+#define ERROR_CODE_49   @"Unable to update Profile picture. Please try later"
+#define ERROR_CODE_50   @"Posting to your Facebook wall is disabled. Check your Settings"
+#define ERROR_CODE_51   @"Posting to your Twitter feed is disabled. Check your Settings"
+#define ERROR_CODE_52   @"Non-Existing follower user Id "
+#define ERROR_CODE_53   @"Non-Existing following user Id"
+#define ERROR_CODE_54   @"Non-Existing follower/following Pair"
+#define ERROR_CODE_55   @"Non-Existing Subscriber Id"
+#define ERROR_CODE_56   @"Subscription allowed for phone users only" 
+#define ERROR_CODE_57   @"Invalid subscription parameter: Pass ‘S’ to subscribe ‘U’ to Unsubscribe"
+#define ERROR_CODE_58   @"Invalid Subscription service Id"
+#define ERROR_CODE_59   @"No user exists for user_id"
+#define ERROR_CODE_60   @"Invalid external app specification."
+#define ERROR_CODE_61   @"Unsupported Country Code"
+#define ERROR_CODE_62   @"Unsupported msg_type . Allowed types are iv or vb."
+#define ERROR_CODE_63   @"Error in reading audio file of Msg Id"
+#define ERROR_CODE_64   @"Posting on wall is disabled."
+#define ERROR_CODE_65   @"Authentication to is required."
+#define ERROR_CODE_66   @"User is not connected to Facebook"
+#define ERROR_CODE_67   @"Unsupported operation . Allowed types are b or u."
+#define ERROR_CODE_68   @"Invalid or expired validation code"
+#define ERROR_CODE_69   @"Data is not be saved on the server."
+#define ERROR_CODE_70   @"You have already sent the maximum allowed VSMS to this user, please wait for a VSMS reply."
+#define ERROR_CODE_71   @"You have already sent the maximum allowed VSMS to different users, please wait for a VSMS reply."
+#define ERROR_CODE_72   @"Requested resource is not available on the server."
+#define ERROR_CODE_73   @"You have signed in from maximum allowed devices. Please disconnect from an unsed device."
+#define ERROR_CODE_74   @"Authentication Error: You have changed your Facebook password. Please re-connect to Facebook."
+#define ERROR_CODE_75   @"Error in Twitter post."
+#define ERROR_CODE_76   @"Phone number is not registered with InstaVoice."
+
+#define ERROR_CODE_84   @"Unable to send message. You have left or admin has deleted you from the group."
+#define ERROR_CODE_85   @"This group has been deleted."
+#define ERROR_CODE_88   @"The number cannot be deleted"
+#define ERROR_CODE_91   @"The number entered is invalid."
+
+#define ERROR_CODE_1001 @"The request timed out. Please try again."
+#define ERROR_CODE_1004 @"Could not connect to the server. Please try again."
+#define ERROR_CODE_1005 @"The network connection was lost."
+
+
+#define STATUS          @"status"
+#define STATUS_OK       @"ok"
+#define STAUS_ERROR     @"error"
+#define ERROR_CODE      @"error_code"
+
+
+#endif

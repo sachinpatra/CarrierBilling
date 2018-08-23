@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="EA2-t1-k5c">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="10032"/>
+    </dependencies>
+    <scenes>
+        <!--imageMessageInterfaceController-->
+        <scene sceneID="pnl-O8-kJL">
+            <objects>
+                <controller identifier="imageMessageInterfaceController" id="ezF-D6-dY3" customClass="ImageMessageInterfaceController">
+                    <items>
+                        <group width="1" alignment="left" id="6bq-ki-iHw">
+                            <items>
+                                <group width="5" height="5" alignment="left" id="WSa-Qu-IAA"/>
+                                <group width="22" height="22" alignment="left" id="9da-d0-oKq">
+                                    <items>
+                                        <imageView width="22" height="22" alignment="left" id="4z3-oj-6vv"/>
+                                    </items>
+                                </group>
+                                <label width="114" height="21" alignment="left" id="lbc-g2-zf7">
+                                    <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                                </label>
+                            </items>
+                        </group>
+                        <group width="1" alignment="left" id="ukT-CJ-bP5">
+                            <items>
+                                <group width="1" alignment="left" id="dcn-xE-Va6">
+                                    <items>
+                                        <imageView width="1" height="126" alignment="left" id="mIS-6E-k8z">
+                                            <variation key="device=watch42mm" height="161"/>
+                                        </imageView>
+                                    </items>
+                                </group>
+                                <group width="1" alignment="left" verticalAlignment="center" id="w8b-l5-3q7"/>
+                            </items>
+                        </group>
+                        <button width="1" alignment="left" title="Call" id="8ba-3h-K3I">
+                            <color key="backgroundColor" red="0.14117647059999999" green="0.14117647059999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="callAction" destination="ezF-D6-dY3" id="3U6-Ze-UKB"/>
+                            </connections>
+                        </button>
+                        <group width="1" height="0.029999999999999999" alignment="left" id="CyA-zf-2FU"/>
+                    </items>
+                    <menu key="menu" id="rf0-bB-a2L">
+                        <items>
+                            <menuItem title="Call" image="call" id="j5h-py-fts" userLabel="forceTouchCall">
+                                <connections>
+                                    <action selector="forceTouceButtonAction" destination="ezF-D6-dY3" id="DRV-U4-0JF"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                    <connections>
+                        <outlet property="groupForImage" destination="9da-d0-oKq" id="tbl-Aa-w9c"/>
+                        <outlet property="imageMessage" destination="mIS-6E-k8z" id="h7a-o8-Qug"/>
+                        <outlet property="remoteUserImage" destination="4z3-oj-6vv" id="MSc-S7-ylX"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="527" y="605.5"/>
+        </scene>
+        <!--audioMessageInterfaceController-->
+        <scene sceneID="aak-Wa-iuq">
+            <objects>
+                <controller identifier="audioMessageInterfaceController" id="dpe-XT-tBW" customClass="AudioMessageInterfaceController">
+                    <items>
+                        <label width="136" height="10" alignment="left" textAlignment="center" id="14a-5E-xNA">
+                            <variation key="device=watch42mm" height="25" width="156"/>
+                        </label>
+                        <group width="1" alignment="left" id="xul-nC-KIP">
+                            <items>
+                                <group width="70" alignment="left" verticalAlignment="center" id="t4z-YQ-8xF">
+                                    <items>
+                                        <group width="48" height="48" alignment="right" verticalAlignment="center" id="dA1-uX-9Z4">
+                                            <items>
+                                                <imageView width="53" height="53" alignment="center" verticalAlignment="center" id="VhH-1c-ons">
+                                                    <variation key="device=watch38mm" height="53" width="53"/>
+                                                    <variation key="device=watch42mm" height="53" width="53"/>
+                                                </imageView>
+                                            </items>
+                                            <variation key="device=watch42mm">
+                                                <mask key="items">
+                                                    <include reference="VhH-1c-ons"/>
+                                                </mask>
+                                            </variation>
+                                        </group>
+                                    </items>
+                                    <variation key="device=watch42mm" width="78"/>
+                                </group>
+                                <timer width="45" height="30" alignment="right" verticalAlignment="center" textAlignment="left" id="Bg4-wt-3RX">
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                    <calendarUnit key="units" minute="YES" second="YES"/>
+                                    <variation key="device=watch42mm" height="30" width="52"/>
+                                </timer>
+                            </items>
+                        </group>
+                        <group width="1" height="13" alignment="left" id="uBc-zH-5eX"/>
+                        <group width="1" alignment="left" id="0p2-08-2IV">
+                            <items>
+                                <button width="136" height="30" alignment="left" title="Play" id="bqM-6q-Wmr">
+                                    <variation key="device=watch42mm" height="30" width="156"/>
+                                    <connections>
+                                        <action selector="playAction" destination="dpe-XT-tBW" id="3OE-YF-g2C"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                        <button width="136" height="30" alignment="left" title="Call" id="hk2-et-3Gw">
+                            <variation key="device=watch42mm" width="156"/>
+                            <connections>
+                                <action selector="callAction" destination="dpe-XT-tBW" id="hbf-Vg-leP"/>
+                            </connections>
+                        </button>
+                    </items>
+                    <menu key="menu" id="EX6-Su-b1Z">
+                        <items>
+                            <menuItem title="Call" image="call" id="Tea-or-jXp" userLabel="forceTouchCall">
+                                <connections>
+                                    <action selector="forceTouceButtonAction" destination="dpe-XT-tBW" id="2A1-0R-eYF"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                    <connections>
+                        <outlet property="audioTimer" destination="Bg4-wt-3RX" id="aPY-9B-qEq"/>
+                        <outlet property="callButton" destination="hk2-et-3Gw" id="8He-F2-RbN"/>
+                        <outlet property="groupForImage" destination="dA1-uX-9Z4" id="xzu-Ah-ZxR"/>
+                        <outlet property="playButton" destination="bqM-6q-Wmr" id="xG1-f2-670"/>
+                        <outlet property="remoteUserImage" destination="VhH-1c-ons" id="yZ5-vi-S4s"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="527" y="326"/>
+        </scene>
+        <!--Glance Interface Controller-->
+        <scene sceneID="BOz-TT-tkC">
+            <objects>
+                <glanceController spacing="0.0" id="0uZ-2p-rRc" customClass="GlanceController">
+                    <items>
+                        <group alignment="left" id="t8f-Gd-c4y">
+                            <items>
+                                <group width="46" alignment="left" id="bbh-9B-XiJ"/>
+                                <imageView width="40" height="40" alignment="center" image="iv_icon_new" id="lev-nK-pvq"/>
+                            </items>
+                        </group>
+                        <group alignment="left" id="uCw-4Q-Ouw">
+                            <items>
+                                <label width="135" height="69.5" alignment="center" text="InstaVoice" textAlignment="center" numberOfLines="3" id="A4H-V2-kuw">
+                                    <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                                </label>
+                            </items>
+                        </group>
+                    </items>
+                    <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="14"/>
+                    <connections>
+                        <outlet property="unreadMsgCountLabel" destination="A4H-V2-kuw" id="rgU-Aa-fuk"/>
+                    </connections>
+                </glanceController>
+            </objects>
+            <point key="canvasLocation" x="249" y="877"/>
+        </scene>
+        <!--textMessageInterfaceController-->
+        <scene sceneID="wpc-Ex-XeY">
+            <objects>
+                <controller identifier="textMessageInterfaceController" id="D9a-bg-lDy" customClass="TextMessageInterfaceController">
+                    <items>
+                        <group width="1" alignment="left" id="th6-oK-TBK">
+                            <items>
+                                <group width="5" height="5" alignment="left" id="tHk-1U-xoo"/>
+                                <group width="22" height="22" alignment="left" id="PBf-8Y-zoP">
+                                    <items>
+                                        <imageView width="22" height="22" alignment="left" id="F4Z-Mz-Gg6"/>
+                                    </items>
+                                </group>
+                                <label width="114" height="21" alignment="left" id="lYY-6H-I9Y">
+                                    <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                                </label>
+                            </items>
+                        </group>
+                        <group width="1" alignment="left" id="LKU-pa-zvc">
+                            <items>
+                                <group width="5" height="10" alignment="left" verticalAlignment="center" id="8N9-Rk-0VZ"/>
+                                <group width="5" height="10" alignment="right" verticalAlignment="center" id="XbV-ua-pG1"/>
+                                <group alignment="left" backgroundImage="text_blue_unread" id="54c-86-qho">
+                                    <items>
+                                        <group width="5" height="5" alignment="left" verticalAlignment="center" id="Izc-ZH-z3u"/>
+                                        <group width="1" alignment="center" verticalAlignment="center" layout="vertical" id="qXs-en-9se">
+                                            <items>
+                                                <group width="5" height="5" alignment="center" id="DpU-Ah-Dud"/>
+                                                <label alignment="left" verticalAlignment="center" text="Label" textAlignment="left" numberOfLines="0" id="2u4-EU-yoh">
+                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                                                </label>
+                                                <label width="100" alignment="right" verticalAlignment="bottom" text="Sep 25, 04:46 PM" textAlignment="left" id="vzt-kn-NKr">
+                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                                </label>
+                                                <group width="5" height="5" alignment="center" verticalAlignment="bottom" id="spQ-bS-OTC"/>
+                                            </items>
+                                        </group>
+                                        <group width="5" height="5" alignment="right" verticalAlignment="center" id="lQb-p3-7LO"/>
+                                    </items>
+                                </group>
+                            </items>
+                        </group>
+                        <button width="1" alignment="left" title="Call" id="ydN-LG-vOO">
+                            <connections>
+                                <action selector="callAction" destination="D9a-bg-lDy" id="scY-0L-vBF"/>
+                            </connections>
+                        </button>
+                    </items>
+                    <menu key="menu" id="pif-SI-hpz">
+                        <items>
+                            <menuItem title="Call" image="call" id="6JY-Xs-d1A" userLabel="forceTouchCall">
+                                <connections>
+                                    <action selector="forceTouceButtonAction" destination="D9a-bg-lDy" id="31s-P0-24p"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                    <connections>
+                        <outlet property="groupForImage" destination="PBf-8Y-zoP" id="maR-NM-lXJ"/>
+                        <outlet property="groupForTextMessage" destination="54c-86-qho" id="Cwg-Nw-fZQ"/>
+                        <outlet property="remoteUserImage" destination="F4Z-Mz-Gg6" id="QaF-hr-1vP"/>
+                        <outlet property="textMessageLabel" destination="2u4-EU-yoh" id="8Bw-yg-9wt"/>
+                        <outlet property="timeLabel" destination="vzt-kn-NKr" id="YFI-TD-8t7"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="527" y="124"/>
+        </scene>
+        <!--Static Notification Interface Controller-->
+        <scene sceneID="AEw-b0-oYE">
+            <objects>
+                <notificationController id="YCC-NB-fut">
+                    <items>
+                        <label width="136" height="43" alignment="left" text="New Message" numberOfLines="0" id="XkS-y5-khE"/>
+                    </items>
+                    <notificationCategory key="notificationCategory" identifier="ivMsg" id="JfB-70-Muf">
+                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </notificationCategory>
+                    <connections>
+                        <outlet property="notificationAlertLabel" destination="XkS-y5-khE" id="49B-RR-99y"/>
+                        <segue destination="gdX-wl-uQE" kind="relationship" relationship="dynamicNotificationInterface" id="fKh-qV-3T2"/>
+                    </connections>
+                </notificationController>
+            </objects>
+            <point key="canvasLocation" x="249" y="1147"/>
+        </scene>
+        <!--Notification Controller-->
+        <scene sceneID="KIl-fV-djm">
+            <objects>
+                <controller id="gdX-wl-uQE" customClass="NotificationController">
+                    <items>
+                        <label alignment="left" text=" " numberOfLines="0" id="lvA-PX-00t"/>
+                    </items>
+                    <connections>
+                        <outlet property="notificationText" destination="lvA-PX-00t" id="ilw-3k-bDR"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="486" y="1147"/>
+        </scene>
+        <!--InstaVoice®-->
+        <scene sceneID="SQf-4i-sGk">
+            <objects>
+                <controller title="InstaVoice®" id="EPB-Mh-6OX">
+                    <items>
+                        <table alignment="left" id="dGT-31-l9Q">
+                            <items>
+                                <tableRow selectable="NO" id="PUX-CX-B4v" customClass="ChatTileRowType">
+                                    <group key="rootItem" width="1" height="61" alignment="left" layout="vertical" id="xsR-Fl-TGj">
+                                        <items>
+                                            <group width="1" alignment="left" spacing="5" id="5t3-44-TY1">
+                                                <items>
+                                                    <group alignment="left" id="mPv-o0-C78">
+                                                        <items>
+                                                            <imageView width="24" height="24" alignment="left" verticalAlignment="center" id="6LS-xd-VJm"/>
+                                                        </items>
+                                                    </group>
+                                                    <group alignment="left" id="zmt-tt-0ZG">
+                                                        <items>
+                                                            <label width="90" height="24" alignment="left" text="Deepak" textAlignment="left" numberOfLines="2" id="bYW-EH-mqY">
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                                                            </label>
+                                                        </items>
+                                                    </group>
+                                                </items>
+                                            </group>
+                                            <group width="89" alignment="right" verticalAlignment="center" id="wb0-hR-dgS">
+                                                <items>
+                                                    <imageView width="11" height="11" alignment="left" verticalAlignment="center" id="En0-1U-W4B"/>
+                                                    <label width="100" alignment="left" verticalAlignment="center" text="Sep 25, 04:46 PM" textAlignment="left" id="CXG-aP-MFN">
+                                                        <color key="textColor" red="0.70588235290000001" green="0.72549019609999998" blue="0.74509803919999995" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                                    </label>
+                                                </items>
+                                            </group>
+                                        </items>
+                                        <color key="backgroundColor" red="0.14117647059999999" green="0.14117647059999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <edgeInsets key="margins" left="8" right="8" top="10" bottom="5"/>
+                                    </group>
+                                </tableRow>
+                            </items>
+                        </table>
+                    </items>
+                    <connections>
+                        <outlet property="tilesListView" destination="dGT-31-l9Q" id="PV2-ll-JrB"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="249" y="411"/>
+        </scene>
+        <!--InstaVoice®-->
+        <scene sceneID="T4c-rM-iUk">
+            <objects>
+                <controller title="InstaVoice®" id="EA2-t1-k5c" customClass="InterfaceController">
+                    <items>
+                        <table alignment="left" id="psd-9S-1EQ">
+                            <items>
+                                <tableRow identifier="tilesListViewRow" id="ets-T7-VFG" customClass="ChatTileRowType">
+                                    <group key="rootItem" width="1" height="50" alignment="left" id="t54-0M-26e">
+                                        <items>
+                                            <group width="27" height="35" alignment="left" id="bN6-J6-NvY">
+                                                <items>
+                                                    <group width="24" height="24" alignment="left" verticalAlignment="center" id="Wke-nJ-vRW">
+                                                        <items>
+                                                            <imageView width="24" height="24" alignment="left" verticalAlignment="center" id="CFc-mc-ahF"/>
+                                                        </items>
+                                                    </group>
+                                                </items>
+                                            </group>
+                                            <group width="93" height="39" alignment="left" verticalAlignment="center" layout="vertical" id="GXJ-9O-KwU">
+                                                <items>
+                                                    <group alignment="left" verticalAlignment="bottom" id="mkJ-LK-1d9">
+                                                        <items>
+                                                            <imageView width="11" height="11" alignment="left" verticalAlignment="center" id="BDc-Rg-egw"/>
+                                                            <label alignment="left" verticalAlignment="center" textAlignment="left" id="gmB-82-vIr">
+                                                                <color key="textColor" red="0.70588235290000001" green="0.72549019609999998" blue="0.74509803919999995" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                                            </label>
+                                                        </items>
+                                                        <variation key="device=watch42mm" alignment="left" verticalAlignment="bottom"/>
+                                                    </group>
+                                                    <label width="100.5" alignment="left" text="Deepak" textAlignment="left" id="LyZ-WM-qTM">
+                                                        <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                                                        <variation key="device=watch42mm" alignment="left" verticalAlignment="center"/>
+                                                    </label>
+                                                </items>
+                                            </group>
+                                        </items>
+                                    </group>
+                                    <connections>
+                                        <outlet property="groupForImage" destination="Wke-nJ-vRW" id="fS9-Xf-Kkg"/>
+                                        <outlet property="messageIcon" destination="CFc-mc-ahF" id="PGs-TG-SrK"/>
+                                        <outlet property="rowDescription" destination="LyZ-WM-qTM" id="w5x-2v-wgf"/>
+                                        <outlet property="timeIcon" destination="BDc-Rg-egw" id="AXT-Xu-wxQ"/>
+                                        <outlet property="timeLabel" destination="gmB-82-vIr" id="Pp2-CU-Wkk"/>
+                                    </connections>
+                                </tableRow>
+                            </items>
+                        </table>
+                    </items>
+                    <connections>
+                        <outlet property="tilesListView" destination="psd-9S-1EQ" id="PQ9-dh-aN2"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="273" y="650"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" red="0.96470588239999999" green="0.34901960780000002" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+</document>

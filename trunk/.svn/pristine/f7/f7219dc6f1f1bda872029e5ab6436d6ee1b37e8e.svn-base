@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CreateNewGroupMembersCellIdentifier" rowHeight="79" id="W7T-ZJ-CDm" customClass="CreateNewGroupMembersCell">
+            <rect key="frame" x="0.0" y="0.0" width="402" height="83"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="W7T-ZJ-CDm" id="QLu-vQ-dWu">
+                <rect key="frame" x="0.0" y="0.0" width="402" height="82"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Tn-hg-HvM">
+                        <rect key="frame" x="8" y="21" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="Q0V-4B-NeB"/>
+                            <constraint firstAttribute="height" constant="40" id="RUF-oT-wZE"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Xm-hh-L0e">
+                        <rect key="frame" x="56" y="18" width="338" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="21" id="iDZ-zd-MNp"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eEc-uV-O9O">
+                        <rect key="frame" x="55" y="42" width="338" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-logo-m" translatesAutoresizingMaskIntoConstraints="NO" id="1KR-a3-rYv">
+                        <rect key="frame" x="59" y="61" width="16" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="16" id="JfQ-rw-z6f"/>
+                            <constraint firstAttribute="height" constant="16" id="Ukg-eH-Lxu"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="leadingMargin" secondItem="2Tn-hg-HvM" secondAttribute="leading" id="ASo-le-qet"/>
+                    <constraint firstItem="2Xm-hh-L0e" firstAttribute="top" secondItem="QLu-vQ-dWu" secondAttribute="topMargin" constant="10" id="BwP-5U-CAl"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="2Xm-hh-L0e" secondAttribute="trailing" id="Soa-wx-ec5"/>
+                    <constraint firstItem="1KR-a3-rYv" firstAttribute="leading" secondItem="QLu-vQ-dWu" secondAttribute="leadingMargin" constant="51" id="UMu-4Y-Esx"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="1KR-a3-rYv" secondAttribute="bottom" constant="-3" id="e4O-ez-AGM"/>
+                    <constraint firstItem="2Xm-hh-L0e" firstAttribute="leading" secondItem="2Tn-hg-HvM" secondAttribute="trailing" constant="8" id="jmN-cx-pGx"/>
+                    <constraint firstItem="1KR-a3-rYv" firstAttribute="top" secondItem="eEc-uV-O9O" secondAttribute="bottom" constant="2" id="qXz-Ys-CAw"/>
+                    <constraint firstItem="eEc-uV-O9O" firstAttribute="leading" secondItem="2Tn-hg-HvM" secondAttribute="trailing" constant="7" id="r9U-9m-KNJ"/>
+                    <constraint firstItem="2Tn-hg-HvM" firstAttribute="centerY" secondItem="QLu-vQ-dWu" secondAttribute="centerY" id="uth-Bg-rch"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="eEc-uV-O9O" secondAttribute="trailing" constant="1" id="yml-UU-C0W"/>
+                    <constraint firstItem="eEc-uV-O9O" firstAttribute="top" secondItem="2Xm-hh-L0e" secondAttribute="bottom" constant="3" id="zd6-Yq-II8"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="circleView" destination="2Tn-hg-HvM" id="Ih5-AO-vM8"/>
+                <outlet property="iconImageView" destination="1KR-a3-rYv" id="a83-EF-7j3"/>
+                <outlet property="nameLabel" destination="2Xm-hh-L0e" id="D0Y-ei-14k"/>
+                <outlet property="nameLabelHeighConstraint" destination="iDZ-zd-MNp" id="yrD-xM-Ga7"/>
+                <outlet property="phoneNumberLabel" destination="eEc-uV-O9O" id="Qnp-yZ-xko"/>
+            </connections>
+            <point key="canvasLocation" x="156" y="171.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="ic-logo-m" width="16" height="16"/>
+    </resources>
+</document>

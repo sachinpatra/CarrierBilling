@@ -1,0 +1,249 @@
+//
+//  StoreViewController.swift
+//  ReachMe
+//
+//  Created by Sachin Kumar Patra on 3/29/18.
+//  Copyright © 2018 Kirusa. All rights reserved.
+//
+
+import UIKit
+
+class StoreViewController: UIViewController {
+
+    lazy var pageViewController: UIPageViewController = {
+        let pageVC = childViewControllers.first as! UIPageViewController
+        pageVC.delegate = self
+        pageVC.dataSource = self
+        return pageVC
+    }()
+    lazy var orderedViewControllers: [UIViewController] = {
+        return [newVc(viewController: "SubscribeNumberViewController"),
+                newVc(viewController: "PurchaseHistoryViewController")]
+    }()
+    
+    @IBOutlet weak var segmentControl: UISegmentedControl!
+    @IBOutlet weak var availableCreditLabel: UILabel!
+    
+    
+    //MARK: - View lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupInAppPurchase()
+        
+        //Display available credits as $ format
+        let availableCredits = Double(Constants.appDelegate.confgReader.getVsmsLimit()) / 100
+        availableCreditLabel.text = String(format: "$%.2f", availableCredits)
+        
+        if let firstViewContrller = orderedViewControllers.first {
+            pageViewController.setViewControllers([firstViewContrller], direction: .forward, animated: true, completion: nil)
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if Constants.appDelegate.confgReader.getOnBoardingStatus() {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+        } else {
+            navigationController?.setNavigationBarHidden(true, animated: true)
+        }
+    }
+
+    
+    //MARK: - Custom Methods
+    func newVc(viewController: String) -> UIViewController {
+        return storyboard!.instantiateViewController(withIdentifier: viewController)
+    }
+    
+    //MARK: - Button Actions
+    @IBAction func onSegmentClicked(_ sender: UISegmentedControl) {
+        
+        guard let currentViewController = pageViewController.viewControllers?.first else { return }
+        if sender.selectedSegmentIndex == 1 {
+            guard let nextViewController = pageViewController.dataSource?.pageViewController(pageViewController, viewControllerAfter: currentViewController) else { return }
+            pageViewController.setViewControllers([nextViewController], direction: .forward, animated: true, completion: nil)
+        } else {
+            guard let previousController = pageViewController.dataSource?.pageViewController(pageViewController, viewControllerBefore: currentViewController) else { return }
+            pageViewController.setViewControllers([previousController], direction: .reverse, animated: true, completion: nil)
+        }
+    }
+    
+    @IBAction func onAddMoneyClicked(_ sender: UIButton) {
+        
+        guard Common.isNetworkAvailable() == NETWORK_AVAILABLE else {
+            ReachMeUtility.showAlert(withMessage: "NET_NOT_AVAILABLE".localized)
+            return
+        }
+        
+        ANLoader.showLoading("", disableUI: true)
+        let reqDisc: NSMutableDictionary = ["country_code":  "\(Constants.appDelegate.confgReader.getCountryCode()!)"]
+        let availableProdcutAPI = InAppPurchaseApi(request: reqDisc)
+        NetworkCommon.addData(reqDisc, eventType: FETCH_PURCHASE_PRODUCTS)
+        availableProdcutAPI?.callNetworkRequest(toFetchProductList: reqDisc, withSuccess: {[weak self] (requestAPI, responseDisc) in
+            ANLoader.hide()
+            
+            if let productList = responseDisc!["product_list"] as? [[String:Any]] {
+                
+                var selectedProduct: [String: Any]!
+                let alert = UIAlertController(style: .alert, title: "Select a recharge", message: "")
+                let cancelAction = alert.addAction(title: "Cancel", style: .default)
+                let confirmaction = alert.addAction(title: "Confirm", style: .default, isEnabled: false) { (alertAction) in
+                    self?.handleCreditPurchase(ForselectedProduct: selectedProduct)
+                }
+                alert.addCreditSelectionController(productList: productList, alertButtons: [cancelAction, confirmaction], action: { (product) in
+                    selectedProduct = product
+                    alert.message = selectedProduct["product_desc"] as? String
+                })
+                alert.show()
+            }
+
+        }, failure: { (requestAPI, error) in
+                ANLoader.hide()
+                ReachMeUtility.showAlert(withMessage: error!.localizedDescription)
+        })
+    }
+    
+    func handleCreditPurchase(ForselectedProduct selectedProduct: [String: Any]) {
+        
+        guard Common.isNetworkAvailable() == NETWORK_AVAILABLE else {
+            ReachMeUtility.showAlert(withMessage: "NET_NOT_AVAILABLE".localized)
+            return
+        }
+        
+        //Call Appstore to purchase product
+        ANLoader.showLoading("", disableUI: true)
+        SwiftyStoreKit.purchaseProduct(Constants.BUNDLE_ID! + "." + "\(String(describing: selectedProduct["product_name"]!))", atomically: false, applicationUsername: "\(Constants.appDelegate.confgReader.getLoginId()!)") { result in
+            
+            if case .success(let purchase) = result {
+                
+                SwiftyStoreKit.fetchReceipt(forceRefresh: false, completion: { receiptResult in
+                    switch receiptResult {
+                    case .success(let receiptdata):
+                        let responseDisc: NSMutableDictionary = ["purchaseToken": receiptdata.base64EncodedString(options: []),
+                                                                 "ios_trans_id": purchase.transaction.transactionIdentifier!]
+                        if let receiptJSONData = try? JSONSerialization.data(withJSONObject: responseDisc, options: .prettyPrinted) {
+                            let receiptJSONType = try? JSONSerialization.jsonObject(with: receiptJSONData, options: [])
+                            
+                            //Update local server
+                            let purchaseProductReqDic: NSMutableDictionary = ["product_id": selectedProduct["product_id"] as Any,
+                                                                              "purchase_source": "AppleStore",
+                                                                              "country_code":  selectedProduct["country_code"] as Any,
+                                                                              "purchase_app_response": receiptJSONType!]
+                            let purchaseAPI = InAppPurchaseApi(request: purchaseProductReqDic)
+                            NetworkCommon.addData(purchaseProductReqDic, eventType: PURCHASE_PRODUCT)
+                            purchaseAPI?.callNetworkRequest(purchaseProductReqDic, withSuccess: {[weak self] (requestAPI, purchaseResponseDisc) in
+                                ANLoader.hide()
+                                guard purchaseResponseDisc?.value(forKey: STATUS) as! String == STATUS_OK else {
+                                    print("Error in purchase product response. api request: \(String(describing: requestAPI?.request))")
+                                    return
+                                }
+                                
+                                let vsmsLimitsJsonString = purchaseResponseDisc!["vsms_limits"] as! String
+                                let vsmsInfo = ReachMeUtility.parseJSONToDictionary(inputString: vsmsLimitsJsonString)
+                                self?.availableCreditLabel.text = String(format: "$ %.2f", Double((vsmsInfo!["limit"] as! Int32)) / 100)
+                                Constants.appDelegate.confgReader.setVsmsLimit(vsmsInfo!["limit"] as! Int32)
+                                
+                                SwiftyStoreKit.finishTransaction(purchase.transaction)//Finish Transaction
+                                //Refresh Purchase History
+                                (self?.orderedViewControllers[1] as! PurchaseHistoryViewController).tableView.beginRefreshing()
+                                
+                                }, failure: { (requestAPI, error) in
+                                    ANLoader.hide()
+                                    if (error! as NSError).code == 97 { //Duplicate Purchase
+                                        SwiftyStoreKit.finishTransaction(purchase.transaction) //Finish Transaction
+                                    }
+                                    print("Error in verify purchased product: \(error.debugDescription)")
+                            })
+                        }
+                    case .error(let error):
+                        ANLoader.hide()
+                        print("Error in fetch Receipt: \(error.localizedDescription)")
+                    }
+                })
+            }
+            
+            self.alertForPurchaseResult(result)
+        }
+    }
+    
+    //MARK:- Unwind Action
+    @IBAction func unwindToStoreViewControllre(segue:UIStoryboardSegue) {}
+    
+    // use this method once when launch the app
+    func setupInAppPurchase() {
+        SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
+        }
+    }
+    
+    func alertForPurchaseResult(_ result: PurchaseResult) {
+        
+        switch result {
+        case .success(let purchase):
+            print("Purchase Success: \(purchase.productId)")
+            return
+            
+        case .error(let error):
+            ANLoader.hide()
+            
+            let errorMessage: String!
+            print("Purchase Failed: \(error)")
+            
+            switch error.code {
+            case .unknown:
+                errorMessage = error.localizedDescription
+            case .clientInvalid: // client is not allowed to issue the request, etc.
+                errorMessage = "Not allowed to make the payment"
+            case .paymentCancelled: // user cancelled the request, etc.
+                print("User Canceld Trancsction")
+                return
+            case .paymentInvalid: // purchase identifier was invalid, etc.
+                errorMessage = "The purchase identifier was invalid"
+            case .paymentNotAllowed: // this device is not allowed to make the payment
+                errorMessage = "The device is not allowed to make the payment"
+            case .storeProductNotAvailable: // Product is not available in the current storefront
+                errorMessage = "The product is not available in the current storefront"
+            case .cloudServicePermissionDenied: // user has not allowed access to cloud service information
+                errorMessage = "Access to cloud service information is not allowed"
+            case .cloudServiceNetworkConnectionFailed: // the device could not connect to the nework
+                errorMessage = "Could not connect to the network"
+            case .cloudServiceRevoked: // user has revoked permission to use this cloud service
+                errorMessage = "Cloud service was revoked"
+            }
+            
+            ReachMeUtility.showAlert(withMessage: errorMessage, title: "Purchase failed")
+        }
+    }
+}
+
+//MARK: - UIPageController Datasource
+extension StoreViewController: UIPageViewControllerDataSource {
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        guard let viewContrllerIndex = orderedViewControllers.index(of: viewController) else { return nil }
+        
+        let previousIndex = viewContrllerIndex - 1
+        guard previousIndex >= 0 else { return nil }
+        
+        return orderedViewControllers[previousIndex]
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        guard let viewContrllerIndex = orderedViewControllers.index(of: viewController) else { return nil }
+        
+        let nextIndex = viewContrllerIndex + 1
+        guard orderedViewControllers.count != nextIndex else { return nil }
+        
+        return orderedViewControllers[nextIndex]
+    }
+}
+
+//MARK: - UIPageController Delegate
+extension StoreViewController: UIPageViewControllerDelegate {
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        let pageContentViewController = pageViewController.viewControllers![0]
+        guard let index = orderedViewControllers.index(of: pageContentViewController) else { return }
+        segmentControl.selectedSegmentIndex = index
+    }
+}

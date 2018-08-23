@@ -1,0 +1,889 @@
+//
+//  PasswordEntryViewController.m
+//  InstaVoice
+//
+//  Created by adwivedi on 21/09/15.
+//  Copyright (c) 2015 Kirusa. All rights reserved.
+//
+
+#import "PasswordEntryViewController.h"
+#import "LinkButton.h"
+#import "macro.h"
+#import "HttpConstant.h"
+#import "EventType.h"
+#import "Common.h"
+#import "ServerErrorMsg.h"
+#import "ConfigurationReader.h"
+#import "VerificationOTPViewController.h"
+#import "TableColumns.h"
+#import "UIType.h"
+#import "AboutUsWebViewScreen.h"
+#import "SizeMacro.h"
+#import "ScreenUtility.h"
+#import "Setting.h"
+#import "RegistrationApi.h"
+#import "RegisterUserAPI.h"
+#import "LoginAPI.h"
+#import "NBPhoneNumberUtil.h"
+#import "NBAsYouTypeFormatter.h"
+#import "MyNotesScreen.h"
+
+#ifndef REACHME_APP
+    #import "ChatGridViewController.h"
+#endif
+
+#import "FriendsScreen.h"
+#import "IVColors.h"
+#import "MyVoboloScreen.h"
+#import "Profile.h"
+#import "SetPasswordViewController.h"
+#import "OTPValidationViewController.h"
+#import "GenerateNewPwdAPI.h"
+#import "ForgotPasswordViewController.h"
+#import "GetDeviceModel.h"
+#import "IVFileLocator.h"
+
+//Settings Related
+#import "IVSettingsListViewController.h"
+
+//OnBoarding
+#ifdef REACHME_APP
+#import "LinphoneManager.h"
+#import "IVCarrierSearchViewController.h"
+#import "IVCarrierCircleViewController.h"
+#import "FetchCarriersListAPI.h"
+#import "ActivateReachMeViewController.h"
+#import "InviteCodeViewController.h"
+#import "ReachMeStatusViewController.h"
+#define kErrorCodeForCarrierListNotFound 20
+#endif
+
+#define PLACEHOLDERTEXT @"_placeholderLabel.textColor"
+
+@interface PasswordEntryViewController () <SettingProtocol>
+#ifdef REACHME_APP
+@property (nonatomic, strong) NSArray *currentCarrierList;
+@property (nonatomic, strong) IVCarrierSearchViewController *carrierSearchViewController;
+@property (nonatomic, strong) IVSettingsCountryCarrierInfo *selectedCountryCarrierInfo;
+@property (nonatomic, strong) VoiceMailInfo *voiceMailInfo;
+@property (nonatomic, strong) SettingModel *currentSettingsModel;
+#endif
+
+@end
+
+@implementation PasswordEntryViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self.enterPassword setTintColor:[UIColor whiteColor]];
+    self.mobileNumberLabel.text= self.mobileNumber;
+
+    //Bhaskar 6 April
+    //Check Multi Login Case for Set Password String Change
+    UIFont *font = [UIFont fontWithName:@"Helvetica Neue" size:14.0f];
+    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    NSDictionary *dict = @{NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle),
+                            NSFontAttributeName:font,
+                            NSForegroundColorAttributeName : [UIColor whiteColor],
+                            NSParagraphStyleAttributeName:style};
+    NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] init];
+    if ([[self.dict valueForKey:@"action"] isEqualToString:@"set_primary_pwd"]) {
+        [attString appendAttributedString:[[NSAttributedString alloc] initWithString:@"Set Password" attributes:dict]];
+    }else{
+        [attString appendAttributedString:[[NSAttributedString alloc] initWithString:@"Forgot Password?" attributes:dict]];
+    }
+    
+    [self.forgotOrSetPassword setAttributedTitle:attString forState:UIControlStateNormal];
+    
+    self.view.backgroundColor=[IVColors redColor];
+    self.mobileIcon.backgroundColor=[IVColors redColor];
+    self.passwordKeyIcon.backgroundColor=[IVColors redColor];
+    self.enterPassword.textColor=[UIColor whiteColor];
+    self.ivLogoIcon.backgroundColor=[IVColors redColor];
+    self.ivLogoIcon.layer.cornerRadius=10.0f;
+    _isToolbarCreated = NO; //CMP
+    
+    [self updateViewBackGroundColor];
+    
+    self.mobileIcon.backgroundColor=[UIColor clearColor];
+    self.passwordKeyIcon.backgroundColor=[UIColor clearColor];
+    self.enterPassword.textColor=[UIColor whiteColor];
+    self.ivLogoIcon.backgroundColor=[UIColor clearColor];
+ 
+    // Do any additional setup after loading the view from its nib.
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    GetDeviceModel *deviceModel=[[GetDeviceModel alloc]init];
+    NSString *model=deviceModel.platformString;
+    
+    // NSString *model = [self platformString];
+    if([model isEqualToString:@"iPhone 6 Plus"]||[model isEqualToString:@"iPhone 6 Plus"])
+        self.view.transform =CGAffineTransformScale(CGAffineTransformIdentity, 1.25,1.25 );
+    [self setPlaceHolderForTextField];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    self.uiType = LOGIN_SCREEN;
+    [appDelegate.stateMachineObj setCurrentUI:self];
+    _initialHeight = self.view.frame.origin.y;
+    self.enterPassword.text=@"";
+    [self setPlaceHolderForTextField];
+    self.enterPassword.placeholder = @"Enter Password";
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillDisappear:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillAppear:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+    [super viewWillDisappear:animated];
+}
+
+/* MAY 23,2016
+-(BOOL)textViewDidBeginEditing:(UITextField *)textField
+{
+   if(self.scrollView)
+   {    CGRect currentFrame = self.view.frame;
+        CGRect newFrame = CGRectMake(currentFrame.origin.x, _initialHeight-150, currentFrame.size.width, currentFrame.size.height);
+        [UIView animateWithDuration:1.0 animations:^{
+                     self.view.frame = newFrame;
+        }];
+       return YES;
+    }
+}
+
+-(BOOL)textViewDidEndEditing:(UITextField *)textField {
+    
+    CGRect currentFrame = self.view.frame;
+    CGRect newFrame = CGRectMake(currentFrame.origin.x, _initialHeight, currentFrame.size.width, currentFrame.size.height);
+    
+    [UIView animateWithDuration:1.0 animations:^{
+        self.view.frame = newFrame;
+    }];
+}
+*/
+
+
+-(void)setPlaceHolderForTextField
+{
+    [self.enterPassword setValue:[UIColor whiteColor] forKeyPath:PLACEHOLDERTEXT];
+}
+
+-(void)keyboardWillAppear:(NSNotification *)note
+{
+    CGRect currentFrame = self.view.frame;
+    CGRect newFrame = CGRectMake(currentFrame.origin.x, -150, currentFrame.size.width, currentFrame.size.height);
+    CGFloat keyboardHeight = [[note.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.y;
+    
+    NSDictionary *info  = note.userInfo;
+    NSValue      *value = info[UIKeyboardFrameEndUserInfoKey];
+    CGRect rawFrame      = [value CGRectValue];
+    CGRect keyboardFrame = [self.view convertRect:rawFrame fromView:nil];
+    
+    CGRect rectButton = self.cancelContinueView.frame;
+    CGFloat height=rectButton.origin.y+rectButton.size.height;
+    if(keyboardHeight<(height) || keyboardFrame.origin.y<(height))
+    {
+        [UIView animateWithDuration:1.0 animations:^{
+            self.view.frame = newFrame;
+        }];
+    }
+}
+
+-(void)keyboardWillDisappear:(NSNotification *)note
+{
+    CGRect currentFrame = self.view.frame;
+    CGRect newFrame = CGRectMake(currentFrame.origin.x, 0, currentFrame.size.width, currentFrame.size.height);
+    
+    [UIView animateWithDuration:1.0 animations:^{
+        self.view.frame = newFrame;
+    }];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+- (IBAction)forgetPasswordAction:(id)sender
+{
+    [self showProgressBar];
+    [self.enterPassword resignFirstResponder];
+    
+    int64_t delayInSeconds = 1.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        
+    ForgotPasswordViewController* targetController = [[ForgotPasswordViewController alloc]initWithNibName:@"ForgotPasswordViewController" bundle:nil];
+    targetController.otpViewDict=[NSMutableDictionary dictionaryWithDictionary:self.dict];
+    targetController.userDic=[NSMutableDictionary dictionaryWithDictionary:self.dict];
+    targetController.verificationType = FORGOT_TYPE;
+    targetController.mobileNumber=self.mobileNumber;
+    [self.navigationController pushViewController:targetController animated:YES];
+        [self hideProgressBar];
+    });
+   
+}
+
+- (IBAction)loginWithPassword:(id)sender {
+   
+    if([self emptyFieldValidation])
+    {
+        [self showProgressBar];
+
+        [self.enterPassword resignFirstResponder];
+        /*TODO: why do we need delay here? JUNE 16, 2016
+        int64_t delayInSeconds = 1.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+            [self.dict setValue:self.enterPassword.text forKey:USER_PWD];
+            [self loginUser:self.dict];
+        });*/
+        
+        [self.dict setValue:self.enterPassword.text forKey:USER_PWD];
+        [self loginUser:self.dict];
+    }
+    
+    isPossible = false;
+}
+
+- (IBAction)cancelAction:(id)sender {
+    
+    if (self.loginViewDelegate && [self.loginViewDelegate respondsToSelector:@selector(changedNumberInTextField:)]) {
+        [self.loginViewDelegate changedNumberInTextField:self.mobileNumberWithCode];
+    }
+    [self.enterPassword resignFirstResponder];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(BOOL)emptyFieldValidation
+{
+    BOOL result = YES;
+    int netAvailable = [Common isNetworkAvailable];
+    
+    if(NETWORK_NOT_AVAILABLE == netAvailable)
+    {
+        //OCT 4, 2016 [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+        return NO;
+    }
+        
+    if([self.enterPassword.text isEqualToString:@""])
+    {
+        [ScreenUtility showAlert: NSLocalizedString(@"PASSWORD_CAN_NOT_BE_BLANK", nil)];
+        self.enterPassword.placeholder = NSLocalizedString(@"BLANK_PWD_HINT", nil);
+        
+        int64_t delayInSeconds = 1.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self.enterPassword becomeFirstResponder];
+        });
+        return NO;
+    }
+    else
+    {
+        int length = self.enterPassword.text.length;
+        
+        char char1 = [self.enterPassword.text characterAtIndex:0];
+        char char2 = [self.enterPassword.text characterAtIndex:length-1];
+        if(char1 == ' ' || char2 == ' ')
+        {
+            [ScreenUtility showAlert:NSLocalizedString(@"PWD_LEADING_SPACES", nil)];
+            self.enterPassword.text = @"";
+            return NO;
+        }
+    }
+    
+    if( ([self.enterPassword.text length] < PWD_MIN) || ([self.enterPassword.text length] > PWD_MAX) )
+    {
+        if([self.enterPassword.text length] < PWD_MIN)
+        {
+            [ScreenUtility showAlert: NSLocalizedString(@"PWD_MIN_LIMIT", nil)];
+        }
+        else
+        {
+            [ScreenUtility showAlert: NSLocalizedString(@"PWD_MAX_LIMIT", nil)];
+        }
+        
+        self.enterPassword.text = @"";
+        [self.enterPassword becomeFirstResponder];
+        EnLoge(@"Register Password TextField cannot exceed 25 characters");
+        
+        return NO;
+    }
+    
+    return result;
+}
+
+-(void)loginUser:(NSMutableDictionary*)userDic
+{
+    [[Setting sharedSetting]setCountryInfo];
+    if(userDic != NULL)
+    {
+        _isToolbarCreated = NO;//RM
+        NSMutableDictionary *signINDic = [[NSMutableDictionary alloc] init];
+        NSString *countryIso = [userDic valueForKey:API_SIM_COUNTRY_ISO];
+        NSString *canonicalNum = [userDic valueForKey:API_PHONE_NUM];
+        [signINDic setValue:canonicalNum forKey:API_LOGIN_ID];
+        [signINDic setValue:[userDic valueForKey:USER_PWD] forKey:API_PWD];
+        NSString *uuid = [appDelegate.confgReader getDeviceUUID];
+        if(uuid == nil || [uuid length]==0)
+        {
+            uuid = [Common getUniqueDeviceID];
+            [appDelegate.confgReader setDeviceUUID:uuid];
+        }
+        [signINDic setValue:uuid forKey:API_DEVICE_ID];
+
+        
+        [signINDic setValue:countryIso forKey:API_SIM_COUNTRY_ISO];
+        NSString *mccmnc = [appDelegate.confgReader getCountryMCCMNC];
+        if(mccmnc != nil && [mccmnc length] >0)
+        {
+            [signINDic setValue:mccmnc forKey:API_SIM_OPR_MCC_MNC];
+        }
+        else
+        {
+            // [signINDic setValue:@"na" forKey:API_SIM_OPR_MCC_MNC];
+        }
+        
+        
+        
+        LoginAPI* api = [[LoginAPI alloc]initWithRequest:signINDic];
+        [api callNetworkRequest:signINDic withSuccess:^(LoginAPI *req, NSMutableDictionary *responseObject) {
+            [appDelegate.confgReader setFormattedUserName:self.mobileNumberWithCode];
+            
+            NSString* loginID = [responseObject valueForKey:API_LOGIN_ID];
+            if(loginID && [loginID length]) {
+                [[ConfigurationReader sharedConfgReaderObj]setLoginId:loginID];
+            }
+            
+            //Login success.
+            [Setting sharedSetting].delegate = self;
+            //Reset the fetch settings status
+            [[Setting sharedSetting]resetFetchAndUpdateStatus];
+            
+            [[Setting sharedSetting]getUserSettingFromServer];
+            [[Profile sharedUserProfile]fetchBlockedUserList];
+            [self hideProgressBar];
+            
+#ifdef REACHME_APP
+            [self performSelectorOnMainThread:@selector(enableProxy) withObject:nil waitUntilDone:NO];
+#endif
+            
+        } failure:^(LoginAPI *req, NSError *error) {
+            [self hideProgressBar];
+            
+            NSInteger errorCode = error.code;
+            NSString *errorMsg = [Common convertErrorCodeToErrorString:errorCode];
+            
+            
+            if([errorMsg isEqualToString:NSLocalizedString(@"ERROR_CODE_41", nil)])
+            {
+                [ScreenUtility showAlert: errorMsg];
+                self.enterPassword.text = @"";
+            }
+            else if( [errorMsg isEqualToString:NSLocalizedString(@"ERROR_CODE_77", nil)]) {
+                [ScreenUtility showAlert: errorMsg];
+            }
+            else if( [errorMsg isEqualToString:NSLocalizedString(@"ERROR_CODE_73", nil)]) {
+                [ScreenUtility showAlert: errorMsg];
+            }
+            else if( [errorMsg isEqualToString:NSLocalizedString(@"ERROR_CODE_1001", nil)]) {
+                [ScreenUtility showAlert: errorMsg];
+            }
+            else if( [errorMsg isEqualToString:NSLocalizedString(@"ERROR_CODE_1004", nil)]) {
+                [ScreenUtility showAlert: errorMsg];
+            }
+            else if(errorCode == 86) {
+                NSString *errorString = [NSLocalizedString(@"NOT_PRIMARY_NUMBER", nil) stringByAppendingString:[(error.userInfo) valueForKey:NSLocalizedString(@"PRIMARY_PHONE_MASK", nil)]];
+#ifdef REACHME_APP
+                errorString = [errorString stringByAppendingString:@". If you don't recognize this number contact support at reachme@instavoice.com"];
+#endif
+                
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:errorString preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    
+                }];
+                
+                [alertController addAction:ok];
+                
+                alertController.view.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+                [self.navigationController presentViewController:alertController animated:true completion:nil];
+            }
+            else {
+                 [ScreenUtility showAlert: errorMsg];
+            }
+        }];//failure block end
+    }
+}
+
+#ifdef REACHME_APP
+-(void) enableProxy {
+    [appDelegate.lphoneCoreSettings reEnable];
+}
+#endif
+
+- (void) createMainTabBarItems
+{
+#ifdef REACHME_APP
+    
+    self.navigationController.navigationBar.tintColor = [IVColors redColor];
+    Engine *engObj = [Engine sharedEngineObj];
+    [engObj fetchObdDebitPolicy:NO];
+    if ((self.voiceMailInfo.realVocieMailCount > 0 || self.voiceMailInfo.realMissedCallCount > 0) && [[ConfigurationReader sharedConfgReaderObj] isRMFreshSignUp]) {
+        [[ConfigurationReader sharedConfgReaderObj] setOnBoardingStatus:NO];
+        CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:[[ConfigurationReader sharedConfgReaderObj] getLoginId]];
+        CarrierInfo *currentCarrierInfo = [[CarrierInfo alloc]init];
+        currentCarrierInfo.phoneNumber = [[ConfigurationReader sharedConfgReaderObj] getLoginId];
+        if(carrierDetails) {
+            currentCarrierInfo.countryCode = carrierDetails.countryCode;
+            currentCarrierInfo.networkId = carrierDetails.networkId;
+            currentCarrierInfo.vSMSId = carrierDetails.vSMSId;
+            currentCarrierInfo.isReachMeIntlActive = NO;
+            currentCarrierInfo.isReachMeHomeActive = YES;
+            currentCarrierInfo.isReachMeVMActive = NO;
+        }else{
+            currentCarrierInfo.countryCode = [NSString stringWithFormat:@"%d", -1];
+            currentCarrierInfo.networkId = [NSString stringWithFormat:@"%d", -1];
+            currentCarrierInfo.vSMSId = [NSNumber numberWithInteger:-1];
+            currentCarrierInfo.isReachMeIntlActive = NO;
+            currentCarrierInfo.isReachMeHomeActive = NO;
+            currentCarrierInfo.isReachMeVMActive = NO;
+        }
+        
+        [self showProgressBar];
+        
+        [[Setting sharedSetting]updateCarrierSettingsInfo:currentCarrierInfo];
+    }else if ([[ConfigurationReader sharedConfgReaderObj] isRMFreshSignUp]) {
+        [[ConfigurationReader sharedConfgReaderObj] setOnBoardingStatus:YES];
+//        InviteCodeViewController *inviteCode = [[InviteCodeViewController alloc]initWithNibName:@"InviteCodeViewController" bundle:nil];
+//        [self.navigationController pushViewController:inviteCode animated:YES];
+        [self loadLatestDataFromServer];
+
+        CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:[[ConfigurationReader sharedConfgReaderObj] getLoginId]];
+        IVSettingsCountryCarrierInfo *carrierInfo = [[Setting sharedSetting]supportedCarrierInfoFromCustomSettingsForPhoneNumber: [[ConfigurationReader sharedConfgReaderObj] getLoginId]];
+        if (carrierInfo || carrierDetails || [[Setting sharedSetting]hasSupportedSimCarrierInfo:[[ConfigurationReader sharedConfgReaderObj] getLoginId]]) {
+            //ActivateReachMe
+            ActivateReachMeViewController *activateReachMe = [[UIStoryboard storyboardWithName:@"IVVoicemailMissedCallSettings_rm" bundle:[NSBundle mainBundle]]instantiateViewControllerWithIdentifier:@"ActivateReachMe"];
+            activateReachMe.phoneNumber = [[ConfigurationReader sharedConfgReaderObj] getLoginId];
+            activateReachMe.isPrimaryNumber = YES;
+            activateReachMe.voiceMailInfo = self.voiceMailInfo;
+            [self.navigationController pushViewController:activateReachMe animated:YES];
+            return;
+        }
+        
+        NSString *simMCCMNC =[Common simMCCMNCCode];
+        //simMCCMNC = @"40492";
+        NSString *simCountry = [Common simCountryCode];
+        //simCountry = @"091";
+        //We have carrier info - check in the carrier list we have corresponding supported carrier info in the carrier list.
+        NSString *countryCode = self.voiceMailInfo.carrierCountryCode;
+        NSMutableArray *mccMNCCarrierList = [[NSMutableArray alloc] init];
+        NSArray *carrierList = [self carrierListForCountry:countryCode];
+        if (carrierList && [carrierList count]) {
+            for (NSInteger i=0; i<[carrierList count]; i++) {
+                IVSettingsCountryCarrierInfo *carrierInfoInList = [carrierList objectAtIndex:i];
+                //check mccmnc list in the carrier info
+                if (carrierInfoInList.mccmncList && [carrierInfoInList.mccmncList count]) {
+                    //We have MCCMNC List, check whether mccmnc sim is in the list.
+                    BOOL isMCCMNCListInCarrierList = [carrierInfoInList.mccmncList containsObject:simMCCMNC];
+                    if (isMCCMNCListInCarrierList && [simCountry isEqualToString:carrierInfoInList.countryCode]) {
+                        [mccMNCCarrierList addObject:[carrierList objectAtIndex:i]];
+                    }
+                }
+                
+            }
+            
+        }
+        
+        if (mccMNCCarrierList.count == 1) {
+            ActivateReachMeViewController *activateReachMe = [[UIStoryboard storyboardWithName:@"IVVoicemailMissedCallSettings_rm" bundle:[NSBundle mainBundle]]instantiateViewControllerWithIdentifier:@"ActivateReachMe"];
+            activateReachMe.phoneNumber = [[ConfigurationReader sharedConfgReaderObj] getLoginId];
+            activateReachMe.isPrimaryNumber = YES;
+            activateReachMe.voiceMailInfo = self.voiceMailInfo;
+            [self.navigationController pushViewController:activateReachMe animated:YES];
+            return;
+        }
+        
+        if (!self.voiceMailInfo || !self.voiceMailInfo.countryVoicemailSupport) {
+            //ActivateReachMe
+            ActivateReachMeViewController *activateReachMe = [[UIStoryboard storyboardWithName:@"IVVoicemailMissedCallSettings_rm" bundle:[NSBundle mainBundle]]instantiateViewControllerWithIdentifier:@"ActivateReachMe"];
+            activateReachMe.phoneNumber = [[ConfigurationReader sharedConfgReaderObj] getLoginId];
+            activateReachMe.isPrimaryNumber = YES;
+            activateReachMe.voiceMailInfo = self.voiceMailInfo;
+            [self.navigationController pushViewController:activateReachMe animated:YES];
+            return;
+        }
+
+        NSArray *listOfCarriers = [[Setting sharedSetting]carrierListForCountry:self.voiceMailInfo.carrierCountryCode];
+        if (listOfCarriers && [listOfCarriers count]) {
+            //We have list of carriers.
+            self.currentCarrierList = listOfCarriers;
+            [self selectCarrier];
+        }
+        else {
+            self.currentCarrierList = nil;
+            //We do not have list of carriers - so start fetching list of carriers for the country.
+            [[Setting sharedSetting]fetchListOfCarriersForCountry:self.voiceMailInfo.carrierCountryCode];
+        }
+    }else{
+        
+        /*
+        [self loadLatestDataFromServer];
+        
+        CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:[[ConfigurationReader sharedConfgReaderObj] getLoginId]];
+        IVSettingsCountryCarrierInfo *carrierInfo = [[Setting sharedSetting]supportedCarrierInfoFromCustomSettingsForPhoneNumber: [[ConfigurationReader sharedConfgReaderObj] getLoginId]];
+        if (carrierInfo || carrierDetails || [[Setting sharedSetting]hasSupportedSimCarrierInfo:[[ConfigurationReader sharedConfgReaderObj] getLoginId]]) {
+            _isToolbarCreated = YES;
+            [appDelegate createTabBarControllerItems];
+            return;
+        }
+        
+        NSString *simMCCMNC =[Common simMCCMNCCode];
+        //simMCCMNC = @"40492";
+        NSString *simCountry = [Common simCountryCode];
+        //simCountry = @"091";
+        //We have carrier info - check in the carrier list we have corresponding supported carrier info in the carrier list.
+        NSString *countryCode = self.voiceMailInfo.carrierCountryCode;
+        NSMutableArray *mccMNCCarrierList = [[NSMutableArray alloc] init];
+        NSArray *carrierList = [self carrierListForCountry:countryCode];
+        if (carrierList && [carrierList count]) {
+            for (NSInteger i=0; i<[carrierList count]; i++) {
+                IVSettingsCountryCarrierInfo *carrierInfoInList = [carrierList objectAtIndex:i];
+                //check mccmnc list in the carrier info
+                if (carrierInfoInList.mccmncList && [carrierInfoInList.mccmncList count]) {
+                    //We have MCCMNC List, check whether mccmnc sim is in the list.
+                    BOOL isMCCMNCListInCarrierList = [carrierInfoInList.mccmncList containsObject:simMCCMNC];
+                    if (isMCCMNCListInCarrierList && [simCountry isEqualToString:carrierInfoInList.countryCode]) {
+                        [mccMNCCarrierList addObject:[carrierList objectAtIndex:i]];
+                    }
+                }
+                
+            }
+            
+        }
+        
+        if (mccMNCCarrierList.count == 1) {
+            ActivateReachMeViewController *activateReachMe = [[UIStoryboard storyboardWithName:@"IVVoicemailMissedCallSettings_rm" bundle:[NSBundle mainBundle]]instantiateViewControllerWithIdentifier:@"ActivateReachMe"];
+            activateReachMe.phoneNumber = [[ConfigurationReader sharedConfgReaderObj] getLoginId];
+            activateReachMe.isPrimaryNumber = YES;
+            activateReachMe.voiceMailInfo = self.voiceMailInfo;
+            [self.navigationController pushViewController:activateReachMe animated:YES];
+            return;
+        }
+        
+        if (!self.voiceMailInfo || !self.voiceMailInfo.countryVoicemailSupport) {
+            //ActivateReachMe
+            ActivateReachMeViewController *activateReachMe = [[UIStoryboard storyboardWithName:@"IVVoicemailMissedCallSettings_rm" bundle:[NSBundle mainBundle]]instantiateViewControllerWithIdentifier:@"ActivateReachMe"];
+            activateReachMe.phoneNumber = [[ConfigurationReader sharedConfgReaderObj] getLoginId];
+            activateReachMe.isPrimaryNumber = YES;
+            activateReachMe.voiceMailInfo = self.voiceMailInfo;
+            [self.navigationController pushViewController:activateReachMe animated:YES];
+            return;
+        }
+        
+        NSArray *listOfCarriers = [[Setting sharedSetting]carrierListForCountry:self.voiceMailInfo.carrierCountryCode];
+        if (listOfCarriers && [listOfCarriers count]) {
+            //We have list of carriers.
+            self.currentCarrierList = listOfCarriers;
+            [self selectCarrier];
+        }
+        else {
+            self.currentCarrierList = nil;
+            //We do not have list of carriers - so start fetching list of carriers for the country.
+            [[Setting sharedSetting]fetchListOfCarriersForCountry:self.voiceMailInfo.carrierCountryCode];
+        }
+        */
+        
+//        _isToolbarCreated = YES;
+//        [appDelegate createTabBarControllerItems];
+        
+        ReachMeStatusViewController *rmStatusVC = [[UIStoryboard storyboardWithName:@"IVSettings_rm" bundle:[NSBundle mainBundle]]instantiateViewControllerWithIdentifier:@"ReachMeStatus"];
+        [self.navigationController pushViewController:rmStatusVC animated:YES];
+        
+    }
+    
+#endif
+    
+#ifndef REACHME_APP
+    if(_isToolbarCreated) {
+        return;
+    }
+    _isToolbarCreated = YES;
+    [appDelegate createTabBarControllerItems];
+#endif
+    
+}
+
+#ifdef REACHME_APP
+
+-(void)updateSettingCompletedWith:(SettingModel*)modelData withUpdateStatus:(BOOL)withUpdateStatus
+{
+    [self hideProgressBar];
+    _isToolbarCreated = YES;
+    [appDelegate createTabBarControllerItems];
+}
+
+- (NSArray *)carrierListForCountry:(NSString *)withCountryCode {
+    
+    NSArray *carrierList;
+    
+    if (withCountryCode) {
+        //Get the current country carrier list.
+        if ([[Setting sharedSetting].data.listOfCarriers count]) {
+            
+            NSDictionary *carrierDetails;
+            BOOL statusOfExistanceOfCarrierList = NO;
+            for (carrierDetails in [Setting sharedSetting].data.listOfCarriers) {
+                
+                NSString *countryCode = [[carrierDetails allKeys]objectAtIndex:0];
+                if([countryCode isKindOfClass:[NSNumber class]]) {
+                    countryCode = [NSString stringWithFormat:@"%@",countryCode];
+                }
+                
+                @try {
+                    if ([countryCode isEqualToString:withCountryCode]) {
+                        statusOfExistanceOfCarrierList = YES;
+                        break;
+                    }
+                    else {
+                        statusOfExistanceOfCarrierList = NO;
+                    }
+                }
+                @catch (NSException *exception) {
+                    EnLogd(@"FIXME");
+                    if([withCountryCode isKindOfClass:[NSNumber class]]) {
+                        EnLogd(@"Why withCountryCode is of NSNumber type?");
+                    }
+                }
+            }
+            
+            if (statusOfExistanceOfCarrierList) {
+                carrierList = [carrierDetails objectForKey:withCountryCode];
+            }
+        }
+        else {
+            carrierList = nil;
+        }
+    }
+    return carrierList;
+}
+
+- (void)fetchListOfCarriersForCountry:(SettingModel *)modelData withFetchStatus:(BOOL)withFetchStatus {
+    
+    //hide loading Indicator
+    [self hideProgressBar];
+    
+    //NOV 24, 2016
+    if ([Common isNetworkAvailable] != NETWORK_AVAILABLE) {
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+    }
+    //
+    
+    if (withFetchStatus) {
+        NSArray *listOfCarriers = [[Setting sharedSetting]carrierListForCountry:self.voiceMailInfo.carrierCountryCode];
+        self.currentCarrierList = listOfCarriers;
+        [self selectCarrier];
+    }
+}
+
+- (void)loadLatestDataFromServer {
+    
+    KLog(@"loadLatestDataFromServer");
+    
+    self.currentSettingsModel = [Setting sharedSetting].data;
+    if (self.currentSettingsModel) {
+        if (self.currentSettingsModel.voiceMailInfo && [self.currentSettingsModel.voiceMailInfo count]) {
+            for (VoiceMailInfo *voiceMailInfo in self.currentSettingsModel.voiceMailInfo) {
+                if([voiceMailInfo.phoneNumber isEqualToString:[[ConfigurationReader sharedConfgReaderObj] getLoginId]]) {
+                    self.voiceMailInfo = voiceMailInfo;
+                }
+            }
+            
+        }
+    }
+}
+
+- (void)selectCarrier
+{
+    if ([self.voiceMailInfo.carrierCountryCode isEqualToString:@"091"]) {
+        IVCarrierCircleViewController *selectCircle = [[IVCarrierCircleViewController alloc]initWithNibName:@"IVCarrierCircleViewController" bundle:nil];
+        selectCircle.carrierList = self.currentCarrierList;
+        selectCircle.isEdit = NO;
+        [self.navigationController pushViewController:selectCircle animated:YES];
+        return;
+    }
+    
+    if([Common isNetworkAvailable] == NETWORK_AVAILABLE) {
+        if(self.currentCarrierList && self.currentCarrierList.count) {
+            if (!self.carrierSearchViewController) {
+                self.carrierSearchViewController = [[UIStoryboard storyboardWithName:@"IVVoicemailMissedCallSettings_rm" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"IVCarrierSearchView"];
+            }
+            
+            if (![self.navigationController.topViewController isKindOfClass:[IVCarrierSearchViewController class]]) {
+                self.carrierSearchViewController.carrierList = self.currentCarrierList;
+                self.carrierSearchViewController.voiceMailInfo = self.voiceMailInfo;
+                self.carrierSearchViewController.isEdit = NO;
+                self.carrierSearchViewController.selectedCountryCarrierInfo = self.selectedCountryCarrierInfo;
+                [self.navigationController pushViewController:self.carrierSearchViewController animated:YES];
+                return;
+            }
+        }
+        else
+            //Fetch the carrier list.
+            [self retrieveCarrierDetails];
+    }else{
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+    }
+}
+
+- (void)retrieveCarrierDetails {
+    
+    if([Common isNetworkAvailable] != NETWORK_AVAILABLE) {
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+        return;
+    }
+    if (self.voiceMailInfo) {
+        
+        NSMutableDictionary *requestData = [[NSMutableDictionary alloc]init];
+        if(self.voiceMailInfo.carrierCountryCode) {
+            //[self showLoadingIndicator];
+            [requestData setObject:self.voiceMailInfo.carrierCountryCode forKey:@"country_code"];
+            [requestData setValue:[NSNumber numberWithBool:1] forKey:@"fetch_voicemails_info"]; //NOV 16, 2016
+            FetchCarriersListAPI* fetchCarrierListRequest = [[FetchCarriersListAPI alloc]initWithRequest:requestData];
+            
+            [fetchCarrierListRequest callNetworkRequest:requestData withSuccess:^(FetchCarriersListAPI *req, NSMutableDictionary *responseObject) {
+                
+                //Hide the loading indicator
+                //[self hideLoadingIndicator];
+                self.currentCarrierList = responseObject[@"country_list"];
+                
+                //Reload Data - Current Network Name and reload the tableView.
+                //[self reloadData];
+                //[self redirectToAppropriateVoiceMailSettingsView];
+                
+            } failure:^(FetchCarriersListAPI *req, NSError *error) {
+                KLog(@"Failure in fetching carrier list");
+                //Hide the loading indicator
+                //[self hideLoadingIndicator];
+                
+                NSInteger errorCode = 0;
+                NSString *errorReason;
+                if (error.userInfo) {
+                    errorCode = [error.userInfo[@"error_code"]integerValue];
+                    errorReason = error.userInfo[@"error_reason"];
+                }
+                if (kErrorCodeForCarrierListNotFound == errorCode)
+                    [ScreenUtility showAlert:errorReason];
+            }];
+        }
+    }
+}
+#endif
+
+-(void)generateNewPwd:(NSMutableDictionary*)userDic
+{
+    NSMutableDictionary *generatePwdDic = [[NSMutableDictionary alloc] init];
+    [generatePwdDic setValue:[userDic valueForKey:API_PHONE_NUM] forKey:API_LOGIN_ID];
+    
+    GenerateNewPwdAPI* api = [[GenerateNewPwdAPI alloc]initWithRequest:generatePwdDic];
+    [self showProgressBar];
+    [api callNetworkRequest:generatePwdDic withSuccess:^(GenerateNewPwdAPI *req, NSMutableDictionary *responseObject) {
+        [self hideProgressBar];
+
+        [appDelegate.confgReader setUserNumberForValidation:[userDic valueForKey:API_PHONE_NUM]];//txtField.text]];
+        NSDate* now = [NSDate date];
+        NSNumber* currentTime = [NSNumber numberWithDouble:[now timeIntervalSince1970]];
+        [appDelegate.confgReader setValidationTimer:currentTime];
+        
+      ForgotPasswordViewController* targetController = [[ForgotPasswordViewController alloc]initWithNibName:@"ForgotPasswordViewController" bundle:nil];
+        targetController.otpViewDict=[NSMutableDictionary dictionaryWithDictionary:self.dict];
+        targetController.userDic=[NSMutableDictionary dictionaryWithDictionary:userDic];
+        targetController.verificationType = FORGOT_TYPE;
+        targetController.mobileNumber=self.mobileNumber;
+     
+       /*
+        OTPValidationViewController* targetController = [[OTPValidationViewController alloc]initWithNibName:@"OTPValidationViewController" bundle:nil];
+        targetController.otpViewDict=[NSMutableDictionary dictionaryWithDictionary:self.dict];
+        targetController.verificationType = FORGOT_TYPE;
+        targetController.mobileNumber=self.mobileNumber;
+       */
+        [self.navigationController pushViewController:targetController animated:YES];
+        
+        
+    } failure:^(GenerateNewPwdAPI *req, NSError *error) {
+        [self hideProgressBar];
+        NSInteger errorCode = error.code;
+        NSString *errorMsg = [Common convertErrorCodeToErrorString:(int)errorCode];
+        if([errorMsg isEqualToString:@""])
+        {
+            [ScreenUtility showAlert:NSLocalizedString(@"INVALID_PHONE_NUMBER", nil)];
+        }else if(errorCode == 86){
+            NSString *errorString = [NSLocalizedString(@"NOT_PRIMARY_NUMBER", nil) stringByAppendingString:[(error.userInfo) valueForKey:NSLocalizedString(@"PRIMARY_PHONE_MASK", nil)]];
+#ifdef REACHME_APP
+            errorString = [errorString stringByAppendingString:@". If you don't recognize this number contact support at reachme@instavoice.com"];
+#endif
+            
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:errorString preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                
+            }];
+            
+            [alertController addAction:ok];
+            
+            alertController.view.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+            [self.navigationController presentViewController:alertController animated:true completion:nil];
+        }else if (errorCode == 91)
+        {
+            [ScreenUtility showAlert:ERROR_CODE_91];
+        }
+        else
+        {
+            [ScreenUtility showAlert: errorMsg];
+        }
+    }];
+}
+- (IBAction)tapGestureRecognize:(id)sender {
+    [self.enterPassword resignFirstResponder];
+}
+
+
+#pragma mark - Settings Protocol Methods - 
+- (void)fetchSettingCompletedWith:(SettingModel *)modelData withFetchStatus:(BOOL)withFetchStatus {
+   //Success or failure - update the main tab bar items...!!!
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self createMainTabBarItems];
+    });
+}
+
+@end

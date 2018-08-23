@@ -1,0 +1,257 @@
+//
+//  LinkAdditionalMobileNumberViewController.m
+//  InstaVoice
+//
+//  Created by kirusa on 12/19/14.
+//  Copyright (c) 2014 Kirusa. All rights reserved.
+//
+
+#import "LinkAdditionalMobileNumberViewController.h"
+#import "CountryTableViewController.h"
+#import "MZCustomTransition.h"
+#import "MZFormSheetController.h"
+#import "NBPhoneNumberUtil.h"
+#import "NBAsYouTypeFormatter.h"
+#import "UserProfileModel.h"
+#import "Profile.h"
+
+@interface LinkAdditionalMobileNumberViewController ()
+
+@end
+
+@implementation LinkAdditionalMobileNumberViewController
+@synthesize numberWithoutFormat;
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    _selectCountryLabel.text = [[ConfigurationReader sharedConfgReaderObj]getCountryName];
+    
+    _flagView.image = [UIImage imageNamed:[self getFlagFromCountryName:[[ConfigurationReader sharedConfgReaderObj]getCountryName]]];
+    
+    _countryCodeEntered = [[Setting sharedSetting]getCountryCodeFromCountryIsd:[[ConfigurationReader sharedConfgReaderObj]getCountryName]];
+    _plusField.text = [NSString stringWithFormat:@"%@ - ",[@"+" stringByAppendingString:[[ConfigurationReader sharedConfgReaderObj]getCountryISD]]];
+    _isOkButtonClicked = false;
+    countryIsdCode = [[ConfigurationReader sharedConfgReaderObj]getCountryISD];
+    numberWithoutFormat = @"";
+    numberE164format = @"";
+    self.numberBorder.layer.borderWidth = 1.0;
+    self.numberBorder.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.selectCountryButton.layer.borderWidth = 1.0;
+    self.selectCountryButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+
+    self.hidesBottomBarWhenPushed = YES;//KM
+}
+
+-(NSString *) getFlagFromCountryName : (NSString *)countryName
+{
+    NSString *country_flag = countryName;
+    
+    for(int i=0;i<[country_flag length];i++)
+    {
+        if([country_flag characterAtIndex:i]==' ')
+        {
+            country_flag = [country_flag stringByReplacingOccurrencesOfString:@" "
+                                                                   withString:@"-"];
+        }
+    }
+    
+    return country_flag;
+}
+
+#pragma mark@ button action
+
+- (IBAction)selectCountryButtonAction:(id)sender {
+    [_userId resignFirstResponder];
+    CountryTableViewController *countryTableViewController = [[CountryTableViewController alloc]init];
+    countryTableViewController.view.frame = CGRectMake(0, 0, 270, CGRectGetHeight([UIScreen mainScreen].bounds)-140);
+    MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:countryTableViewController];
+    formSheet.shouldDismissOnBackgroundViewTap = YES;
+    formSheet.transitionStyle = MZFormSheetTransitionStyleSlideFromBottom;
+    formSheet.cornerRadius = 8.0;
+    formSheet.presentedFormSheetSize = CGSizeMake(270, CGRectGetHeight([UIScreen mainScreen].bounds)-140);
+    formSheet.willPresentCompletionHandler = ^(UIViewController *presentedFSViewController){
+        presentedFSViewController.view.autoresizingMask = presentedFSViewController.view.autoresizingMask | UIViewAutoresizingFlexibleWidth;
+    };
+    
+    formSheet.willDismissCompletionHandler = ^(UIViewController *presentedFSViewController){
+        CountryTableViewController *countryTableViewController = (CountryTableViewController *)presentedFSViewController;
+        countryIsdCode = [countryTableViewController.countryIsdCodeSelected stringByReplacingOccurrencesOfString:@"+" withString:@""];
+        _plusField.text = [NSString stringWithFormat:@"%@ - ",countryTableViewController.countryIsdCodeSelected];
+        _countryCodeEntered = countryTableViewController.countryCode;
+        _selectCountryLabel.text = countryTableViewController.countryNameSelected;
+        [_flagView setImage:[UIImage imageNamed:countryTableViewController.countryFlag]];
+        _userId.text = @"";
+        numberWithoutFormat = @"";
+    };
+    
+    [formSheet presentAnimated:YES completionHandler:^(UIViewController *presentedFSViewController) {
+    }];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(alertView == alertMobileConfirmation){
+        if(buttonIndex == 0){
+            [_userId becomeFirstResponder];
+            
+        }else if(buttonIndex == 1){
+            _isOkButtonClicked = true;
+            _mobileNumberEntered = numberE164format;
+            [self mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+            }];
+        }
+    }
+}
+
+- (IBAction)okButtonAction:(id)sender{
+    UserProfileModel *model = [[Profile sharedUserProfile]profileData];
+    NSMutableArray *additionalNonVerifiedNumbers = [model.additionalNonVerifiedNumbers mutableCopy];
+    numberE164format = [Common getE164FormatNumber:numberWithoutFormat withCountryIsdCode:countryIsdCode];
+       NSString *mobileNumberEnteredFormatted=[numberE164format stringByReplacingOccurrencesOfString:@"+" withString:@""];
+    NSArray *extracted = [additionalNonVerifiedNumbers valueForKey:@"contactId"];
+    if ([extracted containsObject:mobileNumberEnteredFormatted])
+    {
+     [ScreenUtility showAlert:NSLocalizedString(@"NUMBER_ALREADY_ADDED", nil)];
+        return;
+    }
+    
+    if(numberWithoutFormat.length < 5)
+    {
+        [ScreenUtility showAlert:NSLocalizedString(@"ENTER_CORRECT_NUMBER", nil)];
+        [_userId becomeFirstResponder];
+    }
+    else
+    {
+        NSString *msg;
+        //CMP
+        NSString* formattedString = [Common getFormattedNumber:numberWithoutFormat withCountryIsdCode:countryIsdCode withGivenNumberisCannonical:NO];
+        
+        if(!formattedString || [formattedString length] <= 0) {
+            [ScreenUtility showAlert:NSLocalizedString(@"ENTER_CORRECT_NUMBER", nil)];
+            [_userId becomeFirstResponder];
+            return;
+        }
+        //
+        
+        NSString *title = [@"Confirm mobile number\n" stringByAppendingString:formattedString];
+        
+        numberE164format = [Common getE164FormatNumber:numberWithoutFormat withCountryIsdCode:countryIsdCode];
+        
+        if ([Common isValidNumber:numberWithoutFormat withContryISDCode:countryIsdCode]) {
+            msg = @"A validation code will be sent to this number. \nDo you confirm that this is the correct mobile number or would you like to change it?";
+            alertMobileConfirmation = [[UIAlertView alloc]initWithTitle:title message:msg delegate:self cancelButtonTitle:@"Change" otherButtonTitles:@"Confirm", nil];
+            [alertMobileConfirmation show];
+        }
+        else if ([Common isPossibleNumber:numberWithoutFormat withContryISDCode:countryIsdCode showAlert:YES])
+        {
+            msg = @"A validation code will be sent to this number. \nThis number appears to be invalid. Do you confirm or would you like to change it?";
+            alertMobileConfirmation = [[UIAlertView alloc]initWithTitle:title message:msg delegate:self cancelButtonTitle:@"Change" otherButtonTitles:@"Confirm", nil];
+            [alertMobileConfirmation show];
+        }
+        else
+        {
+            [ScreenUtility showAlert:NSLocalizedString(@"ENTER_CORRECT_NUMBER", nil)];
+            [_userId becomeFirstResponder];
+        }
+    }
+}
+
+- (IBAction)cancelButtonAction:(id)sender{
+    //[[NSUserDefaults standardUserDefaults]removeObjectForKey:@"numberEntered"];
+    [self mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+    }];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if(_userId == textField)
+    {
+        if([string isEqualToString:@""])
+        {
+            if([numberWithoutFormat length] != 0){
+                numberWithoutFormat = [numberWithoutFormat substringToIndex:[numberWithoutFormat length]-1];
+                textField.text = [Common getFormattedNumberForTextFieldWithNumber:numberWithoutFormat andCountryIsdCode:countryIsdCode];
+                return NO;
+            }
+            return YES;
+        }else{
+            
+            if ([string rangeOfCharacterFromSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]].location != NSNotFound)
+            {
+                [ScreenUtility showAlert:NSLocalizedString(@"ENTER_CORRECT_NUMBER", nil)];
+                return NO;
+            }
+            else {
+                numberWithoutFormat = [numberWithoutFormat stringByAppendingString:string];
+
+            }
+            
+        }
+        textField.text = [Common getFormattedNumberForTextFieldWithNumber:numberWithoutFormat andCountryIsdCode:countryIsdCode];
+        return NO;
+    }
+    return YES;
+}
+
+
+// may be called if forced even if shouldEndEditing returns NO (e.g. view removed from window) or endEditing:YES called
+
+
+
+//-(BOOL) validatePhone : (NSString *) phone
+//{
+//    NSInteger minPhoneLen = [[ConfigurationReader sharedConfgReaderObj]getMinPhoneLen];
+//    NSInteger maxPhoneLen = [[ConfigurationReader sharedConfgReaderObj]getMaxPhoneLen];
+//    
+//    BOOL valid = YES;
+//    
+//    if(phone == nil && [phone isEqualToString:@""])
+//    {
+//        valid = false;
+//    }
+//    else
+//    {
+//        NSCharacterSet *alphaNums = [NSCharacterSet decimalDigitCharacterSet];
+//        NSCharacterSet *inStringSet = [NSCharacterSet characterSetWithCharactersInString:phone];
+//        
+//        valid = ((([alphaNums isSupersetOfSet:inStringSet]) && (([phone length] >=minPhoneLen) && ([phone length] <= maxPhoneLen))) && (!([phone characterAtIndex:0] == '0')));  //Edited by Jatin
+//    }
+//    
+//    return valid;
+//}
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+- (UIInterfaceOrientationMask) supportedInterfaceOrientations {
+    return (UIInterfaceOrientationMaskPortrait);
+}
+
+-(UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
+
+//- (void) handleEnterForeground: (NSNotification*) sender{
+//    NSString *numberEntered = [[NSUserDefaults standardUserDefaults]valueForKey:@"numberEntered"];
+//    if(numberEntered){
+//        _userId.text = numberEntered;
+//    }
+//}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
+
+@end

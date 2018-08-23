@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VoiceMailViewController">
+            <connections>
+                <outlet property="activateButton" destination="aMa-3X-hml" id="kJr-xU-p3O"/>
+                <outlet property="buyRmNumberButton" destination="ALs-75-NHm" id="b3q-N9-fgs"/>
+                <outlet property="descriptionTextView" destination="T25-cD-fR2" id="ysh-pF-d68"/>
+                <outlet property="detailsLabel" destination="QDt-pV-DQs" id="hON-Kl-sgc"/>
+                <outlet property="enableVoiceMailSettingsView" destination="n99-QR-zQY" id="dt1-sH-fUz"/>
+                <outlet property="headerLabel" destination="5Sy-LR-lEY" id="Rhn-l9-Iz5"/>
+                <outlet property="msgLabel" destination="StM-vA-J2k" id="aaU-AK-4Y0"/>
+                <outlet property="tableView" destination="BDD-lE-fGF" id="cw1-Fq-Ihu"/>
+                <outlet property="unsupportedEmptyStateView" destination="Ece-OX-H0u" id="Bgq-wj-bZ8"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <searchBar contentMode="redraw" placeholder="Search contacts" translatesAutoresizingMaskIntoConstraints="NO" id="XzD-Kq-0Cp">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="375" id="MMD-cW-REM"/>
+                        <constraint firstAttribute="height" constant="44" id="c02-qw-S5J"/>
+                    </constraints>
+                    <color key="barTintColor" red="0.81234320459999998" green="0.81234320459999998" blue="0.81234320459999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="2i2-Ue-xk0"/>
+                    </connections>
+                </searchBar>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="BDD-lE-fGF">
+                    <rect key="frame" x="0.0" y="44" width="375" height="574"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="PRS-iR-Y2g"/>
+                        <outlet property="delegate" destination="-1" id="Alo-cU-aFU"/>
+                    </connections>
+                </tableView>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StM-vA-J2k">
+                    <rect key="frame" x="0.0" y="44" width="375" height="580"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n99-QR-zQY">
+                    <rect key="frame" x="0.0" y="243.5" width="375" height="181"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sorry, InstaVoice ReachMe is not available with selected carrier at the moment" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Sy-LR-lEY">
+                            <rect key="frame" x="8" y="8" width="359" height="72"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable your Voicemail &amp; Missed Call Service Enable your Voicemail &amp; Missed Call Service" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QDt-pV-DQs">
+                            <rect key="frame" x="8" y="89" width="359" height="41"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.66666666669999997" green="0.66666666669999997" blue="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aMa-3X-hml">
+                            <rect key="frame" x="99" y="144.5" width="178" height="30"/>
+                            <color key="backgroundColor" red="0.83137254900000002" green="0.25098039220000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <state key="normal" title="ACTIVATE">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="clickToEnableVoiceMailSettingsButtonTapped:" destination="-1" eventType="touchUpInside" id="Qai-rT-RuQ"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="aMa-3X-hml" secondAttribute="bottom" constant="6.5" id="5UW-1Q-sFH"/>
+                        <constraint firstItem="QDt-pV-DQs" firstAttribute="leading" secondItem="n99-QR-zQY" secondAttribute="leading" constant="8" id="Bmd-RJ-4VI"/>
+                        <constraint firstAttribute="trailing" secondItem="QDt-pV-DQs" secondAttribute="trailing" constant="8" id="JJb-FR-jlP"/>
+                        <constraint firstItem="5Sy-LR-lEY" firstAttribute="leading" secondItem="n99-QR-zQY" secondAttribute="leading" constant="8" id="RYo-Fp-tby"/>
+                        <constraint firstItem="5Sy-LR-lEY" firstAttribute="top" secondItem="n99-QR-zQY" secondAttribute="top" constant="8" id="TfF-MZ-TRy"/>
+                        <constraint firstAttribute="trailing" secondItem="5Sy-LR-lEY" secondAttribute="trailing" constant="8" id="Xoo-kD-kWK"/>
+                        <constraint firstAttribute="trailing" secondItem="aMa-3X-hml" secondAttribute="trailing" constant="98" id="be6-hA-3pw"/>
+                        <constraint firstItem="aMa-3X-hml" firstAttribute="top" secondItem="QDt-pV-DQs" secondAttribute="bottom" constant="14.5" id="fiS-8m-6AH"/>
+                        <constraint firstItem="QDt-pV-DQs" firstAttribute="top" secondItem="5Sy-LR-lEY" secondAttribute="bottom" constant="9" id="oFJ-Dw-gRn"/>
+                        <constraint firstItem="aMa-3X-hml" firstAttribute="leading" secondItem="n99-QR-zQY" secondAttribute="leading" constant="99" id="pUZ-78-Tbu"/>
+                    </constraints>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ece-OX-H0u">
+                    <rect key="frame" x="0.0" y="89" width="375" height="460"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unsupported_empty" translatesAutoresizingMaskIntoConstraints="NO" id="PpF-F8-ICg">
+                            <rect key="frame" x="146" y="8" width="84" height="84"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="84" id="BWh-eJ-MgH"/>
+                                <constraint firstAttribute="width" constant="84" id="awt-of-mbA"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sorry, ReachMe is not available with selected carrier at the moment" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OIb-pD-DBO">
+                            <rect key="frame" x="8" y="119" width="359" height="33.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                            <color key="textColor" white="0.0" alpha="0.54000000000000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="T25-cD-fR2">
+                            <rect key="frame" x="8" y="161" width="359" height="83"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <string key="text">However, you can buy a ReachMe Number to receive calls over WiFi or mobile data. You can also make calls from your mobile number over 
+WiFi or mobile data. View calling rates</string>
+                            <color key="textColor" white="0.0" alpha="0.54000000000000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            <connections>
+                                <outlet property="delegate" destination="i5M-Pr-FkT" id="AKU-Lt-et7"/>
+                            </connections>
+                        </textView>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ALs-75-NHm">
+                            <rect key="frame" x="46" y="332" width="283" height="44"/>
+                            <color key="backgroundColor" red="0.83137254900000002" green="0.25098039220000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="WEm-hf-eGN"/>
+                            </constraints>
+                            <state key="normal" title="Buy ReachMe Number">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="buyRmNumber:" destination="-1" eventType="touchUpInside" id="ph3-tM-44l"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="OIb-pD-DBO" secondAttribute="trailing" constant="8" id="2qh-OG-0r6"/>
+                        <constraint firstItem="PpF-F8-ICg" firstAttribute="top" secondItem="Ece-OX-H0u" secondAttribute="top" constant="8" id="51k-Yt-MZP"/>
+                        <constraint firstItem="T25-cD-fR2" firstAttribute="leading" secondItem="Ece-OX-H0u" secondAttribute="leading" constant="8" id="6KU-mL-6Ln"/>
+                        <constraint firstItem="OIb-pD-DBO" firstAttribute="top" secondItem="Ece-OX-H0u" secondAttribute="top" constant="119" id="B8h-mb-KhA"/>
+                        <constraint firstItem="ALs-75-NHm" firstAttribute="leading" secondItem="Ece-OX-H0u" secondAttribute="leading" constant="46" id="CoG-6Z-PsF"/>
+                        <constraint firstItem="T25-cD-fR2" firstAttribute="top" secondItem="OIb-pD-DBO" secondAttribute="bottom" constant="8.5" id="FZp-bB-bIa"/>
+                        <constraint firstAttribute="trailing" secondItem="T25-cD-fR2" secondAttribute="trailing" constant="8" id="Gji-hU-mg2"/>
+                        <constraint firstAttribute="trailing" secondItem="ALs-75-NHm" secondAttribute="trailing" constant="46" id="HW2-2n-Omx"/>
+                        <constraint firstItem="ALs-75-NHm" firstAttribute="top" secondItem="T25-cD-fR2" secondAttribute="bottom" constant="88" id="U5E-SZ-2e6"/>
+                        <constraint firstAttribute="bottom" secondItem="ALs-75-NHm" secondAttribute="bottom" constant="84" id="cLy-W7-9af"/>
+                        <constraint firstItem="PpF-F8-ICg" firstAttribute="centerX" secondItem="Ece-OX-H0u" secondAttribute="centerX" id="pC5-OO-DLQ"/>
+                        <constraint firstItem="OIb-pD-DBO" firstAttribute="leading" secondItem="Ece-OX-H0u" secondAttribute="leading" constant="8" id="svR-MD-VB5"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="BDD-lE-fGF" secondAttribute="trailing" id="18y-PP-ua0"/>
+                <constraint firstItem="StM-vA-J2k" firstAttribute="top" secondItem="XzD-Kq-0Cp" secondAttribute="bottom" id="1bL-nJ-VD3"/>
+                <constraint firstItem="XzD-Kq-0Cp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="2ro-2j-Vts"/>
+                <constraint firstAttribute="bottom" secondItem="StM-vA-J2k" secondAttribute="bottom" constant="43" id="Grx-83-lJS"/>
+                <constraint firstItem="n99-QR-zQY" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="IDS-eu-njG"/>
+                <constraint firstItem="BDD-lE-fGF" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="LV8-ek-fsl"/>
+                <constraint firstItem="Ece-OX-H0u" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="NUu-kL-SKN"/>
+                <constraint firstAttribute="trailing" secondItem="Ece-OX-H0u" secondAttribute="trailing" id="P0S-YO-NaK"/>
+                <constraint firstAttribute="bottom" secondItem="BDD-lE-fGF" secondAttribute="bottom" constant="49" id="TGf-X3-CgI"/>
+                <constraint firstItem="BDD-lE-fGF" firstAttribute="top" secondItem="XzD-Kq-0Cp" secondAttribute="bottom" id="Vre-Ui-42G"/>
+                <constraint firstAttribute="trailing" secondItem="n99-QR-zQY" secondAttribute="trailing" id="aiU-LH-eOu"/>
+                <constraint firstItem="n99-QR-zQY" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="eXd-Y5-Dkp"/>
+                <constraint firstItem="StM-vA-J2k" firstAttribute="trailing" secondItem="BDD-lE-fGF" secondAttribute="trailing" id="gW5-QZ-LpN"/>
+                <constraint firstAttribute="trailing" secondItem="XzD-Kq-0Cp" secondAttribute="trailing" id="hp0-my-A62"/>
+                <constraint firstItem="Ece-OX-H0u" firstAttribute="top" secondItem="XzD-Kq-0Cp" secondAttribute="bottom" constant="45" id="jTc-Sp-0gK"/>
+                <constraint firstItem="StM-vA-J2k" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="kir-7q-9S7"/>
+                <constraint firstItem="XzD-Kq-0Cp" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="qzh-y5-4fN"/>
+            </constraints>
+            <point key="canvasLocation" x="33.5" y="54.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="unsupported_empty" width="84" height="84"/>
+    </resources>
+</document>

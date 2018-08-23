@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="IVSelectCarrierViewController">
+            <connections>
+                <outlet property="carrierTableView" destination="xhr-hM-Ef4" id="xxY-kW-t8K"/>
+                <outlet property="tableTopConstraint" destination="cWp-9G-19K" id="fsF-ZM-oZ5"/>
+                <outlet property="view" destination="08b-HX-SZf" id="E8K-Iy-BiO"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="08b-HX-SZf">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="xhr-hM-Ef4">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="615"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="Tq4-ja-1rP"/>
+                        <outlet property="delegate" destination="-1" id="NtL-Pq-Ina"/>
+                    </connections>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TPR-vy-bm8">
+                    <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="IGV-vE-Cbn"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                    <state key="normal" title="Carrier Not in List">
+                        <color key="titleColor" red="0.85490196080000003" green="0.26274509800000001" blue="0.21176470589999999" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="carrierNotListed:" destination="-1" eventType="touchUpInside" id="pEa-mG-iNs"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="xhr-hM-Ef4" firstAttribute="leading" secondItem="08b-HX-SZf" secondAttribute="leading" id="DFB-rF-a5Q"/>
+                <constraint firstItem="HYt-RZ-QG0" firstAttribute="bottom" secondItem="TPR-vy-bm8" secondAttribute="bottom" id="R6n-nw-gwJ"/>
+                <constraint firstAttribute="trailing" secondItem="TPR-vy-bm8" secondAttribute="trailing" id="Ryh-oV-F3K"/>
+                <constraint firstItem="xhr-hM-Ef4" firstAttribute="trailing" secondItem="08b-HX-SZf" secondAttribute="trailing" id="UhO-hR-P2Q"/>
+                <constraint firstItem="xhr-hM-Ef4" firstAttribute="top" secondItem="08b-HX-SZf" secondAttribute="top" id="cWp-9G-19K"/>
+                <constraint firstItem="TPR-vy-bm8" firstAttribute="top" secondItem="xhr-hM-Ef4" secondAttribute="bottom" constant="8" id="gyN-hj-JEK"/>
+                <constraint firstItem="TPR-vy-bm8" firstAttribute="leading" secondItem="08b-HX-SZf" secondAttribute="leading" id="yfu-sW-2L8"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="HYt-RZ-QG0"/>
+            <point key="canvasLocation" x="33.5" y="54.5"/>
+        </view>
+    </objects>
+</document>

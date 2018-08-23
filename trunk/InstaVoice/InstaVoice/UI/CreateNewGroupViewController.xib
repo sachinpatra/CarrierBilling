@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CreateNewGroupViewController">
+            <connections>
+                <outlet property="groupChatImage" destination="s4q-Ce-Lct" id="WBz-b0-kRL"/>
+                <outlet property="groupMemberTableView" destination="eKb-8L-8LB" id="rFp-O7-mup"/>
+                <outlet property="groupNameTextField" destination="ljU-g8-ehT" id="8eS-04-kCW"/>
+                <outlet property="instructionsToolbar" destination="njS-bD-ytz" id="qKl-qt-KDw"/>
+                <outlet property="instructionsToolbarToTopOfScreenConstraint" destination="EDu-Qh-S2R" id="kvO-WJ-u1F"/>
+                <outlet property="peopleInGroupBackgroundView" destination="xaB-Xu-FT0" id="XHZ-WT-184"/>
+                <outlet property="peopleInGroupLabel" destination="n96-Kt-Itd" id="vYQ-UQ-Qhg"/>
+                <outlet property="view" destination="1" id="3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="eKb-8L-8LB">
+                    <rect key="frame" x="0.0" y="148" width="320" height="420"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="prominent" placeholder="Search" id="V3o-Tr-2z3">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <textInputTraits key="textInputTraits"/>
+                        <connections>
+                            <outlet property="delegate" destination="-1" id="xKw-8T-qgO"/>
+                        </connections>
+                    </searchBar>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="i1x-1e-wnj"/>
+                        <outlet property="delegate" destination="-1" id="96W-CL-u0Y"/>
+                    </connections>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xaB-Xu-FT0">
+                    <rect key="frame" x="0.0" y="88" width="320" height="60"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select People Below to Add to Group" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n96-Kt-Itd">
+                            <rect key="frame" x="8" y="0.0" width="304" height="60"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" red="0.3333333432674408" green="0.3333333432674408" blue="0.3333333432674408" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="n96-Kt-Itd" secondAttribute="trailing" constant="8" id="2TE-hh-3zV"/>
+                        <constraint firstAttribute="bottom" secondItem="n96-Kt-Itd" secondAttribute="bottom" id="YVA-aS-bDp"/>
+                        <constraint firstAttribute="height" constant="60" id="i90-QJ-6CE"/>
+                        <constraint firstItem="n96-Kt-Itd" firstAttribute="top" secondItem="xaB-Xu-FT0" secondAttribute="top" id="tZE-5f-YSP"/>
+                        <constraint firstItem="n96-Kt-Itd" firstAttribute="leading" secondItem="xaB-Xu-FT0" secondAttribute="leading" constant="8" id="wi2-xj-u2I"/>
+                    </constraints>
+                </view>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Zb-OP-lvG">
+                    <rect key="frame" x="0.0" y="44" width="320" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="3AO-uN-cDl"/>
+                    </constraints>
+                    <items>
+                        <barButtonItem style="plain" id="wQK-Wa-cgc">
+                            <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Group Name" minimumFontSize="17" id="ljU-g8-ehT">
+                                <rect key="frame" x="16" y="6" width="222" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
+                                <connections>
+                                    <outlet property="delegate" destination="-1" id="Ccg-ID-wZr"/>
+                                </connections>
+                            </textField>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="CiQ-PI-Sdb"/>
+                        <barButtonItem style="plain" id="TcU-aT-3jo">
+                            <view key="customView" contentMode="scaleToFill" id="S2t-OB-bs6">
+                                <rect key="frame" x="261" y="0.5" width="43" height="43"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="camera_icn" translatesAutoresizingMaskIntoConstraints="NO" id="s4q-Ce-Lct">
+                                        <rect key="frame" x="11" y="5" width="25" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="50"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MgV-kx-sD9">
+                                        <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal">
+                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="selectGroupPicture:" destination="-1" eventType="touchUpInside" id="402-Ev-YWE"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                        </barButtonItem>
+                    </items>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="Gzy-xt-sV6"/>
+                    </connections>
+                </toolbar>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="njS-bD-ytz">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="78d-VM-SVQ"/>
+                    </constraints>
+                    <items/>
+                </toolbar>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="5Zb-OP-lvG" secondAttribute="trailing" id="02Z-qF-IpV"/>
+                <constraint firstItem="eKb-8L-8LB" firstAttribute="top" secondItem="xaB-Xu-FT0" secondAttribute="bottom" id="0JX-iZ-YHJ"/>
+                <constraint firstItem="njS-bD-ytz" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="0nM-63-HrQ"/>
+                <constraint firstAttribute="trailing" secondItem="xaB-Xu-FT0" secondAttribute="trailing" id="1TH-ZB-5yI"/>
+                <constraint firstItem="5Zb-OP-lvG" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="5R6-eE-DPI"/>
+                <constraint firstItem="5Zb-OP-lvG" firstAttribute="top" secondItem="1" secondAttribute="top" constant="44" id="EDu-Qh-S2R"/>
+                <constraint firstAttribute="bottom" secondItem="eKb-8L-8LB" secondAttribute="bottom" id="JKF-NQ-Z5g"/>
+                <constraint firstItem="njS-bD-ytz" firstAttribute="top" secondItem="1" secondAttribute="top" id="Jid-Hc-SQg"/>
+                <constraint firstItem="xaB-Xu-FT0" firstAttribute="top" secondItem="5Zb-OP-lvG" secondAttribute="bottom" id="TGD-n5-rU6"/>
+                <constraint firstItem="eKb-8L-8LB" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="U3T-3T-QV4"/>
+                <constraint firstAttribute="trailing" secondItem="eKb-8L-8LB" secondAttribute="trailing" id="emj-eI-MUx"/>
+                <constraint firstAttribute="trailing" secondItem="njS-bD-ytz" secondAttribute="trailing" id="ggK-Kt-lUI"/>
+                <constraint firstItem="xaB-Xu-FT0" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="jGf-Ns-Ciu"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="camera_icn" width="25" height="25"/>
+    </resources>
+</document>

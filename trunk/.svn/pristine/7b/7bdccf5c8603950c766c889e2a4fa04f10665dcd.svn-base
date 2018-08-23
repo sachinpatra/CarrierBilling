@@ -1,0 +1,490 @@
+//
+//  EditNumberDetailsViewController.m
+//  InstaVoice
+//
+//  Created by Bhaskar Munireddy on 19/01/18.
+//  Copyright © 2018 Kirusa. All rights reserved.
+//
+
+#import "EditNumberDetailsViewController.h"
+#import "UserProfileModel.h"
+#import "Profile.h"
+#import "IVFileLocator.h"
+#import "IVCarrierSearchViewController.h"
+#import "FetchCarriersListAPI.h"
+#import "IVCarrierCircleViewController.h"
+#import "IVSelectCarrierViewController.h"
+
+#define kErrorCodeForCarrierListNotFound 20
+
+@interface EditNumberDetailsViewController ()<UITextFieldDelegate, IVCarrierSearchDelegate,SettingProtocol>{
+    BOOL isCarrierChanged,isSaveProcessed;
+}
+@property (weak, nonatomic) IBOutlet UITextField *titleNameTextField;
+@property (weak, nonatomic) IBOutlet UIImageView *countryFlag;
+@property (weak, nonatomic) IBOutlet UILabel *phoneNumberLabel;
+@property (weak, nonatomic) IBOutlet UILabel *carrierNameLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *rightArrow;
+@property (nonatomic, strong) NSArray *currentCarrierList;
+@property (nonatomic, strong) SettingModel *currentSettingsModel;
+
+@property (nonatomic, strong) IVCarrierSearchViewController *carrierSearchViewController;
+@property (nonatomic, strong) IVSettingsCountryCarrierInfo *selectedCountryCarrierInfo;
+
+@end
+
+@implementation EditNumberDetailsViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = NSLocalizedString(@"Edit Details", nil);
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction)];
+    self.navigationItem.rightBarButtonItem = saveButton;
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
+    self.navigationItem.leftBarButtonItem = cancelButton;
+    self.navigationController.navigationItem.hidesBackButton = YES;
+    
+    self.titleNameTextField.delegate = self;
+    if(self.titleName.length)
+        self.titleNameTextField.text = self.titleName;
+    else
+        self.titleNameTextField.text = @"";
+    
+    self.phoneNumberLabel.text = [Common getFormattedNumber:self.phoneNumber withCountryIsdCode:nil withGivenNumberisCannonical:YES];
+    
+    
+    if (self.isReachMeNumber) {
+        self.carrierNameLabel.text = @"ReachMe Number";
+    }else{
+        self.carrierNameLabel.text = self.carrierName;
+    }
+    UITapGestureRecognizer *changeSimCarrier = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeCarrier:)];
+    [self.carrierNameLabel addGestureRecognizer:changeSimCarrier];
+    
+    self.countryFlag.image = [UIImage imageNamed:[self getFlagFromCountryName:[self getCountryCode:self.phoneNumber]]];
+    
+    if (self.isReachMeNumber) {
+        self.rightArrow.hidden = YES;
+    }else{
+        self.rightArrow.hidden = NO;
+    }
+    
+    // Do any additional setup after loading the view from its nib.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(selectedCarrier:)
+                                                 name:@"Carrier_Selected"
+                                               object:self.selectedCountryCarrierInfo];
+    
+    [Setting sharedSetting].delegate = self;
+    [self loadLatestDataFromServer];
+    NSArray *listOfCarriers = [[Setting sharedSetting]carrierListForCountry:self.voiceMailInfo.carrierCountryCode];
+    if (listOfCarriers && [listOfCarriers count]) {
+        //We have list of carriers.
+        self.currentCarrierList = listOfCarriers;
+    }
+    else {
+        self.currentCarrierList = nil;
+        //We do not have list of carriers - so start fetching list of carriers for the country.
+        [[Setting sharedSetting]fetchListOfCarriersForCountry:self.voiceMailInfo.carrierCountryCode];
+    }
+}
+
+- (NSString *)getCountryCode:(NSString *)phoneNumber
+{
+    NSArray *countryList;
+    NSString* archiveFilePathCountry = [[IVFileLocator getDocumentDirectoryPath]
+                                        stringByAppendingPathComponent:@"Country.dat"];
+    @try {
+        countryList = [NSKeyedUnarchiver unarchiveObjectWithFile:archiveFilePathCountry];
+    }
+    @catch (NSException *exception) {
+        KLog(@"Unable to create object from archive file");
+    }
+    
+    NSString *countryCode = @"";
+    
+    UserProfileModel *model = [[Profile sharedUserProfile]profileData];
+    NSMutableArray *phoneNumberDetails = model.additionalVerifiedNumbers;
+    for (int i = 0; i < phoneNumberDetails.count; i++) {
+        if ([[[phoneNumberDetails objectAtIndex:i] valueForKey:@"contact_id"] isEqualToString:phoneNumber]) {
+            countryCode = [[phoneNumberDetails objectAtIndex:i] valueForKey:@"country_code"];
+        }
+    }
+    
+    NSMutableArray *countries = [NSMutableArray arrayWithArray:countryList];
+    NSString* countryISO = @"";
+    if(countries != nil && [countries count] >0)
+    {
+        for(NSMutableDictionary* dic in countries)
+        {
+            NSString *code = [dic valueForKey:COUNTRY_CODE];
+            if([code isEqualToString:countryCode])
+            {
+                countryISO = [dic valueForKey:COUNTRY_NAME];
+            }
+        }
+    }
+    
+    return countryISO;
+}
+
+-(NSString *) getFlagFromCountryName : (NSString *)countryName
+{
+    NSString *country_flag = countryName;
+    
+    for(int i=0;i<[country_flag length];i++)
+    {
+        if([country_flag characterAtIndex:i]==' ')
+        {
+            country_flag = [country_flag stringByReplacingOccurrencesOfString:@" "
+                                                                   withString:@"-"];
+        }
+    }
+    
+    return country_flag;
+}
+
+- (void)saveAction
+{
+    if([Common isNetworkAvailable] != NETWORK_AVAILABLE) {
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+        return;
+    }
+    
+    [self.titleNameTextField resignFirstResponder];
+    [self showProgressBar];
+    isSaveProcessed = YES;
+    if (isCarrierChanged) {
+        //Carrier Info Update
+        CarrierInfo *currentCarrierInfo = [[CarrierInfo alloc]init];
+        currentCarrierInfo.phoneNumber = self.phoneNumber;
+        if(self.selectedCountryCarrierInfo) {
+            currentCarrierInfo.countryCode = self.selectedCountryCarrierInfo.countryCode;
+            currentCarrierInfo.networkId = self.selectedCountryCarrierInfo.networkId;
+            currentCarrierInfo.vSMSId = self.selectedCountryCarrierInfo.vsmsNodeId;
+            currentCarrierInfo.isReachMeIntlActive = NO;
+            currentCarrierInfo.isReachMeHomeActive = NO;
+            currentCarrierInfo.isReachMeVMActive = NO;
+        }else{
+            currentCarrierInfo.countryCode = [NSString stringWithFormat:@"%d", -1];
+            currentCarrierInfo.networkId = [NSString stringWithFormat:@"%d", -1];
+            currentCarrierInfo.vSMSId = [NSNumber numberWithInteger:-1];
+            currentCarrierInfo.isReachMeIntlActive = NO;
+            currentCarrierInfo.isReachMeHomeActive = NO;
+            currentCarrierInfo.isReachMeVMActive = NO;
+        }
+        //Number Info Update
+        NumberInfo *updateNumberInfo = [[NumberInfo alloc]init];
+        updateNumberInfo.phoneNumber = self.phoneNumber;
+        updateNumberInfo.titleName = self.titleName;
+        updateNumberInfo.imgName = @"iphone";
+        [[Setting sharedSetting]updateCarrierSettingsInfo:currentCarrierInfo numberSettingsInfo:updateNumberInfo];
+    }else{
+        //Number Info Update
+        NumberInfo *updateNumberInfo = [[NumberInfo alloc]init];
+        updateNumberInfo.phoneNumber = self.phoneNumber;
+        updateNumberInfo.titleName = self.titleName;
+        updateNumberInfo.imgName = @"iphone";
+        [[Setting sharedSetting]updateNumberSettingsInfo:updateNumberInfo];
+    }
+}
+
+- (void)loadLatestDataFromServer {
+    
+    KLog(@"loadLatestDataFromServer");
+    
+    self.currentSettingsModel = [Setting sharedSetting].data;
+    if (self.currentSettingsModel) {
+        if (self.currentSettingsModel.voiceMailInfo && [self.currentSettingsModel.voiceMailInfo count]) {
+            for (VoiceMailInfo *voiceMailInfo in self.currentSettingsModel.voiceMailInfo) {
+                if ([[ConfigurationReader sharedConfgReaderObj] getVerifiedOTP]) {
+                    if([voiceMailInfo.phoneNumber isEqualToString:[[ConfigurationReader sharedConfgReaderObj] getVerifiedOTPNumber]])
+                        self.voiceMailInfo = voiceMailInfo;
+                }else{
+                    if ([[ConfigurationReader sharedConfgReaderObj] getOnBoardingStatus]) {
+                        if([voiceMailInfo.phoneNumber isEqualToString:[[ConfigurationReader sharedConfgReaderObj] getLoginId]])
+                            self.voiceMailInfo = voiceMailInfo;
+                    }else{
+                        if([voiceMailInfo.phoneNumber isEqualToString:self.phoneNumber])
+                            self.voiceMailInfo = voiceMailInfo;
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+- (void)fetchSettingCompletedWith:(SettingModel*)modelData withFetchStatus:(BOOL)withFetchStatus {
+    if (withFetchStatus) {
+        if (isSaveProcessed) {
+            [self hideProgressBar];
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    } else {
+        //TODO: FIXME -- handle error case
+    }
+}
+
+- (void)updateSettingCompletedWith:(SettingModel*)modelData withUpdateStatus:(BOOL)withUpdateStatus {
+    
+    //Settings has been updated successfully,
+    if (withUpdateStatus) {
+//        if (isCarrierChanged) {
+//            [[ConfigurationReader sharedConfgReaderObj]setVoipSettingFetched:NO];
+//            VoipSetting* voipSettingObj = [VoipSetting sharedVoipSetting];
+//            [voipSettingObj getVoipSetting];
+//        }
+        [[Setting sharedSetting]getUserSettingFromServer];
+    } else {
+        [self hideProgressBar];
+    }
+}
+
+- (void)cancelAction
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    self.titleName = textField.text;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    self.titleName = textField.text;
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (BOOL)isActive
+{
+    CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:self.phoneNumber];
+    if (carrierDetails.isReachMeIntlActive || carrierDetails.isReachMeHomeActive || carrierDetails.isReachMeVMActive) {
+        return YES;
+    }
+//    IVSettingsCountryCarrierInfo *ccInfo =  [[Setting sharedSetting]supportedCarrierInfoFromCustomSettingsForPhoneNumber:self.phoneNumber];
+//    NSString *activeString = [[ConfigurationReader sharedConfgReaderObj] getMissedCallReasonForTheNumber:self.phoneNumber];
+//    if (activeString.length && ccInfo) {
+//        return YES;
+//    }else if (carrierDetails.isReachMeIntlActive || carrierDetails.isReachMeHomeActive || carrierDetails.isReachMeVMActive) {
+//        return YES;
+//    }
+    
+    return NO;
+}
+
+- (IBAction)changeCarrier:(id)sender {
+    if (self.isReachMeNumber) {
+        return;
+    }
+    if ([self isActive]) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Do you want to change carrier?" message:@"Your service is active for this Carrier. Please, Deactivate before changing the carrier." preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *no = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+            
+        }];
+        
+        UIAlertAction *yes = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
+        
+        [alertController addAction:no];
+        [alertController addAction:yes];
+        
+        alertController.view.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+        [self.navigationController presentViewController:alertController animated:true completion:nil];
+        return;
+    }
+    
+    if([Common isNetworkAvailable] != NETWORK_AVAILABLE) {
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+        return;
+    }
+    
+    if ([self.voiceMailInfo.carrierCountryCode isEqualToString:@"091"]) {
+        IVCarrierCircleViewController *selectCircle = [[IVCarrierCircleViewController alloc]initWithNibName:@"IVCarrierCircleViewController" bundle:nil];
+        selectCircle.carrierList = self.currentCarrierList;
+        selectCircle.isEdit = YES;
+        [self.navigationController pushViewController:selectCircle animated:YES];
+        return;
+    }
+    
+    if([Common isNetworkAvailable] == NETWORK_AVAILABLE) {
+        if(self.currentCarrierList && self.currentCarrierList.count) {
+            if (!self.carrierSearchViewController) {
+                self.carrierSearchViewController = [[UIStoryboard storyboardWithName:@"IVVoicemailMissedCallSettings_rm" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"IVCarrierSearchView"];
+            }
+            
+            if (![self.navigationController.topViewController isKindOfClass:[IVCarrierSearchViewController class]]) {
+                self.carrierSearchViewController.carrierList = self.currentCarrierList;
+                self.carrierSearchViewController.voiceMailInfo = self.voiceMailInfo;
+                self.carrierSearchViewController.selectedCountryCarrierInfo = self.selectedCountryCarrierInfo;
+                self.carrierSearchViewController.carrierSearchDelegate = self;
+                self.carrierSearchViewController.isEdit = YES;
+                [self.navigationController pushViewController:self.carrierSearchViewController animated:YES];
+                return;
+            }
+        }
+        else
+            //Fetch the carrier list.
+            [self retrieveCarrierDetails];
+    }else{
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+    }
+}
+
+- (void)retrieveCarrierDetails {
+    
+    if([Common isNetworkAvailable] != NETWORK_AVAILABLE) {
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+        return;
+    }
+    if (self.voiceMailInfo) {
+        
+        NSMutableDictionary *requestData = [[NSMutableDictionary alloc]init];
+        if(self.voiceMailInfo.carrierCountryCode) {
+            //[self showLoadingIndicator];
+            [requestData setObject:self.voiceMailInfo.carrierCountryCode forKey:@"country_code"];
+            [requestData setValue:[NSNumber numberWithBool:1] forKey:@"fetch_voicemails_info"]; //NOV 16, 2016
+            FetchCarriersListAPI* fetchCarrierListRequest = [[FetchCarriersListAPI alloc]initWithRequest:requestData];
+            
+            [fetchCarrierListRequest callNetworkRequest:requestData withSuccess:^(FetchCarriersListAPI *req, NSMutableDictionary *responseObject) {
+                
+                //Hide the loading indicator
+                //[self hideLoadingIndicator];
+                self.currentCarrierList = responseObject[@"country_list"];
+                
+                //Reload Data - Current Network Name and reload the tableView.
+                //[self reloadData];
+                //[self redirectToAppropriateVoiceMailSettingsView];
+                
+            } failure:^(FetchCarriersListAPI *req, NSError *error) {
+                KLog(@"Failure in fetching carrier list");
+                //Hide the loading indicator
+                //[self hideLoadingIndicator];
+                
+                NSInteger errorCode = 0;
+                NSString *errorReason;
+                if (error.userInfo) {
+                    errorCode = [error.userInfo[@"error_code"]integerValue];
+                    errorReason = error.userInfo[@"error_reason"];
+                }
+                if (kErrorCodeForCarrierListNotFound == errorCode)
+                    [ScreenUtility showAlert:errorReason];
+            }];
+        }
+    }
+}
+
+#pragma mark - Carrier Search Delegate Methods -
+- (void)didSelectCarrier:(IVSettingsCountryCarrierInfo *)selectedCarrierInfo {
+    isCarrierChanged = YES;
+    self.selectedCountryCarrierInfo = selectedCarrierInfo;
+    if(selectedCarrierInfo)
+        self.carrierNameLabel.text = selectedCarrierInfo.networkName;
+    else
+        self.carrierNameLabel.text = @"Not Listed";
+}
+
+-(void)selectedCarrier:(NSDictionary *)selectedCarrierInfo
+{
+    if ([[selectedCarrierInfo valueForKey:@"name"] isEqualToString:@"Carrier_Selected"]) {
+        isCarrierChanged = YES;
+        self.selectedCountryCarrierInfo = [[selectedCarrierInfo valueForKey:@"userInfo"] valueForKey:@"carrier_info"];
+        if([[selectedCarrierInfo valueForKey:@"userInfo"] valueForKey:@"carrier_info"]){
+            if(self.selectedCountryCarrierInfo.networkName.length)
+                self.carrierNameLabel.text = self.selectedCountryCarrierInfo.networkName;
+            else{
+                self.carrierNameLabel.text = @"Not Listed";
+                self.selectedCountryCarrierInfo = nil;
+            }
+        }else{
+            self.carrierNameLabel.text = @"Not Listed";
+        }
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSString* currentText = textField.text;
+    if(currentText.length == 0) {
+        //first character can not be space
+        if([string isEqualToString:@" "])
+            return NO;
+    }
+    
+    NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if (newString.length > 50) {
+        [self limitExceedForUsernameAndCity:@"TAG Name should not exceed 50 characters"];
+        return NO;
+    }
+    
+    if(currentText.length == 0) {
+        //first character can not be numeric
+        if([self isNumeric:string])
+            return NO;
+    }
+    
+    if (range.location == textField.text.length && [string isEqualToString:@" "]) {
+        textField.text = [textField.text stringByAppendingString:@"\u00a0"];
+        return NO;
+    }
+    
+    return YES;
+}
+
+- (BOOL)isNumeric:(NSString *)name {
+    
+    BOOL result = FALSE;
+    if(name != nil && name.length >0) {
+        BOOL valid = [Common validateNumeric:name];
+        if (valid)
+            result = TRUE;
+    }
+    return result;
+}
+
+- (void)limitExceedForUsernameAndCity:(NSString *)message
+{
+    UIAlertController *alertController =   [UIAlertController
+                                            alertControllerWithTitle:nil
+                                            message:message
+                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* ok = [UIAlertAction
+                         actionWithTitle:NSLocalizedString(@"OK", nil)
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             [alertController dismissViewControllerAnimated:NO completion:nil];
+                             
+                         }];
+    [alertController addAction:ok];
+    [self presentViewController:alertController animated:YES completion:nil];
+    [alertController.view setTintColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]];
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

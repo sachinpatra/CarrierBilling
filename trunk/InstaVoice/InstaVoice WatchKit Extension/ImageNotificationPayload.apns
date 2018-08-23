@@ -1,0 +1,25 @@
+{
+    "aps" :    {
+        "alert" :        {
+            "body" :"+918971174003: Image",
+        },
+        "badge" : "1",
+        "category" : "ivMsg",
+        "content-available" : "1",
+        "sound" : "default",
+    },
+    "contact_id" : "11351780",
+    "contact_type" : "iv",
+    "extra" : "{\"type\":\"iv\",\"iv_msg_id\":2934775,\"sender_id\":\"918971174003\"}",
+    "id" : "2",
+    "msg" : "11351780",
+    "msg_content_type" : "i",
+    "msg_dt" : "1429612041000",
+    "msg_id" : "2934775",
+    "msg_type" : "iv",
+    "msg_uri" : "http://stagingblogs.instavoice.com/vobolo/iv/msgs/6528/11351780_1429597643011.jpg",
+    "pic_uri" : "http://stagingblogs.instavoice.com/vobolo/thumbnails/6528/11351780_1429597397574.png",
+    "phone" : "918971174003",
+    "sender_id" : "918971174003",
+    "sender_type" : "G",
+}

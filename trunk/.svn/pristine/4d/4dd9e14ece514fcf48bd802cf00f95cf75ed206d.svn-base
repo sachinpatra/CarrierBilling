@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="ContactTableViewInviteCell" id="rwD-tC-9tP" customClass="ContactTableViewInviteCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rwD-tC-9tP" id="Ukv-T8-APB">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="63"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sUx-2g-i2X">
+                        <rect key="frame" x="8" y="9" width="45" height="45"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="45" id="NAT-du-jBX"/>
+                            <constraint firstAttribute="height" constant="45" id="TP4-bM-9Zi"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eQr-V2-5DR">
+                        <rect key="frame" x="58" y="5" width="254" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dN4-Q4-uC2">
+                        <rect key="frame" x="58" y="39" width="203" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbf-dF-b94">
+                        <rect key="frame" x="264" y="40" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="sUx-2g-i2X" firstAttribute="centerY" secondItem="Ukv-T8-APB" secondAttribute="centerY" id="5ib-e4-Qkz"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="eQr-V2-5DR" secondAttribute="trailing" id="Kef-uL-bNd"/>
+                    <constraint firstItem="vbf-dF-b94" firstAttribute="leading" secondItem="dN4-Q4-uC2" secondAttribute="trailing" constant="3" id="Vbt-hk-g6X"/>
+                    <constraint firstItem="eQr-V2-5DR" firstAttribute="leading" secondItem="sUx-2g-i2X" secondAttribute="trailing" constant="5" id="cPD-N7-l4F"/>
+                    <constraint firstItem="eQr-V2-5DR" firstAttribute="top" secondItem="Ukv-T8-APB" secondAttribute="topMargin" constant="-3" id="hNm-oh-NDv"/>
+                    <constraint firstItem="dN4-Q4-uC2" firstAttribute="leading" secondItem="sUx-2g-i2X" secondAttribute="trailing" constant="5" id="suI-Dm-3Ox"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="sUx-2g-i2X" secondAttribute="leading" id="zqQ-ii-1g8"/>
+                </constraints>
+            </tableViewCellContentView>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="dN4-Q4-uC2" secondAttribute="bottom" constant="4" id="4ql-SV-bJX"/>
+                <constraint firstAttribute="trailing" secondItem="vbf-dF-b94" secondAttribute="trailing" constant="14" id="Gsu-bU-coY"/>
+                <constraint firstAttribute="bottom" secondItem="vbf-dF-b94" secondAttribute="bottom" constant="3" id="Vn2-Vu-8Nl"/>
+                <constraint firstItem="dN4-Q4-uC2" firstAttribute="top" secondItem="rwD-tC-9tP" secondAttribute="top" constant="39" id="m90-5Y-1Z4"/>
+                <constraint firstItem="vbf-dF-b94" firstAttribute="top" secondItem="rwD-tC-9tP" secondAttribute="top" constant="40" id="qye-Tc-cEB"/>
+            </constraints>
+            <connections>
+                <outlet property="circleView" destination="sUx-2g-i2X" id="59m-bz-sz4"/>
+                <outlet property="contactName" destination="eQr-V2-5DR" id="VYn-Iu-XpK"/>
+                <outlet property="contactNameTopSpace" destination="hNm-oh-NDv" id="WJ1-XG-fiE"/>
+                <outlet property="contactSubType" destination="vbf-dF-b94" id="DWz-FD-h8D"/>
+                <outlet property="contactValue" destination="dN4-Q4-uC2" id="lOg-bv-uCd"/>
+            </connections>
+            <point key="canvasLocation" x="-281" y="-405"/>
+        </tableViewCell>
+    </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
+    </simulatedMetricsContainer>
+</document>

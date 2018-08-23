@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SettingsMissedCallCarrierViewController">
+            <connections>
+                <outlet property="carrierTableView" destination="kRB-Cl-Wt3" id="Tip-ZR-qKr"/>
+                <outlet property="mobileNumberLabel" destination="bX1-2N-uh1" id="nAa-5F-Y46"/>
+                <outlet property="view" destination="1" id="3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U71-Yj-dy4">
+                    <rect key="frame" x="0.0" y="0.0" width="327" height="568"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select your SIM Carrier" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mim-bs-LJZ">
+                            <rect key="frame" x="0.0" y="7" width="327" height="21"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="21" id="xBP-2w-se4"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="21"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select your SIM Carrier" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bX1-2N-uh1">
+                            <rect key="frame" x="0.0" y="32" width="319" height="19"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k9n-sm-SZ0">
+                            <rect key="frame" x="0.0" y="54" width="327" height="1"/>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TyL-Vd-rnr">
+                            <rect key="frame" x="0.0" y="521" width="322" height="45"/>
+                            <subviews>
+                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MQJ-OI-glF">
+                                    <rect key="frame" x="330" y="8" width="44" height="30"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="Select">
+                                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="selectTapped:" destination="-1" eventType="touchUpInside" id="yUX-Pv-RK0"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E1C-tc-4F9">
+                                    <rect key="frame" x="0.0" y="0.0" width="322" height="45"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="Cancel">
+                                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="cancelTapped:" destination="-1" eventType="touchUpInside" id="cjc-fw-acG"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="E1C-tc-4F9" firstAttribute="height" secondItem="TyL-Vd-rnr" secondAttribute="height" id="8rR-ex-9oQ"/>
+                                <constraint firstItem="E1C-tc-4F9" firstAttribute="centerY" secondItem="TyL-Vd-rnr" secondAttribute="centerY" id="GDB-rc-xj3"/>
+                                <constraint firstItem="E1C-tc-4F9" firstAttribute="centerX" secondItem="TyL-Vd-rnr" secondAttribute="centerX" id="Uzf-2R-NUn"/>
+                                <constraint firstItem="MQJ-OI-glF" firstAttribute="leading" secondItem="E1C-tc-4F9" secondAttribute="trailing" constant="8" symbolic="YES" id="qHc-s7-VuP"/>
+                                <constraint firstItem="E1C-tc-4F9" firstAttribute="width" secondItem="TyL-Vd-rnr" secondAttribute="width" id="qZw-0N-k9T"/>
+                                <constraint firstAttribute="bottom" secondItem="MQJ-OI-glF" secondAttribute="bottom" constant="7" id="ubp-XZ-anD"/>
+                                <constraint firstItem="MQJ-OI-glF" firstAttribute="top" secondItem="TyL-Vd-rnr" secondAttribute="top" constant="8" id="yAH-le-CZv"/>
+                            </constraints>
+                        </view>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="kRB-Cl-Wt3">
+                            <rect key="frame" x="0.0" y="59" width="322" height="459"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <outlet property="dataSource" destination="-1" id="ALq-xz-3k2"/>
+                                <outlet property="delegate" destination="-1" id="LD0-Kd-Lx9"/>
+                            </connections>
+                        </tableView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="k9n-sm-SZ0" firstAttribute="width" secondItem="U71-Yj-dy4" secondAttribute="width" id="5JM-iO-lsp"/>
+                        <constraint firstItem="k9n-sm-SZ0" firstAttribute="top" secondItem="bX1-2N-uh1" secondAttribute="bottom" constant="3" id="6b1-II-W7j"/>
+                        <constraint firstItem="kRB-Cl-Wt3" firstAttribute="top" secondItem="k9n-sm-SZ0" secondAttribute="bottom" constant="4" id="ElP-bW-x9a"/>
+                        <constraint firstItem="kRB-Cl-Wt3" firstAttribute="trailing" secondItem="TyL-Vd-rnr" secondAttribute="trailing" id="LHW-vQ-Tuw"/>
+                        <constraint firstItem="kRB-Cl-Wt3" firstAttribute="leading" secondItem="U71-Yj-dy4" secondAttribute="leading" id="Lcf-gQ-O6T"/>
+                        <constraint firstItem="k9n-sm-SZ0" firstAttribute="leading" secondItem="kRB-Cl-Wt3" secondAttribute="leading" id="PQl-HQ-FuJ"/>
+                        <constraint firstItem="kRB-Cl-Wt3" firstAttribute="leading" secondItem="TyL-Vd-rnr" secondAttribute="leading" id="S2a-df-8OZ"/>
+                        <constraint firstItem="Mim-bs-LJZ" firstAttribute="top" secondItem="U71-Yj-dy4" secondAttribute="top" constant="7" id="Tqp-km-iHX"/>
+                        <constraint firstAttribute="trailing" secondItem="kRB-Cl-Wt3" secondAttribute="trailing" constant="5" id="UGW-vg-90W"/>
+                        <constraint firstItem="k9n-sm-SZ0" firstAttribute="leading" secondItem="Mim-bs-LJZ" secondAttribute="leading" id="WhC-sO-GsS"/>
+                        <constraint firstItem="bX1-2N-uh1" firstAttribute="width" secondItem="Mim-bs-LJZ" secondAttribute="width" constant="-8" id="X1C-V2-42z"/>
+                        <constraint firstItem="k9n-sm-SZ0" firstAttribute="trailing" secondItem="bX1-2N-uh1" secondAttribute="trailing" constant="8" id="gL6-Ci-lcK"/>
+                        <constraint firstItem="kRB-Cl-Wt3" firstAttribute="top" secondItem="bX1-2N-uh1" secondAttribute="bottom" constant="8" symbolic="YES" id="hFo-xn-zps"/>
+                        <constraint firstItem="kRB-Cl-Wt3" firstAttribute="top" secondItem="U71-Yj-dy4" secondAttribute="top" constant="59" id="hdQ-zx-quC"/>
+                        <constraint firstItem="bX1-2N-uh1" firstAttribute="top" secondItem="Mim-bs-LJZ" secondAttribute="bottom" constant="4" id="qIU-rO-lI3"/>
+                        <constraint firstItem="k9n-sm-SZ0" firstAttribute="trailing" secondItem="Mim-bs-LJZ" secondAttribute="trailing" id="qr0-p5-yym"/>
+                        <constraint firstItem="TyL-Vd-rnr" firstAttribute="top" secondItem="kRB-Cl-Wt3" secondAttribute="bottom" constant="3" id="wGT-08-M7z"/>
+                        <constraint firstAttribute="bottom" secondItem="TyL-Vd-rnr" secondAttribute="bottom" constant="2" id="zFP-zt-onl"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="U71-Yj-dy4" secondAttribute="bottom" id="Y3j-k2-p8X"/>
+                <constraint firstAttribute="trailing" secondItem="U71-Yj-dy4" secondAttribute="trailing" constant="-7" id="fbM-0s-1wW"/>
+                <constraint firstItem="U71-Yj-dy4" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="rH7-4H-ek6"/>
+                <constraint firstItem="U71-Yj-dy4" firstAttribute="top" secondItem="1" secondAttribute="top" id="xWT-Me-p1A"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

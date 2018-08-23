@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DialPadViewController">
+            <connections>
+                <outlet property="countryCode" destination="ahW-FM-KS7" id="XNc-gQ-i0d"/>
+                <outlet property="countryFlag" destination="Ow9-1w-Dc3" id="rmf-Sn-KYJ"/>
+                <outlet property="countryFlagImage" destination="sLi-zv-ixJ" id="cFr-Yo-Jyk"/>
+                <outlet property="numberTextField" destination="vRz-Ot-Vfa" id="lcv-Ze-gWe"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="+1 235" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vRz-Ot-Vfa">
+                    <rect key="frame" x="94" y="61" width="188" height="33"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="28"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <action selector="textChange:" destination="-1" eventType="editingChanged" id="Lwe-jA-jKR"/>
+                        <outlet property="delegate" destination="-1" id="mWr-cI-cdC"/>
+                    </connections>
+                </textField>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+91" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ahW-FM-KS7">
+                    <rect key="frame" x="38" y="60" width="48" height="35"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="35" id="6hZ-uf-BaL"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="28"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="India" translatesAutoresizingMaskIntoConstraints="NO" id="sLi-zv-ixJ">
+                    <rect key="frame" x="5" y="67" width="30" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="4i1-xb-BNc"/>
+                        <constraint firstAttribute="width" constant="30" id="xHt-PJ-atc"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ow9-1w-Dc3">
+                    <rect key="frame" x="7" y="60" width="87" height="35"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="35" id="HiS-HS-CCc"/>
+                        <constraint firstAttribute="width" constant="87" id="XKt-KG-RYg"/>
+                    </constraints>
+                    <connections>
+                        <action selector="selectCountry:" destination="-1" eventType="touchUpInside" id="0cN-GB-G4h"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="ahW-FM-KS7" firstAttribute="centerY" secondItem="vRz-Ot-Vfa" secondAttribute="centerY" id="0Xb-47-buT"/>
+                <constraint firstItem="vRz-Ot-Vfa" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" constant="0.5" id="5vz-5G-18e"/>
+                <constraint firstItem="Ow9-1w-Dc3" firstAttribute="centerY" secondItem="ahW-FM-KS7" secondAttribute="centerY" id="N0h-I0-zIF"/>
+                <constraint firstItem="ahW-FM-KS7" firstAttribute="leading" secondItem="sLi-zv-ixJ" secondAttribute="trailing" constant="3" id="P8O-kw-8IP"/>
+                <constraint firstItem="vRz-Ot-Vfa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="topMargin" constant="41" id="Tcm-eN-oqV"/>
+                <constraint firstItem="Ow9-1w-Dc3" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="7" id="g05-h6-phM"/>
+                <constraint firstAttribute="trailingMargin" secondItem="vRz-Ot-Vfa" secondAttribute="trailing" constant="77" id="pDY-R8-uoc"/>
+                <constraint firstItem="sLi-zv-ixJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="5" id="rFw-6p-f6O"/>
+                <constraint firstItem="sLi-zv-ixJ" firstAttribute="centerY" secondItem="ahW-FM-KS7" secondAttribute="centerY" id="uiL-LF-GWg"/>
+            </constraints>
+            <point key="canvasLocation" x="33.5" y="53.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="India" width="21" height="15"/>
+    </resources>
+</document>

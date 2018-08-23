@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>ReachMe</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.22</string>
+	<key>CFBundleVersion</key>
+	<string>42</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>8eac9ef9c47f07959741ac162e6e864dc686c723</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>You may want to send image to Help to resolve any issue. ReachMe needs access to Camera.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>ReachMe needs access to Contacts to display caller names for ReachMe calls, Voicemails and Missed calls. We do not share this info with anyone else. Refer to our Privacy Policy to know more about how we use it and how it benefits you.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>ReachMe will share location information along with your outgoing messages. You can always enable or disable location sharing from ReachMe Chat Settings screen.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>ReachMe will share location information along with your outgoing messages. You can always enable or disable location sharing from InstaVoice Chat Settings screen.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ReachMe will share location information along with your outgoing messages. You can always enable or disable location sharing from InstaVoice Chat Settings screen.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>ReachMe app needs access to Microphone to answer the ReachMe call and record Voicemail greetings.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>ReachMe needs access to Photo Library while setting or changing profile pictures.</string>
+	<key>NSVoIPUsageDescription</key>
+	<string>ReachMe receives audio calls.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>voip</string>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>

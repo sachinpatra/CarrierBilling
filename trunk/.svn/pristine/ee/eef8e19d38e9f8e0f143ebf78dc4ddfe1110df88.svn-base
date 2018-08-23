@@ -1,0 +1,363 @@
+//
+//  ReachMeStatusViewController.m
+//  ReachMe
+//
+//  Created by Bhaskar Munireddy on 11/07/18.
+//  Copyright © 2018 Kirusa. All rights reserved.
+//
+
+#import "ReachMeStatusViewController.h"
+#import "ReachMeStatusTableViewCell.h"
+#import "UserProfileModel.h"
+#import "Profile.h"
+#import "IVFileLocator.h"
+#import "ContactDetailData.h"
+#import "BaseConversationScreen.h"
+#import "Contacts.h"
+#import "InsideConversationScreen.h"
+#import "IVColors.h"
+
+#define kReachMeStatusCellIdentifier @"ReachMeStatusCell"
+#define kReachMeStatusDoneCellIdentifier @"ReachMeStatusDoneCell"
+
+@interface ReachMeStatusViewController ()<ProfileProtocol,SettingProtocol>{
+    NSMutableArray *allNumbers;
+}
+@property (weak, nonatomic) IBOutlet UITableView *statusTable;
+@property (nonatomic, strong) NSMutableArray *supportContactList;
+@property (nonatomic, strong) NSString *helpText;
+@property (nonatomic, strong) NSMutableArray *helpTextArray;
+@end
+
+@implementation ReachMeStatusViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = NSLocalizedString(@"ReachMe Status", nil);
+    self.navigationItem.hidesBackButton = YES;
+    UIBarButtonItem *helpButton = [[UIBarButtonItem alloc] initWithTitle:@"Help" style:UIBarButtonItemStylePlain target:self action:@selector(helpAction)];
+    self.navigationItem.rightBarButtonItem = helpButton;
+    [self configureHelpAndSuggestion];
+    self.statusTable.hidden = YES;
+    
+    [Setting sharedSetting].delegate = self;
+    [[Setting sharedSetting] getUserSettingFromServer];
+    [self showProgressBar];
+    
+    // Do any additional setup after loading the view.
+}
+
+- (void)fetchSettingCompletedWith:(SettingModel *)modelData withFetchStatus:(BOOL)withFetchStatus
+{
+    [Profile sharedUserProfile].delegate = self;
+    [[Profile sharedUserProfile]getProfileDataFromServer];
+}
+
+- (void)fetchProfileCompletedWith:(UserProfileModel *)modelData
+{
+    [self hideProgressBar];
+    UserProfileModel *model = [[Profile sharedUserProfile]profileData];
+    allNumbers = [model.additionalVerifiedNumbers mutableCopy];
+    self.statusTable.hidden = NO;
+    [self.statusTable reloadData];
+}
+
+- (void)helpAction
+{
+    self.helpText = @"";
+    [self showHelpMessage];
+    
+}
+
+- (void)configureHelpAndSuggestion
+{
+    self.helpTextArray = [[NSMutableArray alloc]init];
+    self.supportContactList = [[Setting sharedSetting].supportContactList mutableCopy];
+    if(self.supportContactList != nil && [self.supportContactList count] > 0)
+    {
+        NSUInteger count = (NSUInteger)[self.supportContactList count];
+        for(NSUInteger  i = 0; i < count; i++)
+        {
+            NSMutableDictionary *dic = [self.supportContactList objectAtIndex:i];
+            NSString *supportName = [dic valueForKey:SUPPORT_NAME];
+            if([supportName isEqualToString:MENU_FEEDBACK])
+            {
+                //do nothing
+            }
+            else
+            {
+                [self.helpTextArray addObject:dic];
+            }
+        }
+    }
+}
+
+
+- (void)showHelpMessage
+{
+    if([Common isNetworkAvailable] == NETWORK_AVAILABLE) {
+        if (self.helpTextArray != nil && [self.helpTextArray count] > 0) {
+            NSUInteger count = [self.helpTextArray count];
+            for(NSUInteger  i = 0;i < count; i++) {
+                NSDictionary *helpPhoneDic = [self.helpTextArray objectAtIndex:i];
+                [self gotoHelpChat:helpPhoneDic];
+            }
+        }
+        else
+            [ScreenUtility showAlertMessage:NSLocalizedString(@"NO_SUPPORT_LIST", nil)];
+    }
+    else {
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+    }
+}
+
+-(void)gotoHelpChat:(NSDictionary *)supportDic
+{
+    NSMutableDictionary *newDic = [[NSMutableDictionary alloc]init];
+    
+    NSString *ivUserId = [supportDic valueForKey:SUPPORT_IV_ID];
+    [newDic setValue:IV_TYPE forKey:REMOTE_USER_TYPE];
+    [newDic setValue:ivUserId forKey:REMOTE_USER_IV_ID];
+    [newDic setValue:[supportDic valueForKey:SUPPORT_DATA_VALUE] forKey:FROM_USER_ID];
+    [newDic setValue:[supportDic valueForKey:SUPPORT_NAME] forKey:REMOTE_USER_NAME];
+    [newDic setValue:[supportDic valueForKey:SUPPORT_PIC_URI] forKey:REMOTE_USER_PIC];
+    [newDic setValue:self.helpText forKey:@"HELP_TEXT"];
+    
+    
+    //- get the pic
+    NSNumber* ivID = [NSNumber numberWithLong:[ivUserId longLongValue]];
+    NSArray* arr = [[Contacts sharedContact]getContactForIVUserId:ivID usingMainContext:YES];
+    ContactDetailData* detailData = Nil;
+    if([arr count]>0)
+        detailData = [arr objectAtIndex:0];
+    
+    if(detailData)
+        [newDic setValue:[IVFileLocator getNativeContactPicPath:detailData.contactIdParentRelation.contactPic]
+                  forKey:REMOTE_USER_PIC];
+    
+    [appDelegate.dataMgt setCurrentChatUser:newDic];
+    
+    BaseUI* uiObj = [[InsideConversationScreen alloc]initWithNibName:@"BaseConversationScreen_4.0_ios7Master" bundle:nil];
+    uiObj.isAnyChangesSpecificSubClass = YES;
+    [self.navigationController pushViewController:uiObj animated:YES];
+    
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return  2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return allNumbers.count;
+    }else{
+        return 1;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    return 90.0;
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 1.0f;
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 1.0f;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell;
+    static NSString *cellIdentifier;
+    if (indexPath.section == 0) {
+        cellIdentifier = kReachMeStatusCellIdentifier;
+    }else if (indexPath.section == 1){
+        cellIdentifier = kReachMeStatusDoneCellIdentifier;
+    }
+    
+    cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    [self configureCell:cell forRowAtIndexPath:indexPath];
+    cell.separatorInset = UIEdgeInsetsMake(0.0, 84.0, 0.0, 0.0);
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    return cell;
+}
+
+- (void)configureCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if ([cell isKindOfClass:[ReachMeStatusTableViewCell class]]) {
+        ReachMeStatusTableViewCell *reachMeStatusCell = (ReachMeStatusTableViewCell *)cell;
+        
+        BOOL isPrimaryNumber = [[[allNumbers objectAtIndex:indexPath.row] valueForKey:@"is_primary"] boolValue];
+        BOOL isVitualNumber = [[[allNumbers objectAtIndex:indexPath.row] valueForKey:@"is_virtual"] boolValue];
+        NSString *phoneNumber = [[allNumbers objectAtIndex:indexPath.row] valueForKey:@"contact_id"];
+        IVSettingsCountryCarrierInfo *carrierInfo = [[Setting sharedSetting]supportedCarrierInfoFromVoiceMailInfoForPhoneNumber:phoneNumber];
+        CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:phoneNumber];
+        
+        NSString *carrierName = carrierInfo.networkName;
+        if (carrierInfo) {
+            carrierName = carrierInfo.networkName;
+        }else{
+            if (carrierDetails) {
+                if ([carrierDetails.networkId isEqualToString:@"-1"] && [carrierDetails.countryCode isEqualToString:@"-1" ] && [carrierDetails.vSMSId integerValue] == -1) {
+                    carrierName = @"Not Listed";
+                }
+            }else{
+                carrierName = @"";
+            }
+        }
+        
+        VoiceMailInfo *carrierVoiceMailInfo;
+        SettingModel *voicemailSettingInfo = [Setting sharedSetting].data;
+        if (voicemailSettingInfo) {
+            if (voicemailSettingInfo.voiceMailInfo && [voicemailSettingInfo.voiceMailInfo count]) {
+                for (VoiceMailInfo *voiceMailInfo in voicemailSettingInfo.voiceMailInfo) {
+                    if([voiceMailInfo.phoneNumber isEqualToString:phoneNumber]) {
+                        carrierVoiceMailInfo = voiceMailInfo;
+                    }
+                }
+            }
+        }
+        
+        if (!carrierVoiceMailInfo || !carrierVoiceMailInfo.countryVoicemailSupport) {
+            carrierName = @"Not supported";
+        }
+        
+        //Number Details Section
+        NumberInfo *numberDetails = [[Setting sharedSetting]customNumberInfoForPhoneNumber:phoneNumber];
+        if (numberDetails.titleName.length) {
+            reachMeStatusCell.tagName.text = numberDetails.titleName;
+            reachMeStatusCell.phoneNumber.text = [Common getFormattedNumber:phoneNumber withCountryIsdCode:nil withGivenNumberisCannonical:YES];
+        }else{
+            reachMeStatusCell.tagName.text = [Common getFormattedNumber:phoneNumber withCountryIsdCode:nil withGivenNumberisCannonical:YES];
+            reachMeStatusCell.phoneNumber.text = [self getCountryCode:phoneNumber];
+        }
+        
+        //Flag Image
+        reachMeStatusCell.countryFlag.image = [UIImage imageNamed:[self getFlagFromCountryName:[self getCountryCode:phoneNumber]]];
+        reachMeStatusCell.countryFlag.layer.cornerRadius = 28.0;
+        
+        reachMeStatusCell.callIcon.image = [UIImage imageNamed:@"obd_call_out"];
+        
+        reachMeStatusCell.primaryNumber.layer.cornerRadius = 3.0;
+        
+        reachMeStatusCell.doneButton.layer.cornerRadius = 5.0;
+        [reachMeStatusCell.doneButton addTarget:self action:@selector(doneButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        
+        if (isPrimaryNumber) {
+            reachMeStatusCell.primaryNumber.hidden = NO;
+        }else{
+            reachMeStatusCell.primaryNumber.hidden = YES;
+        }
+        
+        if (isVitualNumber) {
+            reachMeStatusCell.internationalIcon.hidden = YES;
+            reachMeStatusCell.homeIcon.hidden = YES;
+            reachMeStatusCell.reachMeIcon.hidden = NO;
+            reachMeStatusCell.reachMeIcon.image = [UIImage imageNamed:@"reachme_number"];
+            reachMeStatusCell.carrierName.text = @"ReachMe Number";
+        }else{
+            reachMeStatusCell.internationalIcon.hidden = NO;
+            reachMeStatusCell.homeIcon.hidden = NO;
+            reachMeStatusCell.reachMeIcon.hidden = YES;
+            reachMeStatusCell.carrierName.text = carrierName;
+        }
+        
+        if (carrierDetails.isReachMeIntlActive) {
+            reachMeStatusCell.internationalIcon.image = [UIImage imageNamed:@"intl_on"];
+            reachMeStatusCell.homeIcon.image = [UIImage imageNamed:@"home_off"];
+            reachMeStatusCell.carrierName.text = [NSString stringWithFormat:@"%@ (Roaming)",carrierName];
+            reachMeStatusCell.carrierName.textColor = [IVColors redColor];
+        }else if (carrierDetails.isReachMeHomeActive){
+            reachMeStatusCell.internationalIcon.image = [UIImage imageNamed:@"intl_off"];
+            reachMeStatusCell.homeIcon.image = [UIImage imageNamed:@"home_on"];
+        }else{
+            reachMeStatusCell.internationalIcon.image = [UIImage imageNamed:@"intl_off"];
+            reachMeStatusCell.homeIcon.image = [UIImage imageNamed:@"home_off"];
+        }
+        
+    }
+    
+}
+
+- (NSString *)getCountryCode:(NSString *)phoneNumber
+{
+    NSArray *countryList;
+    NSString* archiveFilePathCountry = [[IVFileLocator getDocumentDirectoryPath]
+                                        stringByAppendingPathComponent:@"Country.dat"];
+    @try {
+        countryList = [NSKeyedUnarchiver unarchiveObjectWithFile:archiveFilePathCountry];
+    }
+    @catch (NSException *exception) {
+        KLog(@"Unable to create object from archive file");
+    }
+    
+    NSString *countryCode = @"";
+    
+    UserProfileModel *model = [[Profile sharedUserProfile]profileData];
+    NSMutableArray *phoneNumberDetails = model.additionalVerifiedNumbers;
+    for (int i = 0; i < phoneNumberDetails.count; i++) {
+        if ([[[phoneNumberDetails objectAtIndex:i] valueForKey:@"contact_id"] isEqualToString:phoneNumber]) {
+            countryCode = [[phoneNumberDetails objectAtIndex:i] valueForKey:@"country_code"];
+        }
+    }
+    
+    NSMutableArray *countries = [NSMutableArray arrayWithArray:countryList];
+    NSString* countryISO = @"";
+    if(countries != nil && [countries count] >0)
+    {
+        for(NSMutableDictionary* dic in countries)
+        {
+            NSString *code = [dic valueForKey:COUNTRY_CODE];
+            if([code isEqualToString:countryCode])
+            {
+                countryISO = [dic valueForKey:COUNTRY_NAME];
+            }
+        }
+    }
+    
+    return countryISO;
+}
+
+-(NSString *) getFlagFromCountryName : (NSString *)countryName
+{
+    NSString *country_flag = countryName;
+    
+    for(int i=0;i<[country_flag length];i++)
+    {
+        if([country_flag characterAtIndex:i]==' ')
+        {
+            country_flag = [country_flag stringByReplacingOccurrencesOfString:@" "
+                                                                   withString:@"-"];
+        }
+    }
+    
+    return country_flag;
+}
+
+- (IBAction)doneButtonClicked:(id)sender
+{
+    [appDelegate createTabBarControllerItems];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

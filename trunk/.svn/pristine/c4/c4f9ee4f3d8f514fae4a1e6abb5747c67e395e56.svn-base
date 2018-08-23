@@ -1,0 +1,719 @@
+//
+//  DialPadViewController.m
+//  ReachMe
+//
+//  Created by Bhaskar Munireddy on 12/04/18.
+//  Copyright © 2018 Kirusa. All rights reserved.
+//
+
+#import "DialPadViewController.h"
+#import <AudioToolbox/AudioToolbox.h>
+#import "LinphoneManager.h"
+#import "CountryCallingRatesViewController.h"
+#import "UserProfileModel.h"
+#import "IVFileLocator.h"
+#import "Profile.h"
+#import "ConfigurationReader.h"
+
+#define DEVICE_WIDTH            [UIScreen mainScreen].bounds.size.width
+#define DEVICE_HEIGHT            [UIScreen mainScreen].bounds.size.height
+
+@interface DialPadViewController ()<CountryCallingRatesViewControllerDelegate>{
+    UIButton *backSpace;
+    BOOL isReturn;
+    BOOL clearText;
+    BOOL isCountrySelected;
+    NSMutableArray *topFiveList, *allCountriesList;
+}
+@property (weak, nonatomic) IBOutlet UITextField *numberTextField;
+@property (weak, nonatomic) IBOutlet UIButton *countryFlag;
+@property (weak, nonatomic) IBOutlet UILabel *countryCode;
+@property (weak, nonatomic) IBOutlet UIImageView *countryFlagImage;
+@property (strong,nonatomic) NSDictionary* dicCountry;
+@property (strong,nonatomic) NSString* countrySimIso;
+
+@end
+
+@implementation DialPadViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self)
+    {
+        [self setTabBarItem:[[UITabBarItem alloc] initWithTitle:@"Keypad" image:[UIImage imageNamed:@"keypad"] selectedImage:[UIImage imageNamed:@"keypad_active"]]];
+    }
+    return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    isCountrySelected = NO;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self prepareCountryListDictionary];
+    });
+    self.numberTextField.text = @"";
+    self.countrySimIso = @"";
+    clearText = NO;
+    UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    self.numberTextField.inputView = dummyView;
+    [self dialPadDesign];
+    // Do any additional setup after loading the view from its nib.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(clearText) {
+        self.numberTextField.text = @"";
+        clearText = NO;
+    }
+    
+    [super viewWillAppear:animated];
+    [self.numberTextField resignFirstResponder];
+    [[UIStateMachine sharedStateMachineObj]setCurrentUI:self];
+    appDelegate.tabBarController.tabBar.hidden = NO;
+    self.navigationController.navigationBar.hidden = YES;
+    
+    if (!isCountrySelected) {
+        NSString *countryName = [self getCountryCode:[[ConfigurationReader sharedConfgReaderObj] getLoginId]];
+        NSString *countryFlag = @"";
+        NSString *isd =@"+";
+        self.countrySimIso = @"";
+        for (NSMutableDictionary *country in [[Setting sharedSetting]getCountryList]) {
+            if ([countryName isEqualToString:[country valueForKey:@"COUNTRY_NAME"]]) {
+                isd = [isd stringByAppendingString:[country valueForKey:@"COUNTRY_ISD_CODE"]];
+                [self setFlag:country];
+                countryFlag = [country valueForKey:@"COUNTRY_FLAG"];
+                self.countrySimIso = [country valueForKey:COUNTRY_SIM_ISO];
+            }
+        }
+        self.countryFlagImage.image = [UIImage imageNamed:countryFlag];
+        self.countryCode.text = isd;
+    }
+    isCountrySelected = NO;
+    
+    NSArray* countryList = [[Setting sharedSetting]getCountryList];
+    NSString* cc = [Common removePlus:self.countryCode.text];
+    NSArray* filteredList = nil;
+    if(self.countrySimIso.length) {
+        filteredList = [countryList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.COUNTRY_SIM_ISO = %@",self.countrySimIso]];
+        
+    } else {
+        filteredList = [countryList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.COUNTRY_ISD_CODE = %@",cc]];
+    }
+    
+    if(filteredList.count) {
+        self.dicCountry = [filteredList objectAtIndex:0];
+    }
+    
+}
+
+-(void)setFlag : (NSMutableDictionary *)flagDic
+{
+    NSString *country_flag = [flagDic valueForKey:@"COUNTRY_NAME"];
+    
+    for(int i=0;i<[country_flag length];i++)
+    {
+        if([country_flag characterAtIndex:i]==' ')
+        {
+            country_flag = [country_flag stringByReplacingOccurrencesOfString:@" "
+                                                                   withString:@"-"];
+        }
+    }
+    [flagDic setValue: country_flag forKey:@"COUNTRY_FLAG"];
+}
+
+- (NSString *)getCountryCode:(NSString *)phoneNumber
+{
+    NSArray *countryList;
+    NSString* archiveFilePathCountry = [[IVFileLocator getDocumentDirectoryPath]
+                                        stringByAppendingPathComponent:@"Country.dat"];
+    @try {
+        countryList = [NSKeyedUnarchiver unarchiveObjectWithFile:archiveFilePathCountry];
+    }
+    @catch (NSException *exception) {
+        KLog(@"Unable to create object from archive file");
+    }
+    
+    NSString *countryCode = @"";
+    
+    UserProfileModel *model = [[Profile sharedUserProfile]profileData];
+    NSMutableArray *phoneNumberDetails = model.additionalVerifiedNumbers;
+    for (int i = 0; i < phoneNumberDetails.count; i++) {
+        if ([[[phoneNumberDetails objectAtIndex:i] valueForKey:@"contact_id"] isEqualToString:phoneNumber]) {
+            countryCode = [[phoneNumberDetails objectAtIndex:i] valueForKey:@"country_code"];
+        }
+    }
+    
+    NSMutableArray *countries = [NSMutableArray arrayWithArray:countryList];
+    NSString* countryISO = @"";
+    if(countries != nil && [countries count] >0)
+    {
+        for(NSMutableDictionary* dic in countries)
+        {
+            NSString *code = [dic valueForKey:COUNTRY_CODE];
+            if([code isEqualToString:countryCode])
+            {
+                countryISO = [dic valueForKey:COUNTRY_NAME];
+            }
+        }
+    }
+    
+    return countryISO;
+}
+
+- (void)prepareCountryListDictionary {
+    
+    KLog(@"prepareCountryListDictionary - START");
+    
+    BOOL hasPrefixValues;
+    float debitRates = 0.0;
+    float minDebitRate = 0.0;
+    float maxDebitRate = 0.0;
+    NSArray *obdDebitRatesArray;
+    NSArray* tmp = [[Engine sharedEngineObj]fetchObdDebitPolicy:NO];
+    if(tmp.count)
+    {
+        obdDebitRatesArray = [[NSArray alloc] initWithArray:tmp];
+    }
+    
+    topFiveList = [[NSMutableArray alloc] init];
+    
+    for (NSMutableDictionary *country in [Common topFiveCountryList]) {
+        hasPrefixValues = NO;
+        NSString *isd =[country valueForKey:@"COUNTRY_SIM_ISO"];
+        if (obdDebitRatesArray.count > 0) {
+            
+            NSArray* res = [obdDebitRatesArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.country_iso2 = %@",isd]];
+            NSDictionary* iso=nil;
+            if(res.count)
+                iso = [res objectAtIndex:0];
+            
+            //for (NSDictionary *iso in obdDebitRatesArray)
+            {
+                //if ([[iso valueForKey:@"country_iso2"] isEqualToString:isd])
+                if(iso.count)
+                {
+                    NSArray *prefixArray = [iso valueForKey:@"prefix_debits"];
+                    NSNumber *max, *min;
+                    long maxPrefix;
+                    long minPrefix;
+                    if (prefixArray.count > 0) {
+                        hasPrefixValues = YES;
+                        NSMutableArray *prefixDebitValues = [NSMutableArray arrayWithArray:[[iso valueForKey:@"prefix_debits"] allValues]];
+                        max = [prefixDebitValues valueForKeyPath:@"@max.doubleValue"];
+                        min = [prefixDebitValues valueForKeyPath:@"@min.doubleValue"];
+                    }
+                    
+                    long callingRate = [[iso valueForKey:@"debits"] longValue];
+                    
+                    if (callingRate == -1) {
+                        [country setValue:@"Not Supported" forKey:@"CALLING_RATE"];
+                    }else{
+                        if (hasPrefixValues) {
+                            maxPrefix = [max longValue];
+                            minPrefix = [min longValue];
+                            minDebitRate = minPrefix / 100.0f;
+                            maxDebitRate = maxPrefix / 100.0f;
+                            if (0.00 == minDebitRate) {
+                                minDebitRate = 0.01;
+                            }
+                            [country setValue:[NSString stringWithFormat:@"$ %.2lf - %.2lf /min",minDebitRate,maxDebitRate] forKey:@"CALLING_RATE"];
+                            [country setValue:prefixArray forKey:@"PREFIX_RATE"];
+                        }else{
+                            debitRates = callingRate / 100.0f;
+                            [country setValue:[NSString stringWithFormat:@"$ %.2lf /min",debitRates] forKey:@"CALLING_RATE"];
+                            [country setValue:@"" forKey:@"PREFIX_RATE"];
+                        }
+                    }
+                }
+            }
+        }else{
+            [country setValue:@"Not Supported" forKey:@"CALLING_RATE"];
+        }
+        if (![country valueForKey:@"CALLING_RATE"]) {
+            [country setValue:@"Not Supported" forKey:@"CALLING_RATE"];
+        }
+        [topFiveList addObject:country];
+    }
+    
+    allCountriesList = [[NSMutableArray alloc] init];
+    for (NSMutableDictionary *country in [[Setting sharedSetting]getCountryList]) {
+        hasPrefixValues = NO;
+        NSString *isd =[country valueForKey:@"COUNTRY_SIM_ISO"];
+        if (obdDebitRatesArray.count > 0) {
+            for (NSDictionary *iso in obdDebitRatesArray) {
+                if ([[iso valueForKey:@"country_iso2"] isEqualToString:isd]) {
+                    NSArray *prefixArray = [iso valueForKey:@"prefix_debits"];
+                    NSNumber *max, *min;
+                    long maxPrefix;
+                    long minPrefix;
+                    if (prefixArray.count > 0) {
+                        hasPrefixValues = YES;
+                        NSMutableArray *prefixDebitValues = [NSMutableArray arrayWithArray:[[iso valueForKey:@"prefix_debits"] allValues]];
+                        max = [prefixDebitValues valueForKeyPath:@"@max.doubleValue"];
+                        min = [prefixDebitValues valueForKeyPath:@"@min.doubleValue"];
+                    }
+                    
+                    long callingRate = [[iso valueForKey:@"debits"] longValue];
+                    
+                    if (callingRate == -1) {
+                        [country setValue:@"Not Supported" forKey:@"CALLING_RATE"];
+                    }else{
+                        if (hasPrefixValues) {
+                            maxPrefix = [max longValue];
+                            minPrefix = [min longValue];
+                            minDebitRate = minPrefix / 100.0f;
+                            maxDebitRate = maxPrefix / 100.0f;
+                            if (0.00 == minDebitRate) {
+                                minDebitRate = 0.01;
+                            }
+                            [country setValue:[NSString stringWithFormat:@"$ %.2lf - %.2lf /min",minDebitRate,maxDebitRate] forKey:@"CALLING_RATE"];
+                            [country setValue:prefixArray forKey:@"PREFIX_RATE"];
+                        }else{
+                            debitRates = callingRate / 100.0f;
+                            [country setValue:[NSString stringWithFormat:@"$ %.2lf /min",debitRates] forKey:@"CALLING_RATE"];
+                            [country setValue:@"" forKey:@"PREFIX_RATE"];
+                        }
+                    }
+                }
+            }
+        }else{
+            [country setValue:@"Not Supported" forKey:@"CALLING_RATE"];
+        }
+        if (![country valueForKey:@"CALLING_RATE"]) {
+            [country setValue:@"Not Supported" forKey:@"CALLING_RATE"];
+        }
+        [allCountriesList addObject:country];
+    }
+    
+    KLog(@"prepareCountryListDictionary - END");
+}
+
+- (void)dialPadDesign
+{
+    CGFloat height = (DEVICE_HEIGHT - 280.0)/5;
+    BOOL iPhoneX = NO;
+    if (@available(iOS 11.0, *)) {
+        UIWindow *mainWindow = [[[UIApplication sharedApplication] delegate] window];
+        if (mainWindow.safeAreaInsets.top > 0.0) {
+            iPhoneX = YES;
+            height = 70.0;
+        }
+    }
+    
+    UIView *view1 = [[UIView alloc]initWithFrame:CGRectMake(0.0, iPhoneX?280.0:140.0, DEVICE_WIDTH, height)];
+    view1.backgroundColor = [UIColor clearColor];
+    
+    UIButton *one = [[UIButton alloc] initWithFrame:CGRectMake(48.0, 0.0, height, height)];
+    [one setImage:[UIImage imageNamed:@"one"] forState:UIControlStateNormal];
+    
+    UIButton *two = [[UIButton alloc] initWithFrame:CGRectMake((DEVICE_WIDTH/2) - (height/2), 0.0, height, height)];
+    [two setImage:[UIImage imageNamed:@"two"] forState:UIControlStateNormal];
+    
+    UIButton *three = [[UIButton alloc] initWithFrame:CGRectMake(DEVICE_WIDTH - height - 48.0, 0.0, height, height)];
+    [three setImage:[UIImage imageNamed:@"three"] forState:UIControlStateNormal];
+    
+    [view1 addSubview:one];
+    [view1 addSubview:two];
+    [view1 addSubview:three];
+    
+    UIView *view2 = [[UIView alloc]initWithFrame:CGRectMake(0.0, view1.frame.size.height + view1.frame.origin.y + 16.0, DEVICE_WIDTH, height)];
+    view2.backgroundColor = [UIColor clearColor];
+    
+    UIButton *four = [[UIButton alloc] initWithFrame:CGRectMake(48.0, 0.0, height, height)];
+    [four setImage:[UIImage imageNamed:@"four"] forState:UIControlStateNormal];
+    
+    UIButton *five = [[UIButton alloc] initWithFrame:CGRectMake((DEVICE_WIDTH/2) - (height/2), 0.0, height, height)];
+    [five setImage:[UIImage imageNamed:@"five"] forState:UIControlStateNormal];
+    
+    UIButton *six = [[UIButton alloc] initWithFrame:CGRectMake(DEVICE_WIDTH - height - 48.0, 0.0, height, height)];
+    [six setImage:[UIImage imageNamed:@"six"] forState:UIControlStateNormal];
+    
+    [view2 addSubview:four];
+    [view2 addSubview:five];
+    [view2 addSubview:six];
+    
+    UIView *view3 = [[UIView alloc]initWithFrame:CGRectMake(0.0, view2.frame.size.height + view2.frame.origin.y + 16.0, DEVICE_WIDTH, height)];
+    view3.backgroundColor = [UIColor clearColor];
+    
+    UIButton *seven = [[UIButton alloc] initWithFrame:CGRectMake(48.0, 0.0, height, height)];
+    [seven setImage:[UIImage imageNamed:@"seven"] forState:UIControlStateNormal];
+    
+    UIButton *eight = [[UIButton alloc] initWithFrame:CGRectMake((DEVICE_WIDTH/2) - (height/2), 0.0, height, height)];
+    [eight setImage:[UIImage imageNamed:@"eight"] forState:UIControlStateNormal];
+    
+    UIButton *nine = [[UIButton alloc] initWithFrame:CGRectMake(DEVICE_WIDTH - height - 48.0, 0.0, height, height)];
+    [nine setImage:[UIImage imageNamed:@"nine"] forState:UIControlStateNormal];
+    
+    [view3 addSubview:seven];
+    [view3 addSubview:eight];
+    [view3 addSubview:nine];
+    
+    UIView *view4 = [[UIView alloc]initWithFrame:CGRectMake(0.0, view3.frame.size.height + view3.frame.origin.y + 16.0, DEVICE_WIDTH, height)];
+    view4.backgroundColor = [UIColor clearColor];
+    
+    UIButton *asterisk = [[UIButton alloc] initWithFrame:CGRectMake(48.0, 0.0, height, height)];
+    [asterisk setImage:[UIImage imageNamed:@"asterisk"] forState:UIControlStateNormal];
+    
+    UIButton *zero = [[UIButton alloc] initWithFrame:CGRectMake((DEVICE_WIDTH/2) - (height/2), 0.0, height, height)];
+    [zero setImage:[UIImage imageNamed:@"zero"] forState:UIControlStateNormal];
+    
+    UIButton *hash = [[UIButton alloc] initWithFrame:CGRectMake(DEVICE_WIDTH - height - 48.0, 0.0, height, height)];
+    [hash setImage:[UIImage imageNamed:@"hash"] forState:UIControlStateNormal];
+    
+    [view4 addSubview:asterisk];
+    [view4 addSubview:zero];
+    [view4 addSubview:hash];
+    
+    UIView *view5 = [[UIView alloc]initWithFrame:CGRectMake(0.0, view4.frame.size.height + view4.frame.origin.y + 16.0, DEVICE_WIDTH, height)];
+    view5.backgroundColor = [UIColor clearColor];
+    
+    UIButton *call = [[UIButton alloc] initWithFrame:CGRectMake((DEVICE_WIDTH/2) - (height/2), 0.0, height, height)];
+    [call setImage:[UIImage imageNamed:@"call_button"] forState:UIControlStateNormal];
+    
+    backSpace = [[UIButton alloc] initWithFrame:CGRectMake(DEVICE_WIDTH - height - 48.0, 0.0, height, height)];
+    [backSpace setImage:[UIImage imageNamed:@"backspace"] forState:UIControlStateNormal];
+    
+    [view5 addSubview:call];
+    [view5 addSubview:backSpace];
+    
+    if (!self.numberTextField.text.length)
+        backSpace.hidden = YES;
+    
+    [one addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [two addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [three addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [four addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [five addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [six addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [seven addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [eight addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [nine addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [zero addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [asterisk addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    [hash addTarget:self action:@selector(touchUp:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    
+    [one addTarget:self action:@selector(oneTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [two addTarget:self action:@selector(twoTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [three addTarget:self action:@selector(threeTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [four addTarget:self action:@selector(fourTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [five addTarget:self action:@selector(fiveTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [six addTarget:self action:@selector(sixTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [seven addTarget:self action:@selector(sevenTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [eight addTarget:self action:@selector(eightTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [nine addTarget:self action:@selector(nineTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [zero addTarget:self action:@selector(zeroTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [asterisk addTarget:self action:@selector(asteriskTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [hash addTarget:self action:@selector(hashTouchDown:) forControlEvents:UIControlEventTouchDown];
+    
+    [call addTarget:self action:@selector(call:) forControlEvents:UIControlEventTouchUpInside];
+    [backSpace addTarget:self action:@selector(backSpace:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UILongPressGestureRecognizer *zeroLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(zeroLongPress:)];
+    [zero addGestureRecognizer:zeroLongPress];
+    
+    UILongPressGestureRecognizer *longPressBackSpace = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(backspaceLongPress:)];
+    [backSpace addGestureRecognizer:longPressBackSpace];
+    
+    [self.view addSubview:view1];
+    [self.view addSubview:view2];
+    [self.view addSubview:view3];
+    [self.view addSubview:view4];
+    [self.view addSubview:view5];
+}
+
+- (IBAction)selectCountry:(id)sender {
+    CountryCallingRatesViewController *callingRateVC = [[UIStoryboard storyboardWithName:@"IVSettings_rm" bundle:[NSBundle mainBundle]]instantiateViewControllerWithIdentifier:@"CountryCallingRate"];
+    callingRateVC.profileFieldData = allCountriesList;
+    callingRateVC.topFiveCountryList = topFiveList;
+    callingRateVC.countryCallingRateDelegate = self;
+    callingRateVC.isDialPad = YES;
+    self.navigationController.navigationBar.hidden = NO;
+    [self.navigationController pushViewController:callingRateVC animated:YES];
+}
+
+-(void)countryCallingRatesSelection:(CountryCallingRatesViewController*)callingRates didSelectCountry:(NSMutableDictionary*)country
+{
+    KLog(@"Country %@",country);
+    if([country valueForKey:COUNTRY_ISD_CODE] != nil && [[country valueForKey:COUNTRY_ISD_CODE] length] > 0)
+    {
+        isCountrySelected = YES;
+        NSString *tempStr = [[NSString alloc] initWithFormat:@"+%@",[country valueForKey:COUNTRY_ISD_CODE]];
+        self.countryCode.text = tempStr;
+        self.countrySimIso = [country valueForKey:COUNTRY_SIM_ISO];
+        self.dicCountry = [[NSDictionary alloc]initWithDictionary:country];
+    }
+    self.countryFlagImage.image = [UIImage imageNamed:[country valueForKey:@"COUNTRY_FLAG"]];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    if(self.numberTextField.text.length)
+        backSpace.hidden = NO;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSCharacterSet *numbersOnly = [NSCharacterSet characterSetWithCharactersInString:@"0123456789*#+"];
+    NSCharacterSet *characterSetFromTextField = [NSCharacterSet characterSetWithCharactersInString:string];
+    
+    BOOL stringIsValid = [numbersOnly isSupersetOfSet:characterSetFromTextField];
+    return stringIsValid;
+}
+
+- (IBAction)textChange:(id)sender {
+    if(self.numberTextField.text.length)
+        backSpace.hidden = NO;
+}
+
+-(IBAction)touchUp:(id)sender {
+    linphone_core_stop_dtmf(LC);
+}
+
+- (void)btnTouchDown:(char)digit {
+    
+    BOOL isEditing = self.numberTextField.isEditing;
+    NSString* text = [NSString stringWithFormat:@"%c",digit];
+    
+    NSInteger idx = [self getCursorIndex];
+    if (idx == 0) {
+        if(self.numberTextField.text.length && isEditing)
+            self.numberTextField.text = [self getStringAtIndex:text];
+        else
+            [self selectedRangeTextChange:text];
+    } else {
+        self.numberTextField.text = [self getStringAtIndex:text];
+    }
+    
+    [self setCursorPosition:idx+1];
+    
+    backSpace.hidden = NO;
+    
+    [self playDigit:digit];
+}
+
+- (IBAction)oneTouchDown:(id)sender {
+    [self btnTouchDown:'1'];
+}
+
+- (IBAction)twoTouchDown:(id)sender {
+    [self btnTouchDown:'2'];
+}
+
+- (IBAction)threeTouchDown:(id)sender {
+    [self btnTouchDown:'3'];
+}
+
+- (IBAction)fourTouchDown:(id)sender {
+    [self btnTouchDown:'4'];
+}
+
+- (IBAction)fiveTouchDown:(id)sender {
+    [self btnTouchDown:'5'];
+}
+
+- (IBAction)sixTouchDown:(id)sender {
+     [self btnTouchDown:'6'];
+}
+
+- (IBAction)sevenTouchDown:(id)sender {
+    [self btnTouchDown:'7'];
+}
+
+- (IBAction)eightTouchDown:(id)sender {
+    [self btnTouchDown:'8'];
+}
+
+- (IBAction)nineTouchDown:(id)sender {
+    [self btnTouchDown:'9'];
+}
+
+- (IBAction)asteriskTouchDown:(id)sender {
+    [self btnTouchDown:'*'];
+}
+
+- (IBAction)zeroTouchDown:(id)sender {
+    [self btnTouchDown:'0'];
+}
+
+- (IBAction)hashTouchDown:(id)sender {
+    [self btnTouchDown:'#'];
+}
+
+-(void)setCursorPosition:(NSInteger)position {
+    
+    UITextPosition* start = self.numberTextField.beginningOfDocument;
+    UITextPosition* newPosition = [self.numberTextField positionFromPosition:start offset:position];
+    if(newPosition)
+        self.numberTextField.selectedTextRange = [self.numberTextField textRangeFromPosition:newPosition toPosition:newPosition];
+}
+
+- (IBAction)call:(id)sender {
+    
+    NSString* address = self.numberTextField.text;
+    if(!address.length)
+        return;
+    
+    //- remove only leading zeros
+    address = [Common removePlus:address];
+    NSRange range = [address rangeOfString:@"^0*" options:NSRegularExpressionSearch];
+    address = [address stringByReplacingCharactersInRange:range withString:@""];
+    address = [Common removePlus:address];
+    
+    NSString* countryCode = @"";
+    id tmpIsdCode = [self.dicCountry valueForKey:COUNTRY_ISD_CODE];
+    if([tmpIsdCode isKindOfClass:[NSString class]]) {
+        countryCode = tmpIsdCode;
+    } else {
+        countryCode = [tmpIsdCode stringValue];
+    }
+    
+    NSString* currentISD = [Common removePlus:countryCode];
+    BOOL isPossibleNumber = [Common isPossibleNumber:address withContryISDCode:currentISD showAlert:NO];
+    BOOL isValidNumber = [Common isValidNumber:address withContryISDCode:currentISD];
+    if(!isValidNumber && !isPossibleNumber) {
+        KLog(@"Invalid phone number: %@",address);
+        //TODO: display a warning message to the user
+        return;
+    }
+    
+    NSInteger maxLen = [[self.dicCountry valueForKey:COUNTRY_MAX_PHONE_LENGTH] integerValue];
+    NSInteger minLen = [[self.dicCountry valueForKey:COUNTRY_MIN_PHONE_LENGTH] integerValue];
+    
+    address = [Common removeCountryCodeFrom:address CCMaxLength:maxLen CCMinLength:minLen];
+    address = [NSString stringWithFormat:@"%@%@",currentISD,address];
+    [LinphoneManager.instance makeCall:address FromAddress:nil UserType:nil CalleeInfo:self.dicCountry];
+    clearText = YES;
+}
+
+- (IBAction)backSpace:(id)sender {
+    
+    [self selectedRangeTextChange:@""];
+    if(isReturn){
+        isReturn = NO;
+        return;
+    }
+    
+    if(self.numberTextField.text.length) {
+        if(self.numberTextField.text.length == 1)
+            backSpace.hidden = YES;
+        
+        NSInteger idx = [self getCursorIndex];
+        if(0==idx) {
+            KLog(@"Do nothing");
+        }
+        else if (idx == self.numberTextField.text.length) {
+            self.numberTextField.text = [self.numberTextField.text substringToIndex:[self.numberTextField.text length]-1];
+        }
+        else {
+            NSRange range = NSMakeRange(idx - 1, 0);
+            self.numberTextField.text = [self string:self.numberTextField.text ByReplacingACharacterAtIndex:idx byCharacter:@""];
+            
+            UITextPosition *start = [self.numberTextField positionFromPosition:[self.numberTextField beginningOfDocument]
+                                                         offset:range.location];
+            UITextPosition *end = [self.numberTextField positionFromPosition:start
+                                                       offset:range.length];
+            [self.numberTextField setSelectedTextRange:[self.numberTextField textRangeFromPosition:start toPosition:end]];
+        }
+    }
+}
+
+
+- (void)zeroLongPress:(UILongPressGestureRecognizer*)gesture {
+    
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        NSInteger index = [self getCursorIndex];
+        KLog(@"INDEX = %ld",index);
+        if(index>0) {
+            NSRange range = NSMakeRange(index-1, 1);
+            NSMutableString* newString = [NSMutableString stringWithString:self.numberTextField.text];
+            [newString replaceCharactersInRange:range withString:@"+"];
+            self.numberTextField.text = newString;
+             [self setCursorPosition:index];
+        }
+        backSpace.hidden = NO;
+    }
+    linphone_core_stop_dtmf(LC);
+}
+
+- (void)backspaceLongPress:(UILongPressGestureRecognizer*)gesture {
+    if(self.numberTextField.text.length){
+        
+        if(self.numberTextField.text.length == 1)
+            backSpace.hidden = YES;
+        
+        self.numberTextField.text = [self.numberTextField.text substringToIndex:[self.numberTextField.text length]-1];
+    }
+}
+
+- (void)selectedRangeTextChange:(NSString *)withString
+{
+    UITextRange *selectedTextRange = self.numberTextField.selectedTextRange;
+    NSUInteger location = [self.numberTextField offsetFromPosition:self.numberTextField.beginningOfDocument
+                                                        toPosition:selectedTextRange.start];
+    NSUInteger length = [self.numberTextField offsetFromPosition:selectedTextRange.start
+        
+                                                      toPosition:selectedTextRange.end];
+    if (length != 0 ) {
+        self.numberTextField.text = [self.numberTextField.text stringByReplacingCharactersInRange:NSMakeRange(location, length) withString:withString];
+        isReturn = YES;
+    } else {
+        self.numberTextField.text = [self.numberTextField.text stringByAppendingString:withString];
+    }
+}
+
+-(NSString *)string:(NSString*)string ByReplacingACharacterAtIndex:(NSInteger)i byCharacter:(NSString*)StringContainingAChar{
+    
+    return [string stringByReplacingCharactersInRange:NSMakeRange(i - 1, 1) withString:StringContainingAChar];
+}
+
+- (NSInteger)getCursorIndex
+{
+    UITextRange *selRange = self.numberTextField.selectedTextRange;
+    UITextPosition *selStartPos = selRange.start;
+    NSInteger idx = [self.numberTextField offsetFromPosition:self.numberTextField.beginningOfDocument toPosition:selStartPos];
+    return idx;
+}
+
+- (NSMutableString *)getStringAtIndex:(NSString *)withString
+{
+    NSMutableString *mu = [NSMutableString stringWithString:self.numberTextField.text];
+    [mu insertString:withString atIndex:[self getCursorIndex]];
+    return mu;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+#pragma mark -
+-(void)playDigit:(char)digit {
+    
+    if (!linphone_core_in_call(LC)) {
+        linphone_core_play_dtmf(LC, digit, -1);
+    } else {
+        LinphoneStatus ret = linphone_call_send_dtmf(linphone_core_get_current_call(LC), digit);
+        linphone_core_play_dtmf(LC, digit, 100);
+        if(0 == ret)  {
+            KLog(@"digit \'%c\' sent",digit);
+            EnLogd(@"digit \'%c\' sent",digit);
+        } else {
+            KLog(@"Error in sending digit \'%c\'",digit);
+            EnLogd(@"Error in sending digit \'%c\'",digit);
+        }
+    }
+}
+
+@end

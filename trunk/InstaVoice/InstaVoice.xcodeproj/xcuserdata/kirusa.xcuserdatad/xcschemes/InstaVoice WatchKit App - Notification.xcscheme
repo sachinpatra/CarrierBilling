@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "0630"
+   version = "2.0">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "647A2AD01AD7AF620091C2BF"
+               BuildableName = "InstaVoice WatchKit App.app"
+               BlueprintName = "InstaVoice WatchKit App"
+               ReferencedContainer = "container:InstaVoice.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "647A2ABE1AD7AF620091C2BF"
+               BuildableName = "InstaVoice WatchKit Extension.appex"
+               BlueprintName = "InstaVoice WatchKit Extension"
+               ReferencedContainer = "container:InstaVoice.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "934381BE17B1030200F9D0B4"
+               BuildableName = "InstaVoice.app"
+               BlueprintName = "InstaVoice"
+               ReferencedContainer = "container:InstaVoice.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      buildConfiguration = "Debug">
+      <Testables>
+      </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "647A2AD01AD7AF620091C2BF"
+            BuildableName = "InstaVoice WatchKit App.app"
+            BlueprintName = "InstaVoice WatchKit App"
+            ReferencedContainer = "container:InstaVoice.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+   </TestAction>
+   <LaunchAction
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      buildConfiguration = "Debug"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      allowLocationSimulation = "YES"
+      launchAutomaticallySubstyle = "8"
+      notificationPayloadFile = "InstaVoice WatchKit Extension/AudioNotificationPayload.apns">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.springboard"
+         RemotePath = "/InstaVoice">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "647A2AD01AD7AF620091C2BF"
+            BuildableName = "InstaVoice WatchKit App.app"
+            BlueprintName = "InstaVoice WatchKit App"
+            ReferencedContainer = "container:InstaVoice.xcodeproj">
+         </BuildableReference>
+      </RemoteRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "647A2AD01AD7AF620091C2BF"
+            BuildableName = "InstaVoice WatchKit App.app"
+            BlueprintName = "InstaVoice WatchKit App"
+            ReferencedContainer = "container:InstaVoice.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </LaunchAction>
+   <ProfileAction
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      buildConfiguration = "Release"
+      debugDocumentVersioning = "YES">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.springboard"
+         RemotePath = "/InstaVoice">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "647A2AD01AD7AF620091C2BF"
+            BuildableName = "InstaVoice WatchKit App.app"
+            BlueprintName = "InstaVoice WatchKit App"
+            ReferencedContainer = "container:InstaVoice.xcodeproj">
+         </BuildableReference>
+      </RemoteRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "647A2AD01AD7AF620091C2BF"
+            BuildableName = "InstaVoice WatchKit App.app"
+            BlueprintName = "InstaVoice WatchKit App"
+            ReferencedContainer = "container:InstaVoice.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>

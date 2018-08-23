@@ -1,0 +1,95 @@
+//
+//  CountryFlag.h
+//  InstaVoice
+//
+//  Created by EninovUser on 22/08/13.
+//  Copyright (c) 2013 EninovUser. All rights reserved.
+//
+
+#ifndef InstaVoice_CountryFlag_h
+#define InstaVoice_CountryFlag_h
+
+#define 93 @"Afganistan.png"
+#define 355 @"Albania.png"
+#define 213 @"Algeria.png"
+#define 1684 @"American-Samoa.png"
+#define 376 @"Andorra.png"
+#define 244 @"Angola.png""
+#define 1264 @"Anguilla.png"
+#define 672 @"Antarctica.png"
+#define  1268 @"Antigua-and-Barbuda.png"
+#define 54 @"Argentina"
+#define 374 @"Armenia.png"
+#define 297 @"Aruba.png"
+#define 61 @"Australia.png"
+#define 43 @"Austria.png"
+#define 994 @"Azerbaijan.png"
+#define 1242 @"Bahamas.png"
+#define 973 @"Bahrain.png"
+#define 880 @"Bangladesh.png"
+#define 1246 @"Barbados.png"
+#define 375 @"Belarus.png"
+#define 32 @"Belgium.png"
+#define 501 @"Belize.png"
+#define 229 @"Belize.png"
+#define 1441 @"Bermuda.png"
+#define 975 @"Bhutan.png"
+#define 591 @"Bolivia.png"
+#define 387 @"Bosnia-and-Herzegovina.png"
+#define 267 @"Botswana.png"
+#define 55 @"Brazil.png"
+#define 1284 @"British-Virgin-Islands.png"
+#define 673 @"Brunei.png"
+#define 359 @"Bulgaria.png"
+#define 226 @"Burkina-Faso.png"
+#define 95 @"Burundi.png"
+#define 257 @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+#define  @""
+
+
+
+
+
+
+#endif

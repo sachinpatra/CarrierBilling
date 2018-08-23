@@ -1,0 +1,133 @@
+//
+//  SelectCountryViewController.swift
+//  ReachMe
+//
+//  Created by Sachin Kumar Patra on 3/29/18.
+//  Copyright © 2018 Kirusa. All rights reserved.
+//
+
+import UIKit
+
+class SelectCountryViewController: UITableViewController {
+
+    var subscriptionList = [[String:Any]]()
+    @IBOutlet weak var refreshSpinner: UIActivityIndicatorView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        fetchPlanlist()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    func fetchPlanlist() {
+        guard Common.isNetworkAvailable() == NETWORK_AVAILABLE else {
+            ReachMeUtility.showAlert(withMessage: "NET_NOT_AVAILABLE".localized)
+            refreshSpinner.stopAnimating()
+            return
+        }
+        
+        let reqDisc: NSMutableDictionary = [:]
+        let purchaseAPI = InAppPurchaseApi(request: reqDisc)
+        NetworkCommon.addData(reqDisc, eventType: SUBSCRIPTION_PLANLIST)
+        purchaseAPI?.callNetworkRequest(reqDisc, withSuccess: {[weak self] (requestAPI, responseDisc) in
+            guard responseDisc?.value(forKey: STATUS) as! String == STATUS_OK else {
+                print("Error in fetching subscription list. api request: \(String(describing: requestAPI?.request))")
+                return
+            }
+            
+            guard let subList = responseDisc?.value(forKey: "sub_list") as? [[String:Any]] else { return }
+
+            let countryList = Setting.shared().getCountryList() as! [[String:Any]]
+            var reloadIndexList = [IndexPath]()
+            for (index, subscription) in subList.enumerated() {
+                if let country = (countryList.filter{ ($0["COUNTRY_SIM_ISO"] as! String).lowercased() == (subscription["country_iso"] as! String).lowercased()}.first) {
+                    
+                    var sub = subscription
+                    sub["country_name"] = country["COUNTRY_NAME"]
+                    sub["country_ISD_code"] = country["COUNTRY_ISD_CODE"]
+                    self?.subscriptionList.append(sub)
+                }
+                reloadIndexList.append(IndexPath(row: index, section: 0))
+            }
+            
+            self?.tableView.beginUpdates()
+            self?.tableView.insertRows(at: reloadIndexList, with: .automatic)
+            self?.tableView.endUpdates()
+
+            self?.refreshSpinner.stopAnimating()
+
+            }, failure: { (requestAPI, error) in
+                self.refreshSpinner.stopAnimating()
+                print("*** Error in fetching subscription list: \(error.debugDescription)")
+        })
+    }
+    
+    //MARK: - Segue Actions
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destVC = segue.destination as! CountryNumbersViewController
+        destVC.selectedCountry = subscriptionList[(tableView.indexPathForSelectedRow?.row)!]
+    }
+    
+    //MARK:- Unwind Action
+    @IBAction func unwindToSelectCountryViewControllre(segue:UIStoryboardSegue) {}
+}
+
+//MARK: - TableView Delegate & Datasource
+extension SelectCountryViewController {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return subscriptionList.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: SelectCountryCell.identifier, for: indexPath) as! SelectCountryCell
+        let subscription = subscriptionList[indexPath.row]
+        
+        cell.phoneCodeLabel.text = "+\(subscription["country_ISD_code"] as! String)"
+        if let countryname = subscription["country_name"] as? String {
+            cell.countryNameLabel.text = countryname
+            cell.countryImageView.image = UIImage(named: countryname.replacingOccurrences(of: " ", with: "-"))
+        }
+        if let subPlanList = subscription["sub_plan_list"] as? [[String:Any]], let subPlan = subPlanList.first {
+            cell.currencyTypeLabel.text = subPlan["price_currency"] as? String
+            cell.valueLabel.text = "\(subPlan["plan_price"] as! Int16)"
+            cell.planLabel.text = subPlan["billing_period"] as? String
+        }
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+}
+
+//MARK: - TableCells
+class SelectCountryCell: UITableViewCell {
+    
+    static let identifier = String(describing: SelectCountryCell.self)
+    
+    @IBOutlet weak var countryImageView: UIImageView!
+    @IBOutlet weak var phoneCodeLabel: UILabel!
+    @IBOutlet weak var countryNameLabel: UILabel!
+    @IBOutlet weak var currencyTypeLabel: UILabel!
+    @IBOutlet weak var valueLabel: UILabel!
+    @IBOutlet weak var planLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+    }
+}

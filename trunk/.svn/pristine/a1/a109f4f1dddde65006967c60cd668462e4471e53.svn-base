@@ -1,0 +1,26 @@
+//
+//  CountryCallingRatesViewController.h
+//  ReachMe
+//
+//  Created by Bhaskar Munireddy on 29/06/18.
+//  Copyright © 2018 Kirusa. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@class CountryCallingRatesViewController;
+
+@protocol CountryCallingRatesViewControllerDelegate <NSObject>
+@optional
+-(void)countryCallingRatesSelection:(CountryCallingRatesViewController*)callingRates didSelectCountry:(NSMutableDictionary*)country;
+@end
+
+@interface CountryCallingRatesViewController : UIViewController
+
+@property NSMutableArray* profileFieldData;
+@property NSMutableArray* topFiveCountryList;
+@property NSString* profileFieldTitle;
+@property BOOL isDialPad;
+@property id<CountryCallingRatesViewControllerDelegate> countryCallingRateDelegate;
+
+@end

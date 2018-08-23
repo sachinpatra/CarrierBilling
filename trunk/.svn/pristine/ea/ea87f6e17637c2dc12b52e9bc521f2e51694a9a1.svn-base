@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GroupChatMembersTableViewCell"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="7" id="c2R-gY-EUe" customClass="GroupChatMembersTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="c2R-gY-EUe" id="m3s-US-Qiw">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="59.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tly-60-Zzx">
+                        <rect key="frame" x="279" y="17" width="28" height="28"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="28" id="4ID-jM-kiv"/>
+                            <constraint firstAttribute="height" constant="28" id="snN-AB-SOL"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <state key="normal" image="calluser">
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                    </button>
+                    <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iuU-Gh-oZU" userLabel="circleView">
+                        <rect key="frame" x="16" y="10" width="40" height="40"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="PUp-Iy-xck"/>
+                            <constraint firstAttribute="width" constant="40" id="TmM-Ex-x2c"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nbw-Wz-fgF">
+                        <rect key="frame" x="64" y="13" width="207" height="16"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone Number" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lDS-0S-2sX">
+                        <rect key="frame" x="64" y="31" width="207" height="19"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="19" id="DLc-v6-fFo"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                        <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView hidden="YES" userInteractionEnabled="NO" tag="9009" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic-logo-m" translatesAutoresizingMaskIntoConstraints="NO" id="Xya-9d-83g">
+                        <rect key="frame" x="64" y="31" width="19" height="19"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
+                </subviews>
+                <color key="backgroundColor" red="0.98936474323272705" green="0.98936474323272705" blue="0.98936474323272705" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                <constraints>
+                    <constraint firstAttribute="centerY" secondItem="Nbw-Wz-fgF" secondAttribute="centerY" constant="9" id="1OI-gB-qGx"/>
+                    <constraint firstItem="iuU-Gh-oZU" firstAttribute="leading" secondItem="m3s-US-Qiw" secondAttribute="leading" constant="16" id="75X-Tx-aDN"/>
+                    <constraint firstAttribute="trailing" secondItem="Tly-60-Zzx" secondAttribute="trailing" constant="13" id="CT1-47-6Vz"/>
+                    <constraint firstAttribute="centerY" secondItem="lDS-0S-2sX" secondAttribute="centerY" constant="-11" id="Eb6-y6-kVW"/>
+                    <constraint firstItem="lDS-0S-2sX" firstAttribute="leading" secondItem="iuU-Gh-oZU" secondAttribute="trailing" constant="8" id="IVv-0a-cFR"/>
+                    <constraint firstItem="Tly-60-Zzx" firstAttribute="leading" secondItem="lDS-0S-2sX" secondAttribute="trailing" constant="8" id="LIi-iL-XHk"/>
+                    <constraint firstItem="Nbw-Wz-fgF" firstAttribute="top" secondItem="iuU-Gh-oZU" secondAttribute="top" constant="3" id="PJi-ry-DuN"/>
+                    <constraint firstItem="Nbw-Wz-fgF" firstAttribute="leading" secondItem="iuU-Gh-oZU" secondAttribute="trailing" constant="8" id="bLP-v3-zK4"/>
+                    <constraint firstItem="Tly-60-Zzx" firstAttribute="leading" secondItem="Nbw-Wz-fgF" secondAttribute="trailing" constant="8" id="oPN-pY-kfy"/>
+                    <constraint firstAttribute="centerY" secondItem="iuU-Gh-oZU" secondAttribute="centerY" id="sxp-el-TsI"/>
+                    <constraint firstAttribute="centerY" secondItem="Tly-60-Zzx" secondAttribute="centerY" constant="-1.5" id="xC2-ca-ItX"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <connections>
+                <outlet property="callButton" destination="Tly-60-Zzx" id="9OH-vX-phf"/>
+                <outlet property="circleView" destination="iuU-Gh-oZU" id="ups-KI-kuC"/>
+                <outlet property="memberName" destination="Nbw-Wz-fgF" id="VIL-TW-ZUd"/>
+                <outlet property="memberPhoneNumber" destination="lDS-0S-2sX" id="IbZ-77-P5l"/>
+            </connections>
+            <point key="canvasLocation" x="255" y="286"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="calluser" width="18" height="18"/>
+        <image name="ic-logo-m" width="16" height="16"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
+    </simulatedMetricsContainer>
+</document>

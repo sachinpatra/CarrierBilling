@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ConversationTableCellReachMeCallReceiver" id="ceB-cv-JPy" customClass="ConversationTableCellReachMeCallReceiver">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ceB-cv-JPy" id="alf-ur-CQX">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="119.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O6x-5D-uUF" userLabel="Missed call View">
+                        <rect key="frame" x="20" y="23" width="237" height="68"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qh8-eZ-ApK" userLabel="mcBGImage">
+                                <rect key="frame" x="0.0" y="0.0" width="237" height="68"/>
+                                <color key="backgroundColor" red="0.987326979637146" green="0.24499532580375671" blue="0.27687093615531921" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="answered" translatesAutoresizingMaskIntoConstraints="NO" id="bUY-fj-chY" userLabel="missedcallIcon">
+                                <rect key="frame" x="29" y="13.5" width="18" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="18" id="wtg-Rz-VUy"/>
+                                    <constraint firstAttribute="height" constant="18" id="yN8-cO-zYY"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c6v-nR-r9f" userLabel="mcTitleCountLabel">
+                                <rect key="frame" x="52" y="13" width="90" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="20" id="5an-Eu-7sz"/>
+                                    <constraint firstAttribute="width" constant="90" id="NZp-pd-Ogp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V5K-rN-UCZ">
+                                <rect key="frame" x="182" y="47" width="50" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="Rei-Se-Leg"/>
+                                    <constraint firstAttribute="width" constant="50" id="n1P-4x-0aj"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" red="0.81176470590000005" green="0.81176470590000005" blue="0.81176470590000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ReachMe" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pAl-Zc-fvC">
+                                <rect key="frame" x="150" y="12" width="65" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iUA-ao-txI">
+                                <rect key="frame" x="52" y="39" width="70" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="bUY-fj-chY" firstAttribute="top" secondItem="O6x-5D-uUF" secondAttribute="top" constant="14" id="19h-dQ-NGg"/>
+                            <constraint firstItem="bUY-fj-chY" firstAttribute="centerY" secondItem="c6v-nR-r9f" secondAttribute="centerY" constant="-0.5" id="4dI-dV-QML"/>
+                            <constraint firstAttribute="height" constant="68" id="53v-pn-N8z"/>
+                            <constraint firstItem="qh8-eZ-ApK" firstAttribute="leading" secondItem="O6x-5D-uUF" secondAttribute="leading" id="KGG-7j-B61"/>
+                            <constraint firstItem="c6v-nR-r9f" firstAttribute="leading" secondItem="bUY-fj-chY" secondAttribute="trailing" constant="5" id="KGU-Ft-ObO"/>
+                            <constraint firstAttribute="width" constant="237" id="NCp-Fn-pVv"/>
+                            <constraint firstItem="V5K-rN-UCZ" firstAttribute="top" secondItem="O6x-5D-uUF" secondAttribute="top" constant="47" id="Tpf-0o-bY5"/>
+                            <constraint firstAttribute="bottom" secondItem="V5K-rN-UCZ" secondAttribute="bottom" constant="1" id="Umg-NP-y8h"/>
+                            <constraint firstItem="bUY-fj-chY" firstAttribute="leading" secondItem="O6x-5D-uUF" secondAttribute="leading" constant="29" id="awL-q6-Ojl"/>
+                            <constraint firstAttribute="trailing" secondItem="V5K-rN-UCZ" secondAttribute="trailing" constant="5" id="bIe-Y4-Fwx"/>
+                            <constraint firstItem="qh8-eZ-ApK" firstAttribute="top" secondItem="O6x-5D-uUF" secondAttribute="top" id="fwE-Ru-Ch2"/>
+                            <constraint firstAttribute="height" constant="30" id="hup-sx-bTP"/>
+                            <constraint firstAttribute="bottom" secondItem="qh8-eZ-ApK" secondAttribute="bottom" id="kvk-tS-by1"/>
+                            <constraint firstItem="c6v-nR-r9f" firstAttribute="top" secondItem="O6x-5D-uUF" secondAttribute="top" constant="13" id="oGf-ie-SPU"/>
+                            <constraint firstAttribute="trailing" secondItem="qh8-eZ-ApK" secondAttribute="trailing" id="obV-Jr-Npz"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="hup-sx-bTP"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3uI-je-uUn" userLabel="callIconButton">
+                        <rect key="frame" x="96.5" y="43" width="28" height="28"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="28" id="Xr0-x1-t38"/>
+                            <constraint firstAttribute="height" constant="28" id="jJx-TS-QaJ"/>
+                        </constraints>
+                        <state key="normal" image="calluser">
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="callIconButtonAction:" destination="ceB-cv-JPy" eventType="touchUpInside" id="8C0-gu-NXH"/>
+                        </connections>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sG4-3a-mKM" userLabel="timeLocationLabel">
+                        <rect key="frame" x="20" y="0.0" width="23.5" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="300" id="KT1-aI-gO1"/>
+                            <constraint firstAttribute="height" constant="20" id="ubW-qK-ftC"/>
+                            <constraint firstAttribute="height" constant="15" id="v54-ON-Emh"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
+                        <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="KT1-aI-gO1"/>
+                                <exclude reference="v54-ON-Emh"/>
+                            </mask>
+                        </variation>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="O6x-5D-uUF" firstAttribute="leading" secondItem="alf-ur-CQX" secondAttribute="leading" constant="20" id="GR3-Kn-7ov"/>
+                    <constraint firstItem="O6x-5D-uUF" firstAttribute="leading" secondItem="alf-ur-CQX" secondAttribute="leadingMargin" constant="-8" id="Kgt-WD-QE8"/>
+                    <constraint firstItem="O6x-5D-uUF" firstAttribute="centerY" secondItem="3uI-je-uUn" secondAttribute="centerY" id="Kod-FY-iLn"/>
+                    <constraint firstAttribute="trailing" secondItem="O6x-5D-uUF" secondAttribute="trailing" constant="120" id="Owv-Bg-a0e"/>
+                    <constraint firstAttribute="trailing" secondItem="sG4-3a-mKM" secondAttribute="trailing" constant="100" id="Pjn-ms-9LB"/>
+                    <constraint firstItem="sG4-3a-mKM" firstAttribute="leading" secondItem="alf-ur-CQX" secondAttribute="leading" constant="20" id="TQl-Qw-s9L"/>
+                    <constraint firstItem="3uI-je-uUn" firstAttribute="top" secondItem="alf-ur-CQX" secondAttribute="topMargin" constant="-8" id="VE6-8s-I5H"/>
+                    <constraint firstAttribute="centerY" secondItem="3uI-je-uUn" secondAttribute="centerY" id="Wyx-oB-R3T"/>
+                    <constraint firstItem="O6x-5D-uUF" firstAttribute="top" secondItem="alf-ur-CQX" secondAttribute="topMargin" constant="12" id="baU-hg-oR3"/>
+                    <constraint firstItem="sG4-3a-mKM" firstAttribute="leading" secondItem="alf-ur-CQX" secondAttribute="leadingMargin" constant="-8" id="eHF-U5-Qkv"/>
+                    <constraint firstAttribute="trailing" secondItem="3uI-je-uUn" secondAttribute="trailing" constant="19" id="epd-PL-ZOf"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="O6x-5D-uUF" secondAttribute="trailing" constant="55" id="sIr-hE-5Vp"/>
+                    <constraint firstItem="sG4-3a-mKM" firstAttribute="top" secondItem="alf-ur-CQX" secondAttribute="top" id="ulj-Sb-v5I"/>
+                    <constraint firstItem="sG4-3a-mKM" firstAttribute="top" secondItem="O6x-5D-uUF" secondAttribute="bottom" id="zmR-Bl-5Pk"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="eHF-U5-Qkv"/>
+                        <exclude reference="zmR-Bl-5Pk"/>
+                        <exclude reference="Kgt-WD-QE8"/>
+                        <exclude reference="Owv-Bg-a0e"/>
+                        <exclude reference="VE6-8s-I5H"/>
+                        <exclude reference="Wyx-oB-R3T"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="callArrowLeadingConstraint" destination="awL-q6-Ojl" id="QDe-4I-Nmx"/>
+                <outlet property="callBackButton" destination="3uI-je-uUn" id="dVr-vW-v92"/>
+                <outlet property="labelDuration" destination="iUA-ao-txI" id="PkA-jZ-kqJ"/>
+                <outlet property="labelReachMe" destination="pAl-Zc-fvC" id="c6a-CN-9nH"/>
+                <outlet property="mcImageView" destination="qh8-eZ-ApK" id="u1y-0M-uby"/>
+                <outlet property="missedCallIconImageView" destination="bUY-fj-chY" id="rwH-sA-s47"/>
+                <outlet property="missedCallTitleLabelOutlet" destination="c6v-nR-r9f" id="Tpz-hG-Cit"/>
+                <outlet property="missedCallView" destination="O6x-5D-uUF" id="sFL-Nb-ahd"/>
+                <outlet property="timeAndLocationLabel" destination="sG4-3a-mKM" id="7YH-JL-eJ4"/>
+                <outlet property="timeLabel" destination="V5K-rN-UCZ" id="1j9-jt-oaR"/>
+            </connections>
+            <point key="canvasLocation" x="144" y="612"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="answered" width="16" height="16"/>
+        <image name="calluser" width="18" height="18"/>
+    </resources>
+</document>

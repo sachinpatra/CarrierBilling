@@ -1,0 +1,229 @@
+//
+//  PendingEventManager.m
+//  InstaVoice
+//
+//  Created by adwivedi on 07/05/15.
+//  Copyright (c) 2015 Kirusa. All rights reserved.
+//
+
+#import "PendingEventManager.h"
+#import "Conversations.h"
+#import "Engine.h"
+#import "Setting.h"
+#import "Profile.h"
+#import "Contacts.h"
+#import "ConfigurationReader.h"
+#import "Common.h"
+
+#ifdef REACHME_APP
+    #import "AppDelegate_rm.h"
+#else
+    #import "AppDelegate.h"
+#endif
+
+static PendingEventManager* _sharedManager = nil;
+
+@implementation PendingEventManager
+
+-(id)init{
+    if(self = [super init])
+    {
+        _isEventProcessing = NO;
+        _pendingEventList = [[NSMutableArray alloc]init];
+        _lockEvents = [[NSLock alloc]init];
+        _lastPendingEventTime = 0;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLastPendingEventTime) name:UIApplicationWillEnterForegroundNotification object:[UIApplication sharedApplication]];
+        _errorCount = 0;
+    }
+    return self;
+}
+
+-(void)updateLastPendingEventTime
+{
+    _lastPendingEventTime = 0;
+}
+
++(id)sharedPendingEventManager
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedManager = [self new];
+    });
+    return _sharedManager;
+}
+
+-(void)addPendingEvents:(NSMutableArray *)eventList atTime:(double)time
+{
+    //KLog(@"AVN___PENDING add pending events list %@ and time %f and last time %f and count %ld with processing status %d",eventList,time,_lastPendingEventTime,_pendingEventList.count,_isEventProcessing);
+    if(time > _lastPendingEventTime && eventList.count)
+    {
+        _lastPendingEventTime = time;
+        
+        [_lockEvents lock];
+        [_pendingEventList removeAllObjects];
+        [_pendingEventList addObjectsFromArray:eventList];
+        [_lockEvents unlock];
+        
+        if(!_isEventProcessing)
+        {
+            [self processPendingEvent];
+        }
+    } else {
+        KLog(@"***ERR: mid(%f) is <= _lastPendingEventTime(%f).May be dup events recvd. Ignore events:%@",time,_lastPendingEventTime,eventList);
+        KLog(@"***ERR: mid(%f) is <= _lastPendingEventTime(%f).May be dup events recvd. Ignore events:%@",time,_lastPendingEventTime,eventList);
+    }
+}
+
+-(void)pendingEventManagerDidSucceedWithResponse:(NSDictionary *)response forPendingEventType:(PendingEventType)eventType
+{
+    _errorCount = 0;
+    
+    [_lockEvents lock];
+    [_pendingEventList removeObjectIdenticalTo:[NSNumber numberWithInteger:eventType]];
+    [_lockEvents unlock];
+    
+    [self processPendingEvent];
+}
+
+-(void)pendingEventManagerDidFailWithError:(NSError *)error forPendingEventType:(PendingEventType)eventType
+{
+    EnLoge(@"Pending Event of type %ld failed with error %@",eventType,error);
+    KLog(@"Pending Event of type %ld failed with error %@",(long)eventType,error);
+    _errorCount++;
+    if(_errorCount>2)
+    {
+        _errorCount = 0;
+        [_lockEvents lock];
+        [_pendingEventList removeObjectIdenticalTo:[NSNumber numberWithInteger:eventType]];
+        [_lockEvents unlock];
+    }
+    [self processPendingEvent];
+}
+
+
+-(void)processPendingEvent
+{
+    [_lockEvents lock];
+    NSInteger count = _pendingEventList.count;
+    [_lockEvents unlock];
+    
+    if(count > 0 && [Common isNetworkAvailable])
+    {
+        [_lockEvents lock];
+        PendingEventType eventType = -1;
+        if(_pendingEventList.count > 0) {
+            @try {
+                eventType = [_pendingEventList[0] integerValue];
+            } @catch(NSException* ex) {
+                EnLogd(@"Exception: %@",ex);
+            }
+        }
+        [_lockEvents unlock];
+        
+        _isEventProcessing = YES;
+        switch (eventType) {
+            case PendingEventTypeFetchMessage:
+            {
+                [[Conversations sharedConversations]fetchMessageFromServerWithSkipMsgId:self.skipId notificationDic:nil];
+                self.skipId = 0;
+                
+                //Added by Nivedita - to fetch the fetch settings, the latest settings information is necessary to show the enable voice mail info from home screen.
+                NSString *primaryNumber = [[ConfigurationReader sharedConfgReaderObj]getLoginId];
+                VoiceMailInfo *primaryNumberVoiceMailInfo  = [[Setting sharedSetting]voiceMailInfoForPhoneNumber:primaryNumber];
+                //If we have voicemail info and is not enabled only fetch the fetch settings - It means we have recieved the Missed Call or VoiceMail - fetch the latest settings information.
+                if (primaryNumberVoiceMailInfo && !primaryNumberVoiceMailInfo.isVoiceMailEnabled) {
+                    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                    [userDefaults setValue:@NO forKey:kUserSettingsFetched];
+                    [userDefaults synchronize];
+                    [[Setting sharedSetting]getUserSettingFromServer];
+                }
+            }
+                break;
+            case PendingEventTypeFetchVobolo:
+            {
+#ifndef REACHME_APP
+                [[Engine sharedEngineObj]fetchCelebrityMsgRequest:nil];
+                [self pendingEventManagerDidSucceedWithResponse:nil forPendingEventType:eventType];
+#endif
+            }
+                break;
+            case PendingEventTypeFetchContact:
+            {
+                [[Contacts sharedContact]updateContactFromServerWithFetchFriendsAPI];
+            }
+                break;
+                
+            case PendingEventTypeFetchMessageActivity:
+            {
+                [[Conversations sharedConversations]fetchMessageActivitiesWithSkipActivityId:self.skipId];
+                self.skipId = 0;
+            }
+                break;
+            case PendingEventTypeFetchProfile:
+            {
+                [[Profile sharedUserProfile]getProfileDataFromServer];
+                [[Profile sharedUserProfile]fetchBlockedUserList];
+                
+                //Start: Nivedita - Pending event is profile changes. So, we need to freshly fetch the settings data.
+                NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                [userDefaults setValue:@NO forKey:kUserSettingsFetched];
+                [userDefaults synchronize];
+                
+                [[Setting sharedSetting]getUserSettingFromServer];
+            }
+                break;
+            case PendingEventTypeFetchGroupUpdates:
+            {
+                [[Contacts sharedContact]updateGroupMemberInfoFromServer:YES];
+                break;
+                
+            }
+            case PendingEventTypeSetDeviceInfo: {
+                EnLogd(@"Event:8 received from server. Clear the device token.");
+                [[ConfigurationReader sharedConfgReaderObj]setCloudSecureKey:@""];
+#ifdef REACHME_APP
+                [[ConfigurationReader sharedConfgReaderObj]setVoipPushToken:@""];
+#endif
+                [[Setting sharedSetting]setDeviceInfo:nil];
+                [self pendingEventManagerDidSucceedWithResponse:nil forPendingEventType:eventType];
+                break;
+            }
+            case PendingEventTypeFetchSetting: {
+                //Start: Nivedita - Pending event is settings changes. So, we need to freshly fetch the settings data.
+                NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                [userDefaults setValue:@NO forKey:kUserSettingsFetched];
+                [userDefaults synchronize];
+                
+                [[Setting sharedSetting]getUserSettingFromServer];
+                break;
+                
+            }
+            case PendingEventTypeSystemAlert:
+            case PendingEventTypeSignOut:
+            case PendingEventTypeAppUpgradeRequired:
+            case PendingEventTypeMQTTFallback:
+            {
+                //Remove it from the queue. Will do the processing later.
+                [self pendingEventManagerDidSucceedWithResponse:Nil forPendingEventType:eventType];
+            }
+                break;
+            /* TODO -- enable this case, when server is handling this event properly.
+             Server is not clering the event once it is processed by the client.
+             */
+            /*
+            case 21:
+                [[Engine sharedEngineObj]fetchObdDebitPolicy:YES];
+                break;
+            */
+            default:
+                [self pendingEventManagerDidSucceedWithResponse:Nil forPendingEventType:eventType];
+                break;
+        }
+    }
+    else
+    {
+        _isEventProcessing = NO;
+    }
+}
+
+@end

@@ -1,0 +1,146 @@
+//
+//  Common.h
+//  InstaVoice
+//
+//  Created by EninovUser on 12/08/13.
+//  Copyright (c) 2013 EninovUser. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "Macro.h"
+
+
+
+@interface Common : NSObject
+
+//This function returns the information about the SIM.
++(NSMutableDictionary*)getSIMInfo;
+
+/**
+ * This Function give the information about network availability. 
+ * @return : resutl;
+ */
++(int)isNetworkAvailable;
+
+/**
+ * This Function give the information about sim availability.
+ * @return : result;
+ */
++(int) isSIMAvailable;
+
+/**
+ * This function return a canonical phone number.
+ * @return :canonivalNum
+ */
++(NSString*)getCanonicalPhoneNumber:(NSString*)phone;
+
+/**
+ *This function return unique device id.
+ */
++(NSString*)getUniqueDeviceID;
+
+/**
+ *This Function Convert Error Code Into Error String. 
+ */
++(NSString *) convertErrorCodeToErrorString:(int)errorCode;
+
+/**
+ * This function create Date and time According to the given  parameter.
+ */
++(NSDate*)getDateAndTimeInMiliSec:(int)year month:(int)month dateOfMonth:(int)dateOfmonth hourOfDay:(int)hrOfDay minute:(int)min second:(int)sec;
+
++(NSString*)getGuid;
+
++(BOOL) validateNumeric : (NSString *) Numeirc;
+
++(NSMutableArray*)topFiveCountryList;
+
+/**
+ * method to remove plus
+ */
++(NSString *)removePlus:(NSString *)number;
+
+/**
+ * method to add plus
+ */
++(NSString *)addPlus:(NSString *)number;
+
+/**
+ * This function is used to create index in Table view Based on Key. 
+ */
++(NSMutableArray *) loadDataAtIndexArray :(NSMutableArray *)elementList key:(NSString*)key indexArray:(NSMutableArray*)indexArray;
+
+/**
+ *This function load the indexed array which is used for index array based searching.
+ */
+
++(NSMutableArray *)loadIndexArray;
+
++(BOOL)getNativeContactAccessPermission;
+
++(NSString *)setPlusPrefix:(NSString *)nameStr;
++(NSString *)setPlusPrefixChatWithMobile:(NSString *)nameStr;
++(NSString *)setPlusPrefixForMobileNumber:(NSString *)nameStr;
+
++(NSString*)getLocationName:(NSArray*)placemarks;
+
+/**Method to check if branding view should be shown or not*/
++(BOOL)showBrandingScreenViewController;
+
+/**Method to make a call in conversation screen*/
+#ifdef REACHME_APP
++ (void)callNumber:(NSString*)toPhoneNumber FromNumber:(NSString*) fromPhoneNnumber UserType:(NSString*)userType;
+#endif
+
++ (void)callWithNumber:(NSString *)phoneNo;
++ (void)callWithNumberWithoutPrompt:(NSString *)phoneNo;
++(NSMutableDictionary *)convertStringJsonToDictionaryJson:(NSString*)stringJson;
++(NSString *)formattedGroupChatEventInformation:(NSString*)stringJson;
++(BOOL)isValidEmail:(NSString*)emailId;
+
+/**Method to get the format a mobile/landline number */
++(NSString *)getFormattedNumber:(NSString *)number withCountryIsdCode:(NSString *)countryIsdCode withGivenNumberisCannonical:(BOOL)isCannonical;
+
+/**  Method to check if the number is valid or not */
++(BOOL)isValidNumber:(NSString *)number withContryISDCode:(NSString *)countryISDCode;
+
+/**  Method to check if the number is Possible or not */
++(BOOL)isPossibleNumber:(NSString *)number withContryISDCode:(NSString *)countryISDCode showAlert:(BOOL)alert;
+
+/** Method used to get E164Format number*/
++(NSString *)getE164FormatNumber:(NSString *)numberWithoutFormat withCountryIsdCode:(NSString *)countryIsdCode;
++(NSString *)getInternationalFormatNumber:(NSString *)numberWithoutFormat;
+
+/** Method to get formatted number for text field */
++(NSString *)getFormattedNumberForTextFieldWithNumber:(NSString *)numberWithoutFormat andCountryIsdCode:(NSString *)countryIsdCode;
+
+//Start: Nivedita - 12th Dec
+/** Method responsible to decide the font based on the dynamic font changes in the device settings. 
+ * @param fontStyle : Indicates the font of the text.
+*/
++ (UIFont *)preferredFontForTextStyleInApp:(NSString *)fontStyle;
+
+/** Method responsible to calculate the size of the rect based on the font and text. 
+ * @param withText Instance indicates the text
+ * @param withFont Instance indicates the font used for displaying the text.
+ */
++ (CGSize)sizeOfViewWithText:(NSString *)withText withFont:(UIFont *)withFont;
+//End: Nivedita
+/**Method responsible to return network type.
+ @return Current Network Type - WiFi, 2G or 3G 
+*/
++ (NSInteger)currentNetworkType;
+
++ (NSString *)simMCCMNCCode;
+
++ (NSString *)simCountryCode;
+
++ (float)currentiOSVersion;
+
++ (NSString *)removeCountryCodeFrom:(NSString*)phoneNumber CCMaxLength:(NSInteger)maxLen CCMinLength:(NSInteger)minLen;
++ (NSString*)getCountryCodeFrom:(NSString*)phoneNumber;
+
+//+ (int)sliderWidthForTheDuration:(int)duration minmumWidthOfVoiceView:(int)width multiplier:(float)mul;
+
+//+ (void)enumeateIfAddresses;
+@end

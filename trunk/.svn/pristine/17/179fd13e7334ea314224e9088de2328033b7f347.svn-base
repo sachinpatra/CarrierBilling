@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VoiceMailViewController">
+            <connections>
+                <outlet property="carrierNotSupportedView" destination="nSg-Gh-rv6" id="ovb-EK-kMP"/>
+                <outlet property="enableVoiceMailSettingsView" destination="fWK-Pq-PgA" id="q9x-zq-CHp"/>
+                <outlet property="msgLabel" destination="StM-vA-J2k" id="aaU-AK-4Y0"/>
+                <outlet property="tableView" destination="BDD-lE-fGF" id="cw1-Fq-Ihu"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <searchBar contentMode="redraw" placeholder="Search contacts" translatesAutoresizingMaskIntoConstraints="NO" id="XzD-Kq-0Cp">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="c02-qw-S5J"/>
+                    </constraints>
+                    <color key="barTintColor" red="0.81234320459999998" green="0.81234320459999998" blue="0.81234320459999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="2i2-Ue-xk0"/>
+                    </connections>
+                </searchBar>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="BDD-lE-fGF">
+                    <rect key="frame" x="0.0" y="44" width="375" height="574"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="PRS-iR-Y2g"/>
+                        <outlet property="delegate" destination="-1" id="Alo-cU-aFU"/>
+                    </connections>
+                </tableView>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Conversation" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StM-vA-J2k">
+                    <rect key="frame" x="0.0" y="56" width="375" height="611"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="375" id="fYv-ll-CvV"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fWK-Pq-PgA">
+                    <rect key="frame" x="0.0" y="271" width="375" height="125"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable your Voicemail &amp; Missed Call Service" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="320" translatesAutoresizingMaskIntoConstraints="NO" id="B0l-io-J67">
+                            <rect key="frame" x="0.0" y="7" width="375" height="41"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.66666666669999997" green="0.66666666669999997" blue="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xiu-QU-oyQ">
+                            <rect key="frame" x="98" y="87" width="178" height="30"/>
+                            <color key="backgroundColor" red="0.83137254900000002" green="0.25098039220000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <state key="normal" title="CLICK HERE">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="clickToEnableVoiceMailSettingsButtonTapped:" destination="-1" eventType="touchUpInside" id="a3R-eb-ljQ"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="xiu-QU-oyQ" firstAttribute="top" secondItem="B0l-io-J67" secondAttribute="bottom" constant="39" id="29i-k3-le9"/>
+                        <constraint firstItem="B0l-io-J67" firstAttribute="top" secondItem="fWK-Pq-PgA" secondAttribute="top" constant="7" id="3Ec-YV-BtP"/>
+                        <constraint firstItem="B0l-io-J67" firstAttribute="leading" secondItem="fWK-Pq-PgA" secondAttribute="leading" id="4K4-v0-oiG"/>
+                        <constraint firstAttribute="trailing" secondItem="xiu-QU-oyQ" secondAttribute="trailing" constant="99" id="B2J-s9-6qz"/>
+                        <constraint firstItem="xiu-QU-oyQ" firstAttribute="leading" secondItem="fWK-Pq-PgA" secondAttribute="leading" constant="98" id="MW6-5T-vys"/>
+                        <constraint firstAttribute="trailing" secondItem="B0l-io-J67" secondAttribute="trailing" id="pZb-Ht-A7L"/>
+                        <constraint firstAttribute="bottom" secondItem="xiu-QU-oyQ" secondAttribute="bottom" constant="8" id="xBf-ff-HpK"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nSg-Gh-rv6" userLabel="Carrier Not Supported">
+                    <rect key="frame" x="0.0" y="197" width="375" height="273.5"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sorry_icon" translatesAutoresizingMaskIntoConstraints="NO" id="9HU-sx-p2f">
+                            <rect key="frame" x="109.5" y="13" width="155" height="120"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Qv-Cs-Rqj" userLabel="info">
+                            <rect key="frame" x="20" y="148" width="334" height="81.5"/>
+                            <string key="text">Sorry, InstaVoice Voicemail service is not available in your region at the moment. We are working hard to make it available very soon.</string>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="7Qv-Cs-Rqj" firstAttribute="leading" secondItem="nSg-Gh-rv6" secondAttribute="leading" constant="20" id="5eb-UW-Kiz"/>
+                        <constraint firstAttribute="trailing" secondItem="7Qv-Cs-Rqj" secondAttribute="trailing" constant="21" id="DLR-CH-SF9"/>
+                        <constraint firstItem="7Qv-Cs-Rqj" firstAttribute="top" secondItem="9HU-sx-p2f" secondAttribute="bottom" constant="15" id="FHy-5f-ms9"/>
+                        <constraint firstItem="9HU-sx-p2f" firstAttribute="centerX" secondItem="nSg-Gh-rv6" secondAttribute="centerX" id="Iho-wp-iMy"/>
+                        <constraint firstAttribute="bottom" secondItem="7Qv-Cs-Rqj" secondAttribute="bottom" constant="44" id="WPa-OW-5zc"/>
+                        <constraint firstItem="9HU-sx-p2f" firstAttribute="top" secondItem="nSg-Gh-rv6" secondAttribute="top" constant="13" id="Zti-MV-Ls4"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="nSg-Gh-rv6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="0pg-L7-32b"/>
+                <constraint firstAttribute="trailing" secondItem="BDD-lE-fGF" secondAttribute="trailing" id="18y-PP-ua0"/>
+                <constraint firstItem="StM-vA-J2k" firstAttribute="top" secondItem="XzD-Kq-0Cp" secondAttribute="bottom" constant="12" id="1bL-nJ-VD3"/>
+                <constraint firstAttribute="trailing" secondItem="nSg-Gh-rv6" secondAttribute="trailing" id="4Mc-Ux-Lpg"/>
+                <constraint firstItem="nSg-Gh-rv6" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="76Y-42-KJN"/>
+                <constraint firstAttribute="bottom" secondItem="StM-vA-J2k" secondAttribute="bottom" id="Grx-83-lJS"/>
+                <constraint firstItem="fWK-Pq-PgA" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="KnE-Bc-2Z0"/>
+                <constraint firstItem="BDD-lE-fGF" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="LV8-ek-fsl"/>
+                <constraint firstAttribute="bottom" secondItem="BDD-lE-fGF" secondAttribute="bottom" constant="49" id="TGf-X3-CgI"/>
+                <constraint firstItem="XzD-Kq-0Cp" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="TR9-56-des"/>
+                <constraint firstItem="BDD-lE-fGF" firstAttribute="top" secondItem="XzD-Kq-0Cp" secondAttribute="bottom" id="Vre-Ui-42G"/>
+                <constraint firstAttribute="trailing" secondItem="XzD-Kq-0Cp" secondAttribute="trailing" id="YZF-Fj-2Za"/>
+                <constraint firstItem="StM-vA-J2k" firstAttribute="trailing" secondItem="BDD-lE-fGF" secondAttribute="trailing" id="gW5-QZ-LpN"/>
+                <constraint firstItem="XzD-Kq-0Cp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="hZd-TM-0JF"/>
+                <constraint firstAttribute="trailing" secondItem="fWK-Pq-PgA" secondAttribute="trailing" id="pG7-UY-aQU"/>
+                <constraint firstItem="fWK-Pq-PgA" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="x8E-ef-D0V"/>
+            </constraints>
+            <point key="canvasLocation" x="33.5" y="54.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="sorry_icon" width="155" height="120"/>
+    </resources>
+</document>

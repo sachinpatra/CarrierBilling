@@ -1,0 +1,806 @@
+//
+//  ProviderDelegate.m
+//  linphone
+//
+//  Modified by Pandian
+//
+//
+
+#import "ProviderDelegate.h"
+#import "LinphoneManager.h"
+#include "linphone/linphonecore.h"
+#import <AVFoundation/AVFoundation.h>
+#import <Foundation/Foundation.h>
+#import "Log.h"
+#import "CountryTableViewController.h"
+
+#ifdef REACHME_APP
+    #import "AppDelegate_rm.h"
+    #import "ReachMe-Swift.h"
+    #import "ActivateReachMeViewController.h"
+    #import "ReachMeActivatedViewController.h"
+    #import "EditNumberDetailsViewController.h"
+    #import "IVCarrierSearchViewController.h"
+    #import "IVCarrierCircleViewController.h"
+    #import "IVSelectCarrierViewController.h"
+    #import "PersonalisationViewController.h"
+    #import "HowToActivateReachMeViewController.h"
+    #import "ReachMeActivationViewController.h"
+#else
+    #import "AppDelegate.h"
+#endif
+
+#import "CallsViewController.h"
+#import "VoiceMailViewController.h"
+#import "InsideConversationScreen.h"
+#import "PhoneViewController.h"
+#import "Engine.h"
+#import "TableColumns.h"
+#import "IVSettingsListViewController.h"
+#import "OTPValidationViewController.h"
+#import "VerificationOTPViewController.h"
+#import "InviteFriendsViewController.h"
+
+@implementation ProviderDelegate
+
+- (instancetype)init {
+    
+    KLog(@"init");
+	self = [super init];
+	self.calls = [[NSMutableDictionary alloc] init];
+	self.uuids = [[NSMutableDictionary alloc] init];
+	_pendingCall = NULL;
+	self.pendingAddr = NULL;
+	self.pendingCallVideo = FALSE;
+	CXCallController *callController = [[CXCallController alloc] initWithQueue:dispatch_get_main_queue()];
+	[callController.callObserver setDelegate:self queue:dispatch_get_main_queue()];
+	self.controller = callController;
+	self.callKitCalls = 0;
+    self.lastCallInfo = [[NSMutableArray alloc]init];
+
+	if (!self) {
+		LOGD(@"ProviderDelegate not initialized...");
+	}
+    appDelegate = (AppDelegate *)APP_DELEGATE;
+    lastVC = nil;
+	return self;
+}
+
+- (void)config:(NSString*)ringTone {
+    
+    KLog(@"CallKit: config");
+    
+    CXProviderConfiguration *config = [[CXProviderConfiguration alloc] initWithLocalizedName:PROVIDER_NAME];
+    config.ringtoneSound = ringTone;
+
+	config.supportsVideo = FALSE;
+	config.iconTemplateImageData = UIImagePNGRepresentation([UIImage imageNamed:@"iv_template"]);
+
+	NSArray *ar = @[ [NSNumber numberWithInt:(int)CXHandleTypePhoneNumber] ];//TODO
+	NSSet *handleTypes = [[NSSet alloc] initWithArray:ar];
+	[config setSupportedHandleTypes:handleTypes];
+	[config setMaximumCallGroups:1];
+	[config setMaximumCallsPerCallGroup:5];
+	self.provider = [[CXProvider alloc] initWithConfiguration:config];
+	[self.provider setDelegate:self queue:dispatch_get_main_queue()];
+}
+
+- (void)configAudioSession:(AVAudioSession *)audioSession {
+    
+    KLog(@"Callkit: configAudioSession");
+    NSError* error;
+    
+	[audioSession setCategory:AVAudioSessionCategoryPlayAndRecord
+				  withOptions:AVAudioSessionCategoryOptionAllowBluetooth
+						error:&error];
+    if(error) {
+        KLog(@"ERROR:%@",error);
+        EnLogd(@"ERROR:%@",error);
+    }
+    
+    error=nil;
+    [audioSession setActive:YES error:&error];
+	[audioSession setMode:AVAudioSessionModeVoiceChat error:nil];
+    
+    if(error) {
+        KLog(@"ERROR:%@",error);
+        EnLogd(@"ERROR:%@",error);
+    }
+    
+	double sampleRate = 44100.0;
+	[audioSession setPreferredSampleRate:sampleRate error:nil];
+}
+
+- (void)onCallStateChanged:(NSDictionary*)info {
+    
+    KLog(@"*** onCallStateChanged = %@",info);
+    EnLogd(@"*** onCallStateChanged = %@",info);
+    LinphoneCall* call = [[info objectForKey:@"call"] pointerValue];
+    //APR 16, 2018
+    LinphoneCallState state = [[info objectForKey:@"state"] intValue];
+    if(LinphoneCallOutgoingInit == state) {
+        KLog(@"LinphoneCallOutgoingInit");
+        return;
+    }
+    //
+    NSString *callId=nil;
+    @try {
+        callId = [NSString stringWithUTF8String:linphone_call_log_get_call_id(linphone_call_get_call_log(call))];
+    } @catch (NSException *exception) {
+        EnLogd(@"linphone_call_log_get_call_id() returns nil.");
+    }
+    
+    NSDictionary* callInfo = nil;
+    if(callId.length)
+         callInfo = [self getCallInfoForCallId:callId];
+    
+    
+    if(callInfo && callInfo.count) {
+        //MAy 22, 2018
+        int callState = [[info valueForKey:@"state"]intValue];
+        NSString* message = [info valueForKey:@"message"];
+        
+        LinphoneCallDir lpCallDir = linphone_call_get_dir(call);
+        if(LinphoneCallOutgoing == lpCallDir) {
+            if(LinphoneCallOutgoingRinging == callState) {
+                [callInfo setValue:MSG_FLOW_S forKey:MSG_FLOW];
+                [callInfo setValue:callId forKey:VOIP_CALL_ID];
+                [callInfo setValue:VOIP_CALL_OUTGOING forKey:VOIP_CALL_STATUS];
+                NSString* toNumber = [info valueForKey:@"toNumber"];
+                if(toNumber.length)
+                    [callInfo setValue:toNumber forKey:TO_PHONE];
+            }
+            else if(LinphoneCallConnected == callState) {
+                [callInfo setValue:VOIP_CALL_ACCEPTED forKey:VOIP_CALL_STATUS];
+            }
+            else if(LinphoneCallEnd == callState) {
+                
+                NSString* status = [callInfo valueForKey:VOIP_CALL_STATUS];
+                if([message caseInsensitiveCompare:@"Call terminated"] == NSOrderedSame) {
+                    if(![status isEqualToString:VOIP_CALL_ACCEPTED])
+                        status = VOIP_CALL_REJECTED;
+                }
+                
+                if(!status || status.length<=0)
+                    status = VOIP_CALL_MISSED;
+                
+                [callInfo setValue:status forKey:VOIP_CALL_STATUS];
+            }
+        }
+        else
+        {
+            if (LinphoneCallIncomingReceived == callState) {
+                [callInfo setValue:MSG_FLOW_R forKey:MSG_FLOW];
+                [callInfo setValue:VOIP_CALL_INCOMING forKey:VOIP_CALL_STATUS];
+                NSString* toNumber = [info valueForKey:@"toNumber"];
+                if(toNumber.length)
+                    [callInfo setValue:toNumber forKey:TO_PHONE];
+            }
+            
+            else if(LinphoneCallConnected == callState) {
+                [callInfo setValue:VOIP_CALL_ACCEPTED forKey:VOIP_CALL_STATUS];
+            }
+            else if(LinphoneCallEnd == callState) {
+                
+                NSString* status = [callInfo valueForKey:VOIP_CALL_STATUS];
+                if([message caseInsensitiveCompare:@"Call terminated"] == NSOrderedSame) {
+                    if(![status isEqualToString:VOIP_CALL_ACCEPTED])
+                        status = VOIP_CALL_REJECTED;
+                }
+                
+                if(!status || status.length<=0)
+                    status = VOIP_CALL_MISSED;
+                
+                [callInfo setValue:status forKey:VOIP_CALL_STATUS];
+            }
+        }
+    }
+}
+
+- (NSMutableDictionary*)getCallLog:(NSString*)callId {
+    
+    NSMutableDictionary* pushDict = [LinphoneManager.instance getPushDictionary:callId];
+    NSMutableDictionary* retDic = [[NSMutableDictionary alloc]init];
+    
+    NSMutableDictionary* callInfo = [self getCallInfoForCallId:callId];
+    
+    if(!pushDict) {
+        retDic = callInfo;
+        KLog(@"getCallLog = %@", callInfo);
+        EnLogd(@"getCallLog = %@", callInfo);
+    } else {
+        KLog(@"getCallLog = %@", pushDict);
+        EnLogd(@"getCallLog = %@", pushDict);
+        
+        //status is saved only in self.lastCallInfo returned by getCallInfoForCallId()
+        NSString* status = [callInfo valueForKey:VOIP_CALL_STATUS];
+        if(!status.length)
+            status = @"unknown";
+        [callInfo setValue:status forKey:VOIP_CALL_STATUS];
+        [pushDict setValue:status forKey:VOIP_CALL_STATUS];
+       
+        KLog(@"callInfo = %@",callInfo);
+        EnLogd(@"callInfo = %@",callInfo);
+        retDic = pushDict;
+    }
+    
+    /*
+    //incoming
+    self.pushDict = [LinphoneManager.instance getPushDictionary:callId];
+    KLog(@"self.pushDict = %@",self.pushDict);
+    [self.pushDict setValue:VOIP_CALL_INCOMING forKey:VOIP_CALL_STATUS];
+    
+    //answer
+    [self.pushDict setValue:VOIP_CALL_ACCEPTED forKey:VOIP_CALL_STATUS];
+    
+    //end
+    if(!self.pushDict)
+        self.pushDict = [LinphoneManager.instance getPushDictionary:self.fromContact];
+    */
+    
+    return retDic;
+}
+
+-(NSMutableDictionary*)getCallInfoForCallId:(NSString*)callId {
+    
+    KLog(@"getCallInfoForCallId. callId=%@",callId);
+    EnLogd(@"getCallInfoForCallId. callId=%@",callId);
+    for(NSDictionary* dic in self.lastCallInfo) {
+        KLog(@"dic = %@", dic);
+        EnLogd(@"dic = %@", dic);
+        NSMutableDictionary* aps = [dic objectForKey:callId];
+        if(aps)
+            return aps;
+    }
+    return nil;
+}
+
+/*
+- (void)setPhoneViewController:(NSString*)callId {
+    
+    [self setRootViewControllerWithPhoneView:YES CallID:callId];
+}*/
+
+/*
+ Handle should be the caller's phone number
+ */
+- (void)reportIncomingCallwithUUID:(NSUUID *)uuid handle:(NSString *)handle video:(BOOL)video {
+    
+    KLog(@"CallKit: reportIncomingCallwithUUID %@",uuid);
+    
+    //- dismiss if the current presented view controller is UIAlertContoller.
+    
+    BaseUI *base = (BaseUI*)[[UIStateMachine sharedStateMachineObj] getCurrentUI];
+    UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    topController = topController.presentedViewController;
+    if([base isKindOfClass:[InsideConversationScreen class]]) {
+        InsideConversationScreen* vc = (InsideConversationScreen*)base;
+        if ([vc respondsToSelector:@selector(removeOverlayViewsIfAnyOnPushNotification)])
+            [vc removeOverlayViewsIfAnyOnPushNotification];
+    }
+    else if([base isKindOfClass:[VoiceMailViewController class]]) {
+        VoiceMailViewController* vc = (VoiceMailViewController*)base;
+        if ([vc respondsToSelector:@selector(dismissAlert)])
+            [vc dismissAlert];
+    }
+    else if([base isKindOfClass:[CallsViewController class]]) {
+        CallsViewController* vc = (CallsViewController*)base;
+        if ([vc respondsToSelector:@selector(dismissAlert)])
+            [vc dismissAlert];
+    }
+    else if([base isKindOfClass:[IVSettingsListViewController class]]) {
+        IVSettingsListViewController* vc = (IVSettingsListViewController*)base;
+        if ([vc respondsToSelector:@selector(removeOverlayViewsIfAnyOnPushNotification)])
+            [vc removeOverlayViewsIfAnyOnPushNotification];
+    }
+    else if([base isKindOfClass:[VerificationOTPViewController class]]) {
+        VerificationOTPViewController* vc = (VerificationOTPViewController*)base;
+        if ([vc respondsToSelector:@selector(removeOverlayViewsIfAnyOnPushNotification)])
+            [vc removeOverlayViewsIfAnyOnPushNotification];
+    }
+    else if([base isKindOfClass:[CountryTableViewController class]]) {
+        CountryTableViewController* vc = (CountryTableViewController*)base;
+        if([vc respondsToSelector:@selector(dismissMe)])
+            [vc dismissMe];
+    }
+    
+    if ([topController isKindOfClass:[InviteFriendsViewController class]]) {
+        InviteFriendsViewController* vc = (InviteFriendsViewController*)topController;
+        if([vc respondsToSelector:@selector(dismissAlert)])
+           [vc dismissAlert];
+    }
+    else if ([topController isKindOfClass:[UIAlertController class]]) {
+        NSLog(@"Dismiss UIAlertController = %@",[topController class]);
+#ifdef REACHME_APP
+        if(ratingAlertTag == topController.view.tag) {
+            KLog(@"Debug");
+            [[Engine sharedEngineObj]sendLastCallLog];
+        }
+        [topController dismissViewControllerAnimated:NO completion:nil];
+#endif
+    }
+    
+    KLog(@"CallKit: reportIncomingCallwithUUID. handle = %@",handle);
+    EnLogd(@"CallKit: reportIncomingCallwithUUID. handle = %@",handle);
+    NSString* callerName = @"";
+    NSString* finalHandle = handle;
+    NSString* fName = [Common getFormattedNumber:handle withCountryIsdCode:nil withGivenNumberisCannonical:YES];
+    if(fName && fName.length) {
+        finalHandle = fName;
+        NSString* name = [self getIVUserNameFromPhoneNumber:handle];
+        if(name.length)
+            callerName = name;
+    } else {
+        //- should not happen; fName may not be number or getFormattedNumber failed to format the number
+        //callerName = handle;
+    }
+    
+    KLog(@"fName = %@",fName);
+    KLog(@"finalHandle = %@",finalHandle);
+    KLog(@"callerName = %@",callerName);
+    EnLogd("fName= %@",fName);
+    EnLogd(@"callerName = %@",callerName);
+    
+    KLog(@"ringTone=%@",self.provider.configuration.ringtoneSound);
+    
+	// Create update to describe the incoming call and caller
+	CXCallUpdate *update = [[CXCallUpdate alloc] init];
+	update.remoteHandle = [[CXHandle alloc] initWithType:CXHandleTypePhoneNumber value:finalHandle];//TODO
+    
+    if(callerName.length) {
+        update.localizedCallerName = callerName;
+    }
+    
+	update.supportsDTMF = TRUE;
+	update.supportsHolding = TRUE;
+	update.supportsGrouping = TRUE;
+	update.supportsUngrouping = TRUE;
+	update.hasVideo = video;
+	
+    //- Remove + from from_phone of VOIP_CALL_DIC
+    NSString* fromPhone = handle;
+    if(fromPhone.length) {
+        NSString* trimmedFromName = [fromPhone stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        trimmedFromName = [trimmedFromName stringByTrimmingCharactersInSet:[NSCharacterSet symbolCharacterSet]];
+        if(trimmedFromName.length)
+            fromPhone = trimmedFromName;
+    }
+    self.fromContact = [NSString stringWithString:fromPhone];
+    //
+    
+    NSString* callId = [self.calls objectForKey:uuid];
+    
+    NSMutableDictionary* callLog = [[NSMutableDictionary alloc]init];
+    [callLog setValue:self.fromContact forKey:FROM_PHONE];
+    NSMutableDictionary* pushDic = [[NSMutableDictionary alloc]init];
+    [pushDic setObject:callLog forKey:callId];
+    [self.lastCallInfo addObject:pushDic];
+    if([self.lastCallInfo count] > 10)
+        [self.lastCallInfo removeObjectAtIndex:0];
+    
+    KLog(@"callInfo = %@",self.lastCallInfo);
+    EnLogd(@"callInfo = %@",self.lastCallInfo);
+    
+    //- Report incoming call to system
+    lastSelectedTab = -1;
+	[self.provider reportNewIncomingCallWithUUID:uuid
+										  update:update
+									  completion:^(NSError *error) {
+                                          if(error) {
+                                              EnLogd(@"Error:%@",error);
+                                              KLog(@"reportNewIncomingCallWithUUID: %@",error);
+                                          }
+									  }];
+}
+
+-(void)makeCall:(NSString *)toNumber FromNumber:(NSString *)fromNumber {
+    
+    KLog(@"makeACall:%@,%@",toNumber,fromNumber);
+    self.fromContact = toNumber;
+    self.toContact = fromNumber;
+    [self setRootViewControllerWithPhoneView:YES CallID:nil];
+}
+
+#pragma mark - CXProdiverDelegate Protocol
+
+- (void)provider:(CXProvider *)provider performAnswerCallAction:(CXAnswerCallAction *)action {
+    
+    KLog(@"CallKit : Answering Call:%@",action.callUUID);
+    
+    //- dismiss the formsheet controller if any is open (this may be Link number controller)
+    MZFormSheetController* fsc = [[MZFormSheetController formSheetControllersStack]lastObject];
+    [fsc mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
+    //
+
+    NSUUID *uuid = action.callUUID;
+	NSString *callID = [self.calls objectForKey:uuid]; // first, make sure this callid is not already involved in a call
+	LinphoneCall *call = [LinphoneManager.instance callByCallId:callID];
+	if (call != NULL) {
+        
+        //linphone_call_accept(call);
+        [self configAudioSession:[AVAudioSession sharedInstance]];
+        [action fulfill];
+        self.callKitCalls++;
+        self.isMicOn = TRUE;
+        /*
+        BOOL video = ([UIApplication sharedApplication].applicationState == UIApplicationStateActive &&
+                      linphone_core_get_video_policy(LC)->automatically_accept &&
+                      linphone_call_params_video_enabled(linphone_call_get_remote_params((LinphoneCall *)call)));
+         */
+        _pendingCall = call;
+        self.pendingCallVideo = FALSE;
+        NSMutableDictionary* callDic = [self getCallInfoForCallId:callID];
+        [callDic setValue:VOIP_CALL_ACCEPTED forKey:VOIP_CALL_STATUS];
+        KLog(@"callDic = %@", callDic);
+        EnLogd(@"callDic = %@", callDic);
+        self.toContact = [callDic valueForKey:TO_PHONE];
+        lastSelectedTab = -1;
+        [self setRootViewControllerWithPhoneView:YES CallID:callID];
+    }
+    else {
+        [action fail];
+    }
+}
+
+- (void)provider:(CXProvider *)provider performStartCallAction:(CXStartCallAction *)action {
+    
+    KLog(@"CallKit: Starting Call");
+    
+	[self configAudioSession:[AVAudioSession sharedInstance]];
+	[action fulfill];
+	NSUUID *uuid = action.callUUID;
+
+	NSString *callID = [self.calls objectForKey:uuid]; // first, make sure this callid is not already involved in a call
+	LinphoneCall *call;
+	if (![callID isEqualToString:@""]) {
+		call = linphone_core_get_current_call(LC);
+	} else {
+		call = [LinphoneManager.instance callByCallId:callID];
+	}
+	if (call != NULL) {
+		_pendingCall = call;
+    } else {
+        KLog(@"Call is null");
+    }
+}
+
+- (void)provider:(CXProvider *)provider performEndCallAction:(CXEndCallAction *)action {
+    
+    KLog(@"CallKit: Ending the Call. %@",action.callUUID);
+
+    NSInteger callDuration = 0;
+    self.isMicOn = FALSE;
+	self.callKitCalls--;
+	[action fulfill];
+    
+	if (linphone_core_is_in_conference(LC)) {
+		LinphoneManager.instance.conf = TRUE;
+		linphone_core_terminate_conference(LC);
+	} else if (linphone_core_get_calls_nb(LC) > 1) {
+		LinphoneManager.instance.conf = TRUE;
+		linphone_core_terminate_all_calls(LC);
+	} else {
+		NSUUID *uuid = action.callUUID;
+		NSString *callID = [self.calls objectForKey:uuid];
+        NSMutableDictionary* callInfo = nil;
+		if (callID) {
+            callInfo = [self getCallLog:callID];
+            LinphoneCall *call = [LinphoneManager.instance callByCallId:callID];
+			if (call) {
+                KLog(@"Get the call duration");
+                EnLogd(@"Get the call duration");
+                callDuration = linphone_core_get_current_call(LC) ? linphone_call_get_duration(linphone_core_get_current_call(LC)) : 0;
+				linphone_call_terminate((LinphoneCall *)call);
+                [callInfo setValue:[NSNumber numberWithLong:callDuration] forKey:DURATION];
+			}
+            
+            /* If PN was not received till end of the connected call, will use lastCallInfo dic returned by the
+                 phoneViewController's callEnded() delegate.
+                 lastCallInfo will have the following <key,value> pairs:
+                 <REMOTE_USER_NAME,  from_phone>
+                 <REMOTE_USER_IV_ID, from user's iv user ID if it is found in contacts or 0>
+                 <REMOTE_USER_PIC,   URL to the pic, or "">
+                 <DURATION,          call duration>
+            */
+            
+            if(callDuration<=0) {
+                if(self.callKitCalls <=0) {
+                    UIViewController* presentdVC = appDelegate.window.rootViewController;
+                    if( [presentdVC isKindOfClass:[PhoneViewController class]]) {
+                        PhoneViewController* pvc = (PhoneViewController*)presentdVC;
+                        callDuration = [pvc getCallDuration];
+                        [callInfo setValue:[NSNumber numberWithLong:callDuration] forKey:DURATION];
+                    }
+                }
+            }
+            
+            
+            [callInfo setValue:callID forKey:VOIP_CALL_ID];
+            KLog(@"sendVoipCallLog = %@",callInfo);
+            EnLogd(@"sendVoipCallLog = %@",callInfo);
+            NSString* callType = [NSString stringWithString:LinphoneManager.instance.callType];
+            [[Engine sharedEngineObj]displayUserRatingOptions:callInfo CallType:callType];
+           
+			[self.uuids removeObjectForKey:callID];
+			[self.calls removeObjectForKey:uuid];
+		}
+	}
+    
+    if(self.callKitCalls <=0) {
+        UIViewController* presentdVC = [appDelegate.getNavController presentedViewController];
+        if( [presentdVC isKindOfClass:[PhoneViewController class]]) {
+            PhoneViewController* pvc = (PhoneViewController*)presentdVC;
+            [pvc getCallDuration];
+        }
+        [self setRootViewControllerWithPhoneView:NO CallID:nil];
+    }
+    
+    self.fromContact = @"";
+    self.lastCallInfo = [[NSMutableArray alloc]init];
+}
+
+- (void)provider:(CXProvider *)provider performSetMutedCallAction:(nonnull CXSetMutedCallAction *)action {
+    
+    KLog(@"performSetMutedCallAction");
+	[action fulfill];
+    self.isMicOn = !self.isMicOn;
+    linphone_core_enable_mic(LC, self.isMicOn);
+    KLog(@"MIC status:%@",self.isMicOn?@"On":@"Off");
+    EnLogd(@"MIC status:%@",self.isMicOn?@"On":@"Off");
+    
+    /* CMP
+	if ([[PhoneMainView.instance currentView] equal:CallView.compositeViewDescription]) {
+		CallView *view = (CallView *)[PhoneMainView.instance popToView:CallView.compositeViewDescription];
+		[view.microButton toggle];
+	}*/
+}
+
+- (void)provider:(CXProvider *)provider performSetHeldCallAction:(nonnull CXSetHeldCallAction *)action {
+    
+    KLog(@"performSetHeldCallAction");
+    
+	[action fulfill];
+    
+	if (linphone_core_is_in_conference(LC) && action.isOnHold) {
+		linphone_core_leave_conference(LC);
+        KLog(@"Leave conference");
+        [NSNotificationCenter.defaultCenter postNotificationName:kLinphoneCallUpdate object:self];
+		return;
+    }
+
+	if (linphone_core_get_calls_nb(LC) > 1 && action.isOnHold) {
+        KLog(@"Pause all calls");
+		linphone_core_pause_all_calls(LC);
+		return;
+	}
+
+	NSUUID *uuid = action.callUUID;
+	NSString *callID = [self.calls objectForKey:uuid];
+    KLog(@"performSetHeldCallAction. callID = %@",callID);
+	if (!callID) {
+        KLog(@"performSetHeldCallAction: callID is nil");
+		return;
+	}
+
+    LinphoneCall *call = [LinphoneManager.instance callByCallId:callID];
+	if (call) {
+		if (action.isOnHold) {
+            KLog(@"performSetHeldCallAction: Call paused");
+            linphone_call_pause(call);
+		} else {
+            KLog(@"performSetHeldCallAction: Call resume");
+			//OCT 3, 2017 [self configAudioSession:[AVAudioSession sharedInstance]];
+            
+			if (linphone_core_get_conference(LC)) {
+				linphone_core_enter_conference(LC);
+                KLog(@"Enter conference");
+                [NSNotificationCenter.defaultCenter postNotificationName:kLinphoneCallUpdate object:self];
+            } else {
+				_pendingCall = call;
+			}
+            
+            [self configAudioSession:[AVAudioSession sharedInstance]];
+		}
+	}
+}
+
+- (void)provider:(CXProvider *)provider performPlayDTMFCallAction:(CXPlayDTMFCallAction *)action {
+    
+    KLog(@"CallKit : performPlayDTMFCallAction");
+	[action fulfill];
+	NSUUID *call_uuid = action.callUUID;
+	NSString *callID = [self.calls objectForKey:call_uuid];
+	LinphoneCall *call = [LinphoneManager.instance callByCallId:callID];
+	char digit = action.digits.UTF8String[0];
+	LinphoneStatus ret = linphone_call_send_dtmf((LinphoneCall *)call, digit);
+    linphone_core_play_dtmf(LC, digit, 100);
+    if(0 == ret)  {
+        KLog(@"digit \'%c\' sent",digit);
+        EnLogd(@"digit \'%c\' sent",digit);
+    } else {
+        KLog(@"Error in sending digit \'%c\'",digit);
+        EnLogd(@"Error in sending digit \'%c\'",digit);
+    }
+}
+
+- (void)provider:(CXProvider *)provider didActivateAudioSession:(AVAudioSession *)audioSession {
+    
+    KLog(@"CallKit : didActivateAudioSession");
+    
+	// Now we can (re)start the call
+    if (_pendingCall) {
+        LinphoneCallState state = linphone_call_get_state(_pendingCall);
+        switch (state) {
+            case LinphoneCallIncomingReceived:
+                KLog(@"didActivateAudioSession: Call received");
+                [LinphoneManager.instance acceptCall:(LinphoneCall *)_pendingCall evenWithVideo:_pendingCallVideo];
+                self.isMicOn = TRUE;
+                break;
+            case LinphoneCallPaused:
+                KLog(@"didActivateAudioSession: Resume call");
+                if(_pendingCall) {
+                    KLog(@"Resuming call");
+                    LinphoneStatus status = linphone_call_resume(_pendingCall);
+                    KLog(@"linphone_call_resume returns: %d", status);
+                }
+                break;
+            case LinphoneCallStreamsRunning:
+                // May happen when multiple calls
+                break;
+            default:
+                KLog(@"didActivateAudioSession: %d",state);
+                break;
+        }
+    } else {
+		if (_pendingAddr) {
+            KLog(@"**** DOCALL");
+			[LinphoneManager.instance doCall:_pendingAddr];
+		} else {
+			LOGE(@"CallKit : No pending call");
+		}
+	}
+
+	_pendingCall = NULL;
+	_pendingAddr = NULL;
+	_pendingCallVideo = FALSE;
+
+}
+
+- (void)provider:(CXProvider *)provider didDeactivateAudioSession:(nonnull AVAudioSession *)audioSession {
+    
+    KLog(@"CallKit : didDeactivateAudioSession");
+
+	_pendingCall = NULL;
+	_pendingAddr = NULL;
+	_pendingCallVideo = FALSE;
+    self.isMicOn = FALSE;
+}
+
+- (void)providerDidBegin:(CXProvider *)provider {
+    KLog(@"CallKit : providerDidBegin");
+}
+
+- (void)providerDidReset:(CXProvider *)provider {
+    
+    KLog(@"CallKit : providerDidReset");
+	LinphoneManager.instance.conf = TRUE;
+	linphone_core_terminate_all_calls(LC);
+	[self.calls removeAllObjects];
+	[self.uuids removeAllObjects];
+}
+
+- (void)provider:(CXProvider *)provider timedOutPerformingAction:(CXAction *)action
+{
+    KLog(@"CallKit: timedOutPerformingAction");
+    
+}
+
+#pragma mark - CXCallObserverDelegate Protocol
+
+- (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call {
+
+    KLog(@"CallKit: Call changed. calls = %@, call = %@",callObserver.calls, call.UUID);
+}
+
+#pragma mark -
+
+-(void)setRootViewControllerWithPhoneView:(BOOL)isPhoneView CallID:(NSString*)callId {
+    
+    if(isPhoneView) {
+        PhoneViewController* vwc = nil;
+        if(DEVICE_HEIGHT > 568)
+            vwc = [[PhoneViewController alloc] initWithNibName:@"PhoneViewController_6" bundle:nil];
+        else
+            vwc = [[PhoneViewController alloc] initWithNibName:@"PhoneViewController" bundle:nil];
+        
+        [vwc setDelegate:self];
+        [vwc setFromAddress:self.fromContact];
+        [vwc setToAddress:self.toContact];
+        [vwc setPushDict:self.pushDict];
+        [vwc setCall:_pendingCall];
+        [vwc setCallID:callId];
+        
+        if(!callId)
+            [vwc setIsIncomingCall:NO];
+        else
+            [vwc setIsIncomingCall:YES];
+        
+        if([[ConfigurationReader sharedConfgReaderObj] getOnBoardingStatus]) {
+            lastVC = appDelegate.window.rootViewController;
+            EnLogd(@"Still in onBoarding");
+        } else {
+            lastVC = nil;
+        }
+        
+        lastSelectedTab = appDelegate.tabBarController.selectedIndex;
+        appDelegate.window.rootViewController = vwc;
+        [appDelegate.window makeKeyAndVisible];
+    }
+    else {
+        if(lastSelectedTab >=0 && lastSelectedTab <= 5) {
+            KLog(@"Tab: Not at more");
+            BOOL isTabbarHidden = appDelegate.tabBarController.tabBar.isHidden;
+            if(!lastVC && ![[ConfigurationReader sharedConfgReaderObj] getOnBoardingStatus]) {
+                appDelegate.window.rootViewController = appDelegate.tabBarController;
+                [appDelegate.tabBarController setSelectedIndex:lastSelectedTab];
+                [appDelegate.tabBarController.tabBar setHidden:isTabbarHidden];
+                [appDelegate.tabBarController setSelectedViewController:appDelegate.tabBarController.viewControllers[lastSelectedTab]];
+                
+            } else if(lastVC) {
+                appDelegate.window.rootViewController = lastVC;
+            } else {
+                EnLogd(@"ROOT VWC is nil. CHECK the code");
+            }
+        }
+        else {
+            // More Tab clicked.
+            KLog(@"Tab: at more");
+            lastSelectedTab = appDelegate.tabBarController.selectedIndex;
+            if( !(lastSelectedTab >=0 && lastSelectedTab <= 5) ) {
+                appDelegate.window.rootViewController = appDelegate.tabBarController;
+                [appDelegate.tabBarController setSelectedViewController:appDelegate.tabBarController.moreNavigationController];
+            }
+        }
+    }
+}
+
+
+#pragma mark -
+#pragma mark PhoneViewControllerDelegate
+
+-(void)callEnded:(NSInteger)duration UserInfo:(NSDictionary *)userInfo {
+    
+    /* 
+     Get the current call info dictionary and update the duration lasted for the call.
+     This method should always be called before performEndCallAction:
+     TODO: check
+     */
+    KLog(@"callEnded: userInfo = %@",userInfo);
+    EnLogd(@"callEnded: userInfo = %@",userInfo);
+    NSString* callId = [userInfo valueForKey:VOIP_CALL_ID];
+    NSMutableDictionary* callDic = [self getCallInfoForCallId:callId];
+    [callDic setValue:[NSNumber numberWithLong:duration] forKey:DURATION];
+    self.hangupTapped = YES;
+}
+
+#pragma -
+
+-(NSString*)getIVUserNameFromPhoneNumber:(NSString*)number {
+    
+    NSString* name = nil;
+    NSNumber* phoneNum = [NSNumber numberWithLongLong:[number longLongValue]];
+    NSUserDefaults* groupSettings = [[NSUserDefaults alloc]initWithSuiteName:@"group.com.kirusa.InstaVoiceGroup"];
+    NSMutableArray* phoneNumbers = [groupSettings objectForKey:@"PHONE_NUMBERS"];
+    if(phoneNumbers.count) {
+        NSUInteger index = [phoneNumbers indexOfObject:phoneNum];
+        if(NSNotFound != index) {
+            NSArray* contactNames = [groupSettings objectForKey:@"CONTACT_NAMES"];
+            if(index < contactNames.count ) {
+                name = [contactNames objectAtIndex:index];
+            }
+        }
+    }
+    KLog(@"getIVUserNameFromPhoneNumber:%@",name);
+    return name;
+}
+@end

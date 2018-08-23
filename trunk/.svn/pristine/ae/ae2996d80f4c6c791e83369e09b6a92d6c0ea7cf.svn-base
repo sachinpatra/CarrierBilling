@@ -1,0 +1,25 @@
+{
+    "aps" :    {
+        "alert" :        {
+            "body" :"Missed Call from +918971172333",
+        },
+        "badge" :"1",
+        "category" : "ivMsg",
+        "content-available" : "1",
+        "sound" : "default",
+    },
+    "contact_id" : "918971172333",
+    "contact_type" : "p",
+    "content" : "",
+    "duration" : "0",
+    "extra" : "{\"type\":\"mc\",\"iv_msg_id\":2934883,\"from_phone_num\":\"918971172333\"}",
+    "id" : "9",
+    "msg" : "918971172333",
+    "msg_content_type" : "t",
+    "msg_dt" : "1429599538087",
+    "msg_id" : "2934883",
+    "msg_subtype" : "avs",
+    "msg_type" : "mc",
+    "phone" : "918971172333",
+    "sender_id" : "918971172333",
+}

@@ -1,0 +1,357 @@
+//
+//  CountryTableViewController.m
+//  InstaVoice
+//
+//  Created by kirusa on 11/5/14.
+//  Copyright (c) 2014 Kirusa. All rights reserved.
+//
+#import "MZFormSheetController.h"
+#import "MZCustomTransition.h"
+#import "FriendsInviteViewController.h"
+#import "CountryTableViewController.h"
+#import "IVFileLocator.h"
+#import "ConfigurationReader.h"
+#define COUNTRY_FLAG @"flag"
+#define SEPARATOR  @"SEP"
+#import <QuartzCore/QuartzCore.h>
+
+#define PLACEHOLDERTEXT @"_placeholderLabel.textColor"
+#define CELL_HEIGHT 40
+#define SELECT_COUNTRY @"Select Country"
+#define PWD_MIN 6
+#define PWD_MAX 25
+
+@interface CountryTableViewController ()
+
+@end
+
+@implementation CountryTableViewController
+@synthesize countryList,countryIsdCodeSelected,countryNameSelected;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:@"CountryTableViewController" bundle:nibBundleOrNil];
+    if (self) {
+        countryList =  nil;
+        newCountryList = nil;
+        countryIsdCode = @"";
+        countryName = @"";
+        maxPhoneLen = 0;
+        minPhoneLen = 0;
+        countryIsdCodeSelected = [@"+" stringByAppendingString:[[ConfigurationReader sharedConfgReaderObj]getCountryISD]];
+        countryNameSelected = [[ConfigurationReader sharedConfgReaderObj]getCountryName];
+        self.countryCode = [[Setting sharedSetting]getCountryCodeFromCountryIsd:[[ConfigurationReader sharedConfgReaderObj]getCountryISD]];
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [appDelegate.stateMachineObj setCurrentUI:self];
+    
+    CGRect rect = CGRectMake(SIZE_0, SIZE_0, SIZE_5, SIZE_34);
+    worldIconImg = [UIImage imageNamed:IMG_WORLD_ICON];
+    
+    UIView *ped = [[UIView alloc] initWithFrame:rect];
+    userID.leftView = ped;
+    
+    userID.leftViewMode = UITextFieldViewModeAlways;
+    [userID becomeFirstResponder];
+    
+    NSString *simISD = [appDelegate.confgReader getSIMIsdCode];
+    [self setSelectCountry:simISD];
+    
+    indexArray = [Common loadIndexArray];
+    countryIndexData = [Common loadDataAtIndexArray:newCountryList key:COUNTRY_NAME indexArray:indexArray];
+    
+    [countryView.layer setCornerRadius:SIZE_10];
+    countryView.layer.masksToBounds = YES;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [appDelegate.stateMachineObj setCurrentUI:self];
+    
+    int netAvailable = [Common isNetworkAvailable];
+    if(netAvailable == NETWORK_NOT_AVAILABLE)
+    {
+        //OCT 4, 2016 [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+    }
+    self.navigationController.navigationBarHidden = YES;
+    [self setDefaultFlag];
+    
+    //countryList = [[Setting sharedSetting]getCountryList];
+}
+
+#pragma mark - UITableView's Delegate methods
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section
+{
+    return [countryList count];
+}
+
+
+-(CGFloat )tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CELL_HEIGHT;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableDictionary *dic;
+    UITableViewCell *cell = nil;
+    static NSString *someCell = @"cellIdentifier";
+    if(cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:someCell];
+    }
+    
+    dic = [countryList objectAtIndex:indexPath.row];
+    [self setFlag:dic];
+    
+    NSNumber *num = [dic valueForKey:SEPARATOR];
+    UIView *lineView = nil;
+    if(num != nil && [num boolValue])
+    {
+        lineView = [[UIView alloc] initWithFrame:CGRectMake(SIZE_0, SIZE_37, cell.contentView.frame.size.width, 3)];
+        lineView.backgroundColor = [UIColor lightGrayColor];
+        [cell addSubview:lineView];
+    }
+    
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(SIZE_10, SIZE_8, SIZE_24, SIZE_24)];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    NSString *countryFlag = [dic valueForKey:COUNTRY_FLAG];
+    UIImage *flagImg = [UIImage imageNamed:countryFlag];
+    
+    if(flagImg == nil)
+    {
+        flagImg = worldIconImg;
+    }
+    [imageView setImage:flagImg];
+    
+    
+    UILabel *lblCountry_isd_Code = [[UILabel alloc]initWithFrame:CGRectMake(SIZE_43, SIZE_4, SIZE_50, SIZE_30)];
+    lblCountry_isd_Code.textColor = [UIColor blackColor];
+    lblCountry_isd_Code.backgroundColor= [UIColor clearColor];
+    NSString *isd =@"+";
+    isd = [isd stringByAppendingString:[dic valueForKey:COUNTRY_ISD_CODE]];
+    lblCountry_isd_Code.text =isd;
+    [lblCountry_isd_Code setFont:[UIFont systemFontOfSize:SIZE_14]];
+    
+    UILabel *lblCountryName = [[UILabel alloc]initWithFrame:CGRectMake(SIZE_88, SIZE_4, SIZE_170, SIZE_30)];
+    lblCountryName.textColor = [UIColor blackColor];
+    lblCountryName.backgroundColor= [UIColor clearColor];
+    NSString *name = [dic valueForKey:COUNTRY_NAME];
+    lblCountryName.text = name;
+    [lblCountryName setFont:[UIFont systemFontOfSize:SIZE_14]];
+    [lblCountryName setLineBreakMode:NSLineBreakByTruncatingTail];
+    
+    [cell addSubview:imageView];
+    [cell addSubview:lblCountry_isd_Code];
+    [cell addSubview:lblCountryName];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    return cell;
+    
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableDictionary *tempDic = [countryList objectAtIndex:indexPath.row];
+    
+    NSString *countryFlag = [tempDic valueForKey:COUNTRY_FLAG];
+    
+    countryName =  [tempDic valueForKey:COUNTRY_NAME];
+    maxPhoneLen = [[tempDic valueForKey:COUNTRY_MAX_PHONE_LENGTH] integerValue];
+    minPhoneLen = [[tempDic valueForKey:COUNTRY_MIN_PHONE_LENGTH] integerValue];
+    self.countryCode = [tempDic valueForKey:@"COUNTRY_CODE"];
+    
+    NSString *isd = countryIsdCode;
+    countryIsdCode = [tempDic valueForKey:COUNTRY_ISD_CODE];
+    
+    if(countryIsdCode != nil && [countryIsdCode length] > 0)
+    {
+        NSString *tempStr = [[NSString alloc] initWithFormat:@"+%@",countryIsdCode];
+        plusField.text = tempStr;
+        countryIsdCodeSelected = tempStr;
+    }
+    countryNameSelected = countryName;
+    
+    UIImage *flagImg = [UIImage imageNamed:countryFlag];
+    _countryFlag = countryFlag;
+    
+    if(flagImg == nil)
+    {
+        flagImg = worldIconImg;
+    }
+    [countryNameLbl setText:countryName];
+    [flagview setImage:flagImg];
+    [countryTable reloadData];
+    
+    countryView.hidden = YES;
+    if(![isd isEqualToString:countryIsdCode])
+    {
+        userID.text = @"";
+    }
+    [userID becomeFirstResponder];
+    
+    [self mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+    }];
+}
+
+
+#pragma mark - Action associated with buttons
+
+-(IBAction)cancelBtnAction:(id)sender
+{
+    [self mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+        }];
+}
+
+
+-(IBAction)selectCountryBtnAction:(id)sender;
+{
+    if(countryView.hidden)
+    {
+        countryView.hidden = NO;
+        [userID resignFirstResponder];
+    }
+    else
+    {
+        countryView.hidden = YES;
+    }
+}
+
+#pragma mark - UITableView's DataSource
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    return indexArray;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    sepCount = 0;
+    
+    NSMutableArray *dataAtIndex = nil;
+    int i = 0;
+    
+    dataAtIndex =  countryIndexData;
+    if([dataAtIndex count] > index)
+    {
+        NSMutableDictionary *dataDic = [dataAtIndex objectAtIndex:index];
+        
+        i = [[dataDic valueForKey:TABLE_VALUE] intValue];
+        if(i == 0)
+        {
+            if(index > 0)
+            {
+                dataDic = [dataAtIndex objectAtIndex:index-1];
+                i = [[dataDic valueForKey:TABLE_VALUE] intValue];
+            }
+        }
+    }
+    [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:i+(sepCount+1) inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    return i;
+    
+}
+
+-(NSMutableDictionary *) setFlag : (NSMutableDictionary *)flagDic
+{
+    NSString *country_flag = [flagDic valueForKey:COUNTRY_NAME];
+    //country_flag = [country_flag stringByAppendingString:@".png"];
+    
+    for(int i=0;i<[country_flag length];i++)
+    {
+        if([country_flag characterAtIndex:i]==' ')
+        {
+            country_flag = [country_flag stringByReplacingOccurrencesOfString:@" "
+                                                                   withString:@"-"];
+        }
+    }
+    [flagDic setValue: country_flag forKey:COUNTRY_FLAG];
+    return flagDic;
+}
+
+-(void)setDefaultFlag
+{
+    NSString *countryISD = [appDelegate.confgReader getCountryISD];
+    NSString *countryFlag = [appDelegate.confgReader getCountryName];
+    
+    if(countryISD != nil && [countryISD length]>0 && countryFlag != nil && [countryFlag length]>0)
+    {
+        maxPhoneLen = [appDelegate.confgReader getMaxPhoneLen];
+        minPhoneLen = [appDelegate.confgReader getMinPhoneLen];
+        countryNameLbl.text = countryFlag;
+        countryName = countryFlag;
+        //countryFlag = [countryFlag stringByAppendingString:@".png"];
+        countryFlag = [countryFlag stringByReplacingOccurrencesOfString:@" " withString:@"-"];
+        [flagview setImage:[UIImage imageNamed:countryFlag]];
+        _countryFlag = countryFlag;
+        [plusField setText:[[NSString alloc] initWithFormat:@"+%@",countryISD]];
+        if(countryIsdCode == nil)
+        {
+            countryIsdCode = @"";
+        }
+        countryIsdCode= countryISD;
+    }
+    else
+    {
+        [flagview setImage:worldIconImg];
+        [countryNameLbl setText:NSLocalizedString(@"SELECT_COUNTRY", nil)];
+        plusField.text = @"+";
+        userID.text= @"";
+    }
+}
+
+-(void)setSelectCountry:(NSString*)countryISD
+{
+    NSMutableArray *fiveCountryList = [Common topFiveCountryList];
+    if(countryISD != nil && [countryISD length]>0)
+    {
+        int count = (int)[fiveCountryList count];
+        int index = -1;
+        for (int i =0; i<count; i++)
+        {
+            NSMutableDictionary *dic = [fiveCountryList objectAtIndex:i];
+            NSString *isd = [dic valueForKey:COUNTRY_ISD_CODE];
+            if([isd isEqualToString:countryISD])
+            {
+                index = i;
+                break;
+            }
+        }
+        if(index >= 0)
+        {
+            NSMutableDictionary *dic = [fiveCountryList objectAtIndex:index];
+            [fiveCountryList removeObjectAtIndex:index];
+            [fiveCountryList insertObject:dic atIndex:0];
+        }
+        
+    }
+    newCountryList = [[Setting sharedSetting]getCountryList];//[appDelegate.dataMgt getCountryList];
+    countryList = newCountryList;
+    sepCount = 4;
+    [fiveCountryList addObjectsFromArray:countryList];
+    countryList = fiveCountryList;
+    if(sepCount>0)
+    {
+        NSMutableDictionary *dic = [countryList objectAtIndex:sepCount];
+        [dic setValue:[NSNumber numberWithBool:YES] forKey:SEPARATOR];
+    }
+}
+
+-(void)dismissMe {
+    
+    [self mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+    }];
+}
+
+@end

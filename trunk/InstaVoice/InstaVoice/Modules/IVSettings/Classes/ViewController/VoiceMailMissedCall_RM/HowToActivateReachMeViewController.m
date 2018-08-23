@@ -1,0 +1,591 @@
+//
+//  HowToActivateReachMeViewController.m
+//  InstaVoice
+//
+//  Created by Bhaskar Munireddy on 23/01/18.
+//  Copyright © 2018 Kirusa. All rights reserved.
+//
+
+#import "HowToActivateReachMeViewController.h"
+#import "HowToActivateReachMeTableViewCell.h"
+#import "UserProfileModel.h"
+#import "Profile.h"
+#import "IVFileLocator.h"
+#import "ContactDetailData.h"
+#import "BaseConversationScreen.h"
+#import "Contacts.h"
+#import "InsideConversationScreen.h"
+#import "ReachMeActivationViewController.h"
+#import "VoiceMailHLRAPI.h"
+#import "ActivateReachMeViewController.h"
+#import "PersonalisationViewController.h"
+
+#define kReachMeDetailsCellIdentifier @"ReachMeDetailsCell"
+#define kReachMeActivateCellIdentifier @"ActivateButtonCell"
+#define kReachMeInfoCellIdentifier @"ReachMeActivateInfoCell"
+
+@interface HowToActivateReachMeViewController ()<SettingProtocol>{
+    BOOL isSwitch;
+}
+@property (weak, nonatomic) IBOutlet UITableView *howToActivateTableView;
+@property (nonatomic, strong) HowToActivateReachMeTableViewCell *activateReachMeCell;
+@property (nonatomic, strong) NSMutableArray *supportContactList;
+@property (nonatomic, strong) NSString *helpText, *titleName, *carrierName;
+@property (nonatomic, strong) NSString *activationDialNumber;
+@property (nonatomic, strong) NSString *deactivateDialNumber;
+@property (nonatomic, strong) NSMutableArray *helpTextArray;
+@end
+
+@implementation HowToActivateReachMeViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    if([self.reachMeType isEqualToString:REACHME_INTERNATIONAL])
+        self.title = NSLocalizedString(@"ReachMe International", nil);
+    else if ([self.reachMeType isEqualToString:REACHME_HOME])
+        self.title = NSLocalizedString(@"ReachMe Home", nil);
+    else
+        self.title = NSLocalizedString(@"ReachMe VoiceMail", nil);
+    
+    UIBarButtonItem *helpButton = [[UIBarButtonItem alloc] initWithTitle:@"Help" style:UIBarButtonItemStylePlain target:self action:@selector(helpAction)];
+    self.navigationItem.rightBarButtonItem = helpButton;
+    // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [Setting sharedSetting].delegate = self;
+    if([Common isNetworkAvailable] == NETWORK_AVAILABLE) {
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        [userDefaults setValue:@NO forKey:kUserSettingsFetched];
+        [userDefaults synchronize];
+        [[Setting sharedSetting]getUserSettingFromServer];
+        [[Profile sharedUserProfile] getProfileDataFromServer];
+        [self configureHelpAndSuggestion];
+    }
+    
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    }
+}
+
+- (void)helpAction
+{
+//    CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:self.phoneNumber];
+//
+//    if (self.voiceMailInfo.countryVoicemailSupport && !self.voiceMailInfo.isVoiceMailEnabled && self.isCarrierSupportedForVoiceMailSetup) {
+//        self.helpText = [NSString stringWithFormat:@"I'm having problems in activating InstaVoice Voicemail & Missed Call Service. My carrier is %@ and the activation number is %@", [self currentCarrierName:self.phoneNumber withCarrierList:self.currentCarrierList], self.activationDialNumber];
+//    }else if (!self.isValidCarrierName || !self.voiceMailInfo.countryVoicemailSupport) {
+//        self.helpText = kCarrierNotSupporttedHelpText;
+//    }else if (self.voiceMailInfo.isVoiceMailEnabled) {
+//        if ([self numberIsActive:self.phoneNumber withVoiceMailInfo:self.voiceMailInfo] && carrierDetails) {
+//            self.helpText = @"";
+//        }else if (self.voiceMailInfo.countryVoicemailSupport && self.isCarrierSupportedForVoiceMailSetup){
+//            self.helpText = [NSString stringWithFormat:@"I'm having problems in activating InstaVoice Voicemail & Missed Call Service. My carrier is %@ and the activation number is %@", [self currentCarrierName:self.phoneNumber withCarrierList:self.currentCarrierList], self.activationDialNumber];
+//        }else if (!self.isValidCarrierName || !self.voiceMailInfo.countryVoicemailSupport || !carrierDetails) {
+//            self.helpText = kCarrierNotSupporttedHelpText;
+//        }else{
+//            if ([carrierDetails.networkId isEqualToString:@"-1"] && [carrierDetails.countryCode isEqualToString:@"-1" ] && [carrierDetails.vSMSId integerValue] == -1) {
+//                self.helpText = kCarrierNotSupporttedHelpText;
+//            }else{
+//                self.helpText = [NSString stringWithFormat:@"%@ %@",kCarrierNotSupporttedHelpText,[self currentCarrierName:self.phoneNumber withCarrierList:self.currentCarrierList]];
+//            }
+//
+//        }
+//    }else{
+//
+//        self.helpText = [NSString stringWithFormat:@"%@ %@",kCarrierNotSupporttedHelpText,[self currentCarrierName:self.phoneNumber withCarrierList:self.currentCarrierList]];
+//    }
+    self.helpText = @"";
+    [self showHelpMessage];
+    
+}
+
+- (void)configureHelpAndSuggestion
+{
+    self.helpTextArray = [[NSMutableArray alloc]init];
+    self.supportContactList = [[Setting sharedSetting].supportContactList mutableCopy];
+    if(self.supportContactList != nil && [self.supportContactList count] > 0)
+    {
+        NSUInteger count = (NSUInteger)[self.supportContactList count];
+        for(NSUInteger  i = 0; i < count; i++)
+        {
+            NSMutableDictionary *dic = [self.supportContactList objectAtIndex:i];
+            NSString *supportName = [dic valueForKey:SUPPORT_NAME];
+            if([supportName isEqualToString:MENU_FEEDBACK])
+            {
+                //do nothing
+            }
+            else
+            {
+                [self.helpTextArray addObject:dic];
+            }
+        }
+    }
+}
+
+
+- (void)showHelpMessage
+{
+    if([Common isNetworkAvailable] == NETWORK_AVAILABLE) {
+        if (self.helpTextArray != nil && [self.helpTextArray count] > 0) {
+            NSUInteger count = [self.helpTextArray count];
+            for(NSUInteger  i = 0;i < count; i++) {
+                NSDictionary *helpPhoneDic = [self.helpTextArray objectAtIndex:i];
+                [self gotoHelpChat:helpPhoneDic];
+            }
+        }
+        else
+            [ScreenUtility showAlertMessage:NSLocalizedString(@"NO_SUPPORT_LIST", nil)];
+    }
+    else {
+        [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+    }
+}
+
+-(void)gotoHelpChat:(NSDictionary *)supportDic
+{
+    NSMutableDictionary *newDic = [[NSMutableDictionary alloc]init];
+    
+    NSString *ivUserId = [supportDic valueForKey:SUPPORT_IV_ID];
+    [newDic setValue:IV_TYPE forKey:REMOTE_USER_TYPE];
+    [newDic setValue:ivUserId forKey:REMOTE_USER_IV_ID];
+    [newDic setValue:[supportDic valueForKey:SUPPORT_DATA_VALUE] forKey:FROM_USER_ID];
+    [newDic setValue:[supportDic valueForKey:SUPPORT_NAME] forKey:REMOTE_USER_NAME];
+    [newDic setValue:[supportDic valueForKey:SUPPORT_PIC_URI] forKey:REMOTE_USER_PIC];
+    [newDic setValue:self.helpText forKey:@"HELP_TEXT"];
+    
+    
+    //- get the pic
+    NSNumber* ivID = [NSNumber numberWithLong:[ivUserId longLongValue]];
+    NSArray* arr = [[Contacts sharedContact]getContactForIVUserId:ivID usingMainContext:YES];
+    ContactDetailData* detailData = Nil;
+    if([arr count]>0)
+        detailData = [arr objectAtIndex:0];
+    
+    if(detailData)
+        [newDic setValue:[IVFileLocator getNativeContactPicPath:detailData.contactIdParentRelation.contactPic]
+                  forKey:REMOTE_USER_PIC];
+    
+    [appDelegate.dataMgt setCurrentChatUser:newDic];
+    
+    BaseUI* uiObj = [[InsideConversationScreen alloc]initWithNibName:@"BaseConversationScreen_4.0_ios7Master" bundle:nil];
+    uiObj.isAnyChangesSpecificSubClass = YES;
+    [self.navigationController pushViewController:uiObj animated:YES];
+    
+}
+
+#pragma TableView Methods
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return  3;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return 4;
+    }
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    if (indexPath.section == 2) {
+        NSString *infoString = @"Data connectivity is required to get calls in the app. Your phone will not ring if not connected to data, even if phone is On. ReachMe replaces phone’s default voicemail.";
+        UITextView *msgLabel = [[UITextView alloc] init];
+        msgLabel.text = infoString;
+        msgLabel.font = [UIFont systemFontOfSize:14.0];
+        [msgLabel sizeToFit];
+        
+        CGSize stringSize;
+        CGSize lableWidth = CGSizeMake(DEVICE_WIDTH - 80.0, CGFLOAT_MAX);
+        CGSize neededSize = [msgLabel sizeThatFits:CGSizeMake(lableWidth.width, CGFLOAT_MAX)];
+        stringSize = neededSize;
+        stringSize.height += 20.0;
+        return stringSize.height;
+        
+    }else if (indexPath.section == 0){
+        NSString *infoString = @"Get voicemails and missed calls on multiple devices, even on devices that do not have the SIM card";
+        UITextView *msgLabel = [[UITextView alloc] init];
+        msgLabel.text = infoString;
+        msgLabel.font = [UIFont systemFontOfSize:14.0];
+        [msgLabel sizeToFit];
+        
+        CGSize stringSize;
+        CGSize lableWidth = CGSizeMake(DEVICE_WIDTH - 130.0, CGFLOAT_MAX);
+        CGSize neededSize = [msgLabel sizeThatFits:CGSizeMake(lableWidth.width, CGFLOAT_MAX)];
+        stringSize = neededSize;
+        return stringSize.height + 10.0;
+    }
+    return 60.0;
+}
+
+- (CGFloat)calculateHeightForConfiguredSizingCell:(UITableViewCell *)sizingCell {
+    [sizingCell layoutIfNeeded];
+    
+    CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    return size.height;
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == 0){
+        return 70.0f;
+    }else if (section == 1){
+        return 50.0f;
+    }else{
+        return 30.0f;
+    }
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 1.0f;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    
+    UIView *tableHeaderView = [[UIView alloc]init];
+    tableHeaderView.backgroundColor = [UIColor whiteColor];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16.0, 16.0, DEVICE_WIDTH - 32.0, 60.0)];
+    if ([self.reachMeType isEqualToString:REACHME_INTERNATIONAL]) {
+        label.text = NSLocalizedString(@"Get all calls in the app at zero roaming charges", nil);
+    }else if ([self.reachMeType isEqualToString:REACHME_HOME]){
+        label.text = NSLocalizedString(@"Get calls in the app if number is unreachable", nil);
+    }else{
+        label.text = NSLocalizedString(@"Get voicemail and missed calls", nil);
+    }
+    label.textColor = [UIColor colorWithRed:(81.0/255.0) green:(80.0/255.0) blue:(80.0/255.0) alpha:1.0];
+    label.font = [UIFont systemFontOfSize:20.0 weight:UIFontWeightMedium];
+    label.backgroundColor = [UIColor clearColor];
+    label.numberOfLines = 0;
+    
+    NSString *infoString = @"Learn more about the features >";
+    UITextView *learnMore = [[UITextView alloc] initWithFrame:CGRectMake(0.0, 10.0, tableView.frame.size.width, 40.0)];
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 4;
+    NSURL *URL = [NSURL URLWithString: @"https://reachme.instavoice.com"];
+    NSMutableAttributedString * linkStr = [[NSMutableAttributedString alloc] initWithString:infoString];
+    [linkStr addAttribute: NSLinkAttributeName value:URL range: NSMakeRange(0, infoString.length)];
+    [linkStr addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, infoString.length)];
+    learnMore.attributedText = linkStr;
+    learnMore.tintColor = [UIColor colorWithRed:30.0/255.0 green:144.0/255.0 blue:255.0/255.0 alpha:1.0];
+    learnMore.font = [UIFont fontWithName:@"Helvetica" size:14.0];
+    learnMore.textContainerInset = UIEdgeInsetsZero;
+    learnMore.textAlignment = NSTextAlignmentCenter;
+    learnMore.editable = NO;
+    
+    if (section == 0){
+        [tableHeaderView addSubview:label];
+    }else if (section == 1){
+        [tableHeaderView addSubview:learnMore];
+    }
+    
+    return tableHeaderView;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell;
+    static NSString *cellIdentifier;
+    if (indexPath.section == 0) {
+        cellIdentifier = kReachMeDetailsCellIdentifier;
+    }else if (indexPath.section == 1){
+        cellIdentifier = kReachMeActivateCellIdentifier;
+    }else{
+        cellIdentifier = kReachMeInfoCellIdentifier;
+    }
+    
+    cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    [self configureCell:cell forRowAtIndexPath:indexPath];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    return cell;
+}
+
+- (void)configureCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if ([cell isKindOfClass:[HowToActivateReachMeTableViewCell class]]) {
+        HowToActivateReachMeTableViewCell *activateReachMeCell = (HowToActivateReachMeTableViewCell *)cell;
+        
+        NSArray *detailsIconArray;
+        NSArray *detailsInfoArray;
+        
+        if ([self.reachMeType isEqualToString:REACHME_INTERNATIONAL]) {
+            detailsIconArray = @[@"details_icon_1",@"details_icon_2",@"details_icon_3",@"details_icon_4"];
+            detailsInfoArray = @[@"Save roaming charges when traveling internationally",@"Get all incoming calls in the InstaVoice ReachMe app over data",@"SIM is not required in the phone and you can use the slot for a local SIM",@"World’s best Visual voicemail and Missed calls with chat like interface"];
+        }else if ([self.reachMeType isEqualToString:REACHME_HOME]){
+            detailsIconArray = @[@"details_icon_2",@"multiple_smartphones",@"details_icon_4",@"withdraw_voicemail"];
+            detailsInfoArray = @[@"Get incoming calls in the InstaVoice ReachMe app, over data",@"Get calls on multiple devices, even on devices that do not have the SIM card",@"World’s best Visual voicemail and Missed calls with chat like interface",@"Withdraw, share or forward voicemails with anyone"];
+        }else{
+            detailsIconArray = @[@"details_icon_4",@"multiple_smartphones",@"transcription",@"withdraw_voicemail"];
+            detailsInfoArray = @[@"World’s best visual voicemail and missed calls with chat like interface",@"Get voicemails and missed calls on multiple devices, even on devices that do not have the SIM card",@"Voice-to-text for your voicemails and voice messages",@"Withdraw, share or forward voicemails with anyone"];
+        }
+        
+        activateReachMeCell.infoIcon.image = [UIImage imageNamed:[detailsIconArray objectAtIndex:indexPath.row]];
+        activateReachMeCell.infoLabel.text = [detailsInfoArray objectAtIndex:indexPath.row];
+        
+        activateReachMeCell.infoTextView.textContainerInset = UIEdgeInsetsZero;
+        
+        IVSettingsCountryCarrierInfo *ccInfo =  [[Setting sharedSetting]supportedCarrierInfoFromCustomSettingsForPhoneNumber:self.phoneNumber];
+        
+        CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:self.phoneNumber];
+        //NSString *activeString = [[ConfigurationReader sharedConfgReaderObj] getMissedCallReasonForTheNumber:self.phoneNumber];
+        if (carrierDetails) {
+            if (carrierDetails.isReachMeIntlActive)
+                [activateReachMeCell.activateReachMeButton setTitle:@"Switch To Home" forState:UIControlStateNormal];
+            else if (carrierDetails.isReachMeHomeActive)
+                [activateReachMeCell.activateReachMeButton setTitle:@"Switch to ReachMe International" forState:UIControlStateNormal];
+            /*else if ((activeString.length && ccInfo)){
+                if([activeString isEqualToString:@"unconditional"])
+                    [activateReachMeCell.activateReachMeButton setTitle:@"Switch To Home" forState:UIControlStateNormal];
+                else
+                    [activateReachMeCell.activateReachMeButton setTitle:@"Switch to ReachMe International" forState:UIControlStateNormal];
+            }*/else{
+                if (ccInfo.ussdInfo.isHLREnabled) {
+                    [activateReachMeCell.activateReachMeButton setTitle:@"Activate" forState:UIControlStateNormal];
+                }else{
+                    [activateReachMeCell.activateReachMeButton setTitle:@"How To Activate" forState:UIControlStateNormal];
+                }
+            }
+        }
+        
+        activateReachMeCell.activateReachMeButton.layer.cornerRadius = 22.0;
+        [activateReachMeCell.activateReachMeButton addTarget:self action:@selector(activateReachMe:) forControlEvents:UIControlEventTouchUpInside];
+        
+    }
+    
+}
+
+- (IBAction)activateReachMe:(id)sender
+{
+    
+    IVSettingsCountryCarrierInfo *ccInfo =  [[Setting sharedSetting]supportedCarrierInfoFromCustomSettingsForPhoneNumber:self.phoneNumber];
+    
+    if (ccInfo.ussdInfo.isHLREnabled){
+        if([Common isNetworkAvailable] == NETWORK_AVAILABLE) {
+            [self showProgressBar];
+            [NSTimer scheduledTimerWithTimeInterval:3.0
+                                             target:self
+                                           selector:@selector(activationTimeLapsed:)
+                                           userInfo:nil
+                                            repeats:NO];
+            
+            NSMutableDictionary* requestDic = [[NSMutableDictionary alloc]init];
+            [requestDic setValue:self.phoneNumber forKey:@"phone_num"];
+            [requestDic setValue:@"enable" forKey:@"action"];
+            
+            CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:self.phoneNumber];
+            if (carrierDetails) {
+                if (carrierDetails.isReachMeIntlActive){
+                    isSwitch = YES;
+                    [requestDic setValue:@"switch" forKey:@"action"];
+                    [requestDic setValue:@"H" forKey:@"mode"];
+                }else if (carrierDetails.isReachMeHomeActive){
+                    isSwitch = YES;
+                    [requestDic setValue:@"switch" forKey:@"action"];
+                    [requestDic setValue:@"I" forKey:@"mode"];
+                }else{
+                    isSwitch = NO;
+                    if ([self.reachMeType isEqualToString:REACHME_INTERNATIONAL]) {
+                        [requestDic setValue:@"I" forKey:@"mode"];
+                    }else if ([self.reachMeType isEqualToString:REACHME_HOME]){
+                        [requestDic setValue:@"H" forKey:@"mode"];
+                    }
+                    [requestDic setValue:@"enable" forKey:@"action"];
+                }
+            }
+            
+            VoiceMailHLRAPI* api = [[VoiceMailHLRAPI alloc]initWithRequest:requestDic];
+            [api callNetworkRequest:requestDic withSuccess:^(VoiceMailHLRAPI *req, NSMutableDictionary *responseObject) {
+                if ([[responseObject valueForKey:STATUS] isEqualToString:STATUS_OK]) {
+                    [self updateCarrierSettingsOnHLRSuccess];
+                }
+            }failure:^(VoiceMailHLRAPI *req, NSError *error) {
+                [self hideProgressBar];
+//                ReachMeActivationViewController *reachMeActivate = [[UIStoryboard storyboardWithName:@"IVVoicemailMissedCallSettings_rm" bundle:[NSBundle mainBundle]]instantiateViewControllerWithIdentifier:@"ReachMeActivation"];
+//                reachMeActivate.phoneNumber = self.phoneNumber;
+//                reachMeActivate.voiceMailInfo = self.voiceMailInfo;
+//                reachMeActivate.reachMeType = self.reachMeType;
+//                reachMeActivate.isActivationProcess = YES;
+//                [self.navigationController pushViewController:reachMeActivate animated:YES];
+//                [ScreenUtility showAlert:@"Oops!  Something went wrong. Please, check carrier & reactivate OR tap on ‘Help’ to get assistance."];
+                UIAlertController *alertController =   [UIAlertController
+                                                        alertControllerWithTitle:nil
+                                                        message:NSLocalizedString(@"Oops!  Something went wrong. Please, check carrier & reactivate OR tap on ‘Help’ to get assistance.", nil)
+                                                        preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *ok = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                    if([[ConfigurationReader sharedConfgReaderObj] getOnBoardingStatus]){
+                        PersonalisationViewController *personalisation = [[PersonalisationViewController alloc]initWithNibName:@"PersonalisationViewController" bundle:nil];
+                        [self.navigationController pushViewController:personalisation animated:YES];
+                    }
+                }];
+                [alertController addAction:ok];
+                
+                [self presentViewController:alertController animated:YES completion:nil];
+                [alertController.view setTintColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]];
+                EnLogd(@"*** Error fetching user contact: %@, %@",req,[error description]);
+                KLog(@"*** Error fetching user contact: %@, %@",req,[error description]);
+                
+            }];
+            
+        }else{
+            [ScreenUtility showAlert:NSLocalizedString(@"NET_NOT_AVAILABLE", nil)];
+        }
+        
+    }else{
+        ReachMeActivationViewController *reachMeActivate = [[UIStoryboard storyboardWithName:@"IVVoicemailMissedCallSettings_rm" bundle:[NSBundle mainBundle]]instantiateViewControllerWithIdentifier:@"ReachMeActivation"];
+        reachMeActivate.phoneNumber = self.phoneNumber;
+        reachMeActivate.voiceMailInfo = self.voiceMailInfo;
+        reachMeActivate.reachMeType = self.reachMeType;
+        reachMeActivate.isActivationProcess = YES;
+        
+        CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:self.phoneNumber];
+        if (carrierDetails) {
+            if (carrierDetails.isReachMeIntlActive || carrierDetails.isReachMeHomeActive)
+                reachMeActivate.isSwitchProcess = YES;
+            else
+                reachMeActivate.isSwitchProcess = NO;
+        }
+        
+        [self.navigationController pushViewController:reachMeActivate animated:YES];
+    }
+    
+}
+
+- (void)updateCarrierSettingsOnHLRSuccess
+{
+    CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:self.phoneNumber];
+    
+    CarrierInfo *currentCarrierInfo = [[CarrierInfo alloc]init];
+    currentCarrierInfo.phoneNumber = self.phoneNumber;
+    if(carrierDetails) {
+        currentCarrierInfo.countryCode = carrierDetails.countryCode;
+        currentCarrierInfo.networkId = carrierDetails.networkId;
+        currentCarrierInfo.vSMSId = carrierDetails.vSMSId;
+        if([self.reachMeType isEqualToString:REACHME_INTERNATIONAL]){
+            currentCarrierInfo.isReachMeIntlActive = YES;
+            currentCarrierInfo.isReachMeHomeActive = NO;
+            currentCarrierInfo.isReachMeVMActive = NO;
+        }else if ([self.reachMeType isEqualToString:REACHME_HOME]){
+            currentCarrierInfo.isReachMeIntlActive = NO;
+            currentCarrierInfo.isReachMeHomeActive = YES;
+            currentCarrierInfo.isReachMeVMActive = NO;
+        }else{
+            currentCarrierInfo.isReachMeIntlActive = NO;
+            currentCarrierInfo.isReachMeHomeActive = NO;
+            currentCarrierInfo.isReachMeVMActive = YES;
+        }
+    }else{
+        currentCarrierInfo.countryCode = [NSString stringWithFormat:@"%d", -1];
+        currentCarrierInfo.networkId = [NSString stringWithFormat:@"%d", -1];
+        currentCarrierInfo.vSMSId = [NSNumber numberWithInteger:-1];
+        currentCarrierInfo.isReachMeIntlActive = NO;
+        currentCarrierInfo.isReachMeHomeActive = NO;
+        currentCarrierInfo.isReachMeVMActive = NO;
+    }
+    [[Setting sharedSetting]updateCarrierSettingsInfo:currentCarrierInfo];
+}
+
+-(void)updateSettingCompletedWith:(SettingModel*)modelData withUpdateStatus:(BOOL)withUpdateStatus
+{
+    if (!withUpdateStatus) {
+        [[ConfigurationReader sharedConfgReaderObj] setCarrierInfoUpdateStatus:YES];
+    }
+    [self hideProgressBar];
+    
+    NSString *message = @"\nReachMe is activated for your number. you can test the service by dialing this number from any other phone and you will get a ReachMe call on the app.\n";
+    
+    if([self.reachMeType isEqualToString:REACHME_INTERNATIONAL])
+        message = @"\nReachMe International is activated for your number. you can test the service by dialing this number from any other phone and you will get a ReachMe call on the app.\n";
+    else
+        message = @"\nReachMe Home is activated for your number.You can test the service by putting your phone on flight mode and dialing it from any other phone. You will get a ReachMe Call on the app\n";
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Congratulations" message:message preferredStyle:UIAlertControllerStyleAlert];
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:message];
+    [attrStr addAttribute:NSFontAttributeName
+                    value:[UIFont systemFontOfSize:13.0]
+                    range:NSMakeRange(0, attrStr.length)];
+    [attrStr addAttribute:NSForegroundColorAttributeName
+                    value:[UIColor colorWithRed:3.0/255.0 green:3.0/255.0 blue:3.0/255.0 alpha:1.0]
+                    range:NSMakeRange(0, attrStr.length)];
+    [alertController setValue:attrStr forKey:@"attributedMessage"];
+    
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        NSMutableArray *allViewControllers = [NSMutableArray arrayWithArray:[self.navigationController viewControllers]];
+        for (UIViewController *aViewController in allViewControllers) {
+            if ([aViewController isKindOfClass:[ActivateReachMeViewController class]]) {
+                [self.navigationController popToViewController:aViewController animated:YES];
+                if (isSwitch) {
+                    [self fireLocalNotification];
+                }
+            }
+        }
+    }];
+    
+    [alertController addAction:ok];
+    
+    alertController.view.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+    [self.navigationController presentViewController:alertController animated:true completion:nil];
+}
+
+- (void)fireLocalNotification
+{
+    NSString *notificationInfo = @"";
+    if ([self.reachMeType isEqualToString:REACHME_INTERNATIONAL]) {
+        notificationInfo = [NSString stringWithFormat:@"ReachMe International is active on %@",[Common getFormattedNumber:self.phoneNumber withCountryIsdCode:nil withGivenNumberisCannonical:YES]];
+    }else{
+        notificationInfo = [NSString stringWithFormat:@"ReachMe Home is active on %@",[Common getFormattedNumber:self.phoneNumber withCountryIsdCode:nil withGivenNumberisCannonical:YES]];
+    }
+    
+    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+    content.title = [NSString localizedUserNotificationStringForKey:@"ACTIVATION SUCCESSFULL" arguments:nil];
+    content.body = [NSString localizedUserNotificationStringForKey:notificationInfo
+                                                         arguments:nil];
+    content.sound = [UNNotificationSound defaultSound];
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"rm_switch",@"notification_type", nil];
+    content.userInfo = userInfo;
+    
+    // Deliver the notification in two seconds.
+    UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
+                                                  triggerWithTimeInterval:2 repeats:NO];
+    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"TwoSecond"
+                                                                          content:content trigger:trigger];
+    
+    // Schedule the notification.
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center addNotificationRequest:request withCompletionHandler:nil];
+}
+
+- (void)activationTimeLapsed:(NSTimer *)timer{
+    
+}
+
+- (HowToActivateReachMeTableViewCell *)activateReachMeCell {
+    
+    if (!_activateReachMeCell)
+        _activateReachMeCell = [self.howToActivateTableView dequeueReusableCellWithIdentifier:kReachMeDetailsCellIdentifier];
+    
+    return _activateReachMeCell;
+    
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

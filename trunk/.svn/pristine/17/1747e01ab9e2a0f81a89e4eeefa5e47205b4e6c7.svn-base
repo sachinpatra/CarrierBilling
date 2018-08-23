@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>7918469A-7849-451C-9E13-A76BB4B7CE55</string>
+	<key>IDESourceControlProjectName</key>
+	<string>InstaVoice</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>ed3bd124-e6a5-43f5-ad29-f814f1fa502a++505</key>
+		<string>http://192.168.230.50/svn/ios/trunk</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>InstaVoice/InstaVoice.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>ed3bd124-e6a5-43f5-ad29-f814f1fa502a++505</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>ed3bd124-e6a5-43f5-ad29-f814f1fa502a++505</key>
+		<string>http://192.168.230.50/svn/ios</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://192.168.230.50/svn/ios/trunk/InstaVoice/InstaVoice.xcworkspace</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>ed3bd124-e6a5-43f5-ad29-f814f1fa502a++505</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>ed3bd124-e6a5-43f5-ad29-f814f1fa502a++505</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Latest_IV</string>
+		</dict>
+	</array>
+</dict>
+</plist>

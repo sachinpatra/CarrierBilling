@@ -1,0 +1,26 @@
+{
+    "aps" :    {
+        "alert" :        {
+            "body" :"Voice Mail from +918971172333",
+        },
+        "badge" : "1",
+        "category" : "ivMsg",
+        "content-available" : "1",
+        "sound"  : "default",
+    },
+    "contact_id" : "918971172333",
+    "contact_type" : "p",
+    "duration" : "14",
+    "extra" : "{\"type\":\"vsms\",\"iv_msg_id\":2934886,\"from_phone_num\":\"918971172333\"}",
+    "id" : "3",
+    "msg" : "918971172333",
+    "msg_content_type" : "a",
+    "msg_dt" : "1429614160000",
+    "msg_format" : "opus",
+    "msg_id" : "2934886",
+    "msg_subtype" : "avs",
+    "msg_type" : "vsms",
+    "msg_uri" : "http://stagingblogs.instavoice.com/vobolo/iv/msgs/2333/918971172333_1429599761937.ogg",
+    "phone" : "918971172333",
+    "sender_id" : "918971172333",
+}

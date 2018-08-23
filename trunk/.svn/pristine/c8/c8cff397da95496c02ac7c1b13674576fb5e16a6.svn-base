@@ -1,0 +1,772 @@
+//
+//  ConfigurationReader.h
+//  InstaVoice
+//
+//  Created by EninovUser on 07/08/13.
+//  Copyright (c) 2013 EninovUser. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+#define MQTT_ENABLED 1
+
+// Constants
+
+#ifdef REACHME_APP
+    #define CLIENT_APP_VER      @"iv.05.01.001"
+#else
+    #ifdef OPUS_ENABLED
+        #define CLIENT_APP_VER                   @"iv.03.14.046"
+    #else
+        #define CLIENT_APP_VER                   @"iv.00.09.027"
+    #endif
+#endif
+//
+//-- Comment the below line to use production server
+//
+//#define USE_STAGING_SERVER
+
+#ifdef USE_STAGING_SERVER
+    /*
+    #define SERVER_URL                       @"https://mobileblogs.instavoice.com/iv"
+    #define SERVER_PIC_URL                   @"http://mobileblogs.instavoice.com"
+    #define MQTT_SERVER_URL                  @"mobilemqtt.instavoice.com"
+    */
+
+    //#define VOIP_INFO                        @"https://stagingchannels.instavoice.com/iv"
+//@"https://stagingblogs.instavoice.com/voip/b2ff398f8db492c19ef89b548b04889c"
+    #define SERVER_URL                       @"https://stagingchannels.instavoice.com/iv"
+    #define SERVER_PIC_URL                   @"http://stagingchannels.instavoice.com"
+    #define MQTT_SERVER_URL                  @"pn-staging14.instavoice.com"
+
+    #define MQTT_SERVER_PORT                 8883
+ 
+#else
+    #define SERVER_URL                       @"https://blogs.instavoice.com/iv"
+    #define SERVER_PIC_URL                   @"http://blogs.instavoice.com"
+
+    #define MQTT_SERVER_URL                  @"pn.instavoice.com"
+    #define MQTT_SERVER_PORT                 8883
+#endif
+
+
+//This constant responsible for enabling and disabling the carrier show in the list
+#define SHOW_CARRIER_IN_LIST  0
+
+//This constant responsible for setting the default theme color.
+#define DEFAULT_THEMECOLOR_ENABLED  0
+
+#define DEFAULT_THEMECOLOR @"#e9584b"
+
+// Plist Key Name
+#define CONFG_APP_SECURE_KEY                   @"app_secure_key"
+#define CONFG_REG_SECURE_KEY                   @"reg_secure_key"
+#define CONFG_USER_SECURE_KEY                  @"user_secure_key"
+#define CONFG_CLOUD_SECURE_KEY                 @"cloud_secure_key"
+#define CONFG_VOIP_PUSH_TOKEN                 @"voip_secure_token"
+#define CONFG_PNS_APP_ID                       @"pns_app_id"
+#define CONFG_DOCS_URL                         @"docs_url"
+#define CONFG_CONTACT_SERVER_SYNC_FLAG         @"contact_server_sync_flag"
+#define CONFG_CONTACT_LOCAL_SYNC_FLAG          @"contact_local_sync_flag"
+#define CONFG_CONTACT_SYNC_PERMISSION_FLAG     @"contact_sync_permission_flag"
+#define CONFG_IV_USER_ID                       @"iv_user_id"
+#define CONFG_LOGIN_ID                         @"login_id"
+#define CONFG_LOGIN_PWD                        @"password"
+#define CONFG_LOGIN_TYPE                       @"login_type"
+#define CONFG_COUNTRY_ISD                      @"country_isd"
+#define CONFG_COUNTRY_CODE                     @"country_code"
+#define CONFG_COUNTRY_NAME                     @"country_name"
+#define CONFG_LAST_TRNO                        @"last_trno"
+#define CONFG_LOCATION_NAME                    @"location_name"
+#define CONFG_IS_LOGGED_IN                     @"is_logged_in"
+#define CONFG_MAX_PHONE_LEN                    @"max_phone_len"
+#define CONFG_MIN_PHONE_LEN                    @"min_phone_len"
+#define CONFG_RING_EXPIRY_MIN                  @"ring_expiry_min"
+#define CONFG_FETCH_GROUP_INFO                 @"fetch_group_info"
+
+//
+#define CONFG_POSSIBLE_NUMBER_FAILED           @"possible_number_failed"
+//
+
+#define CONFG_GENDER                           @"gender"
+#define CONFG_VALIDATION_NUMBER                @"validation_number"
+#define CONFG_DOB                              @"dob"
+#define CONFG_VALIDATION_TIME                  @"validation_time"
+#define CONFG_TOTAL_CONTACT                    @"total_contact"
+#define CONFG_TOTAL_CONTACT_VALUES             @"total_contact_values"
+#define CONFG_TOTAL_IV_CONTACT                 @"total_IV_contact"
+#define CONFG_FORMATTED_NUMBER                 @"username"
+
+
+#define CONFG_PIC_PATH                         @"pic_path"
+#define CONFG_SCREEN_NAME                      @"screen_name"
+#define CONFG_FB_CONNECT_URL                   @"fb_connect_url"
+#define CONFG_TW_CONNECT_URL                   @"tw_connect_url"
+#define CONFG_COUNTRY_MCC_MNC                  @"country_mcc_mnc"
+#define CONFG_AFTER_MSG_ID                     @"after_msg_id"
+#define CONFG_MSG_SYNC_FLAG                    @"msg_sync_flag"
+#define CONFG_FB_CONNECTED                     @"fb_connected"
+#define CONFG_TW_CONNECTED                     @"tw_connected"
+#define CONFG_DEVICE_UUID                      @"device_uuid"
+#define CONTACT_ACCESS_PERMISSION_FLAG         @"contact_access_permission_flag"
+#define IS_SIGNUP                              @"IS_SIGNUP"
+#define CONFG_AFTER_ACTIVITY_ID                @"after_activity_id"
+#define CONFG_SIM_ISD_CODE                     @"sim_isd_code"
+#define CONFG_SET_DEVICE_INFO                  @"set_device_info"
+#define CONFG_CONTACT_PERMISSION_ALERT_FLAG    @"contact_permission_alert_flag"
+#define CONFG_VOLUME_MODE                      @"volume_mode"
+#define CONFG_VSMS_LIMIT                        @"vsms_limit"
+#define CONFG_LOCATION_FALG                     @"location_flag"
+#define CONFG_LAST_BLOG_ID                      @"last_blog_id"
+
+#define CONFG_REACH_ME_VOIP_FALG                @"reachme_voip_flag"
+#define CONFG_OTP_FALG                          @"otp_flag"
+#define CONFG_OTP_VERIFIED_NUMBER               @"otp_verified_number"
+
+#define CONFG_FB_LAST_FETCH_TIME                @"fb_last_fetch_time"
+#define CONFG_AB_LAST_SYNC_TIME                @"ab_last_sync_time"
+#define LAST_MSG_UPDATE_FROM_CONTACT_TIME       @"Last_Msg_Update_From_Contact_Time"
+
+#define CLIENT_APP_BUILD_NUMBER                 @"client_app_build_number"
+
+#define CONFG_GROUP_UPDATE_LAST_TRANS_NO        @"confg_group_update_last_trans_no"
+
+#define CONFG_CLEAR_ADDRESS_BOOK                @"confg_clear_address_book"
+#define CONFG_SHOW_BRANDING_SCREEN              @"confg_show_branding_screen"
+
+#define CONFIG_AB_CHANGE_SYNC                   @"config_ab_change_sync"
+
+#define DEFAULT_NETWORK_DATA                    @"default_network_data"
+#define NETWORK_DATA_LIST                       @"network_data_list"
+
+#define CONFG_LAST_PURGE_DATE                   @"confg_last_purge_date"
+#define CONFG_LAST_LOGIN_MOBILE_NUMBER          @"last_login_mobile_number"
+
+#define SHOW_CONTACT_UPLOAD_DLG                 @"show_contact_upload_dlg"
+
+#define LOGGEDINPHONENUMBER                     @"CURRENT_LOGGEDIN_PHONENUMBER"
+
+#define CLOUDKEY_SYNC_TO_SERVER_STATUS         @"CLOUDKEY_SYNC_TO_SERVER_STATUS"
+
+#define MISSED_CALL_REASON                     @"missed_call_reason"
+
+#define ENABLE_LOG_FLAG @"logEnabled"
+
+#define IS_FRESH_SIGNUP         @"IS_FRESH_SIGNUP"
+#define HAS_LAUNCHED_ONCE         @"HAS_LAUNCHED_ONCE"
+
+#define INAPP_PROMOIMAGE_SHOWN @"INAPP_PROMOIMAGE_SHOWN"
+
+#define IS_VOICEMAIL_SUPPORTED @"IS_VOICEMAIL_SUPPORTED"
+
+#define LATEST_CARRIER_THEMECOLOR @"CARRIERTHEMECOLOR"
+//Constant is responsible to identify new joinee message type.
+#define kNewJoineeMessageType  @"IVNewJoinee"
+
+//This constant reponsible for determining whether user settings fetched from server or not.
+//kUserSettingsFetched = YES : We already fetched the user settings.
+//kUserSettingsFetched = NO : We need to fetch the user settings.
+#define kUserSettingsFetched @"UserSettingsFetched"
+
+//This constant responsible for determining whether user provided the permission to access location information.
+//kUserLocationAccessPermissionStatus = YES : Yes, user has provided permission to access location.
+//kUserLocationAccessPermissionStatus = NO : NO, user has not provided permission to access location.
+#define kUserLocationAccessPermissionStatus @"UserLocationAccessPermission"
+
+//This constant reponsible for determining whether user settings.
+//kUserSettingsUpdated = YES : Update user settings is success.
+//kUserSettingsUpdated = NO : Update user settings is not success.
+
+#define kVoipSettinFetched @"VoipSettingFetched"
+
+#define kUserSettingsUpdated @"UserSettingsUpdated"
+
+#ifdef REACHME_APP
+#define CONFG_LOGIN_PWD_SET_TIME               @"password_setTime"
+#define CONFG_NOTIFICATION_SOUND_PATH          @"notification_sound_path"
+#define CONFG_RINGTONE_SET                     @"ringtone_set"
+#define CONFG_CLASS_NAME                       @"class _name"
+#define CONFG_CALL_LOGFILE_SUFFIX              @"call_logfile_suffix"
+
+#define kHelpChatIvId           @"HelpChatIvId"
+#define kSuggestionChatIvId     @"SuggestionChatIvId"
+#define IS_ON_BOARDING           @"IS_ON_BOARDING"
+#define IS_CARRIER_INFO_UPDATE          @"IS_CARRIER_INFO_UPDATE"
+
+#define IS_RM_FRESH_SIGNUP         @"IS_RM_FRESH_SIGNUP"
+
+#endif
+
+typedef NS_ENUM(NSUInteger,LoggedInUserType){
+    eFreshSignInUser = 0,
+    eExistingUser,
+};
+
+
+@interface ConfigurationReader : NSObject {
+    NSUserDefaults      *settings;
+}
+
+
++(ConfigurationReader *)sharedConfgReaderObj;
++(NSUserDefaults*)sharedSettingsForExtension;
+/**
+ * This function set the country mcc and mnc code.
+ */
+-(void)setCountryMCCMNC:(NSString*)mccmnc;
+
+/**
+ * This Function return the Country mcc and mnc code.
+ */
+-(NSString*)getCountryMCCMNC;
+
+/*
+ This finction gives the IVUserId of current logged in user.
+ */
+-(long)getIVUserId;
+
+/*
+ This function set the IVUserId of current logged in user.
+ generated by the server.
+ */
+-(void)setIVUserId:(long)ivuserid;
+
+/*
+ This gives the information about login type of current logged in user.Is this Email or Phone.
+ */
+-(NSString*)getLoginType;
+/*
+ This set the information about login type of current logged in user.Is this Email or Phone.
+ */
+-(void)setLoginType:(NSString*)loginType;
+
+/*
+ This function gives the login ID of current logged in user.
+ */
+-(NSString*)getLoginId;
+
+//This function set the Login ID of current logged in User.
+-(void)setLoginId:(NSString*)paramString;
+
+
+/**
+ * This function is used to set the PSN_APP_ID.
+ */
+-(void)setPnsAppID:(NSString*)psnAppID;
+
+/**
+ * This function return the PSN_APP_ID.
+ */
+
+-(NSString*)getPnsAppID;
+
+-(NSString*)getVoipPushToken;
+-(void)setVoipPushToken:(NSString*)token;
+
+-(NSString*)getCloudSecureKey;
+
+-(void)setCloudSecureKey:(NSString*)key;
+
+/**
+ * This function set the screen Name of current logged in user.
+ */
+
+-(void)setScreenName:(NSString*)screenName;
+
+/**
+ * This function return the screen name of curren logged in user.
+ */
+-(NSString*)getScreenName;
+
+/*
+ This function gives the user secure key.
+ generated by the server after successfull registration.
+ */
+-(NSString*)getUserSecureKey;
+
+/*This function set the user secure key.
+generated by the server after successfull registration.*/
+-(void)setUserSecureKey:(NSString*)paramString;
+
+/*
+ This function set the Registration secure key after registration.
+ generated by the server after successfull registration
+ */
+-(void) setRegSecureKey:(NSString*)paramString; 
+
+/*
+ This function return Registration secure key.
+ */
+-(NSString*)getRegSecureKey; 
+
+/*
+ This function return the boolean flag that indicates,contacts are sync or not with server.
+ */
+-(BOOL) getContactServerSyncFlag;
+
+/*
+ This function set the contacts sync flag.
+ */
+-(void)setContactServerSyncFlag:(BOOL) paramBool;
+
+/*
+ This function return the boolean flag that indicates,contacts are sync or not with native addesss book.
+ */
+-(BOOL) getContactLocalSyncFlag;
+
+/*
+ This function set the local contacts  sync  flag.
+ */
+-(void)setContactLocalSyncFlag:(BOOL) paramBool;
+
+/*
+ This function return a boolean flag that indicates the contacts sync permission dialog is appear or not
+ */
+-(BOOL) getContactSyncPermissionFlag;
+
+-(void)setShowContactUploadDlg:(BOOL)value;
+
+-(BOOL)getShowContactUploadDlg;
+
+/*
+ This function set the contact Sync permission flag.
+ */
+-(void) setContactSyncPermissionFlag:(BOOL)paramBool;
+
+/*
+ This function return the App secure key.
+ */
+-(NSString*)getAppSecureKey;
+
+/*
+ This function set App secure Key.Given in the Server API Doc. 
+ */
+-(void)setAppSecureKey:(NSString*) paramString;
+
+/*
+ This function set the Country ISD of SIM.
+ */
+
+-(void)setCountryISD:(NSString*)paramString;
+
+/*
+ This function return the Country ISD of SIM.
+ */
+-(NSString*)getCountryISD;
+
+/*
+ This function set the Country Code of SIM.
+ */
+-(void)setCountryCode:(NSString*)paramString;
+
+/*
+ This function return the Country Code of SIM.
+ */
+
+-(NSString*)getCountryCode;
+
+/*
+ This function set the Country Name of SIM.
+ */
+-(void)setCountryName:(NSString*)countryName;
+
+/*
+ This function return the Country Name of SIM.
+ */
+-(NSString*) getCountryName;
+
+/*
+ This function returns the Last Trasactin Number.
+ Last TrNo is used i fetch contacts.
+ */
+-(NSNumber*) getLast_trno;
+
+/*
+ This function set the Last Trasactin Number.
+ Last TrNo is used i fetch contacts.
+ */
+-(void)setLast_trno:(NSNumber*)last_trno;
+
+/*
+ This function return a docs Url which is used in about us */
+-(NSString*) getDocsUrl;
+/*
+ This function set a docs Url which is used in about us */
+-(void) setDocsUrl:(NSString*) docs_url;
+
+/*
+ This function return user's current location*/
+-(NSString*) getLocation_name;
+/*
+ This function set user's current location*/
+-(void) setLocation_name:(NSString*) location_name;
+
+
+-(void) setUserGender:(NSString*) gender;
+-(NSString*) getUserGender;
+-(void) setUserDob:(NSNumber *) dob;
+-(NSNumber *) getUserDob;
+-(void) setValidationTimer:(NSNumber *) timeToSet;
+-(NSNumber *) getValidationTimer;
+-(NSString*) getUserNumberForValidation;
+-(void) setUserNumberForValidation:(NSString*) number;
+
+
+/*
+ This function set the User's profile pic path after downloading from  the server*/
+-(void) setUserProfilePicPath:(NSString*) path;
+
+/*
+ This function return the User's profile pic path after downloading from  the server*/
+-(NSString*) getUserProfilePicPath;
+
+/*
+ this function return phone number max length of current country which user belong*/
+-(int) getMaxPhoneLen;
+
+/*
+ this function return phone number length of current country which user belong*/
+-(void) setMaxPhoneLen:(int)phonelen;
+
+/*
+ this function return phone number min length of current country which user belong*/
+-(int) getMinPhoneLen;
+
+/*
+ this function return phone number min length of current country which user belong*/
+-(void) setMinPhoneLen:(int)phonelen;
+
+/**
+ * this function set the Facebook connect URl.
+ */
+-(void)setFBConnectUrl:(NSString*)url;
+
+/**
+ * This function get the facebook connect URl.
+ */
+-(NSString*)getFBConnectUrl;
+
+/**
+ * This function set twitter connect url.
+ */
+-(void)setTWConnectUrl:(NSString*)url;
+
+/**
+ * This function return twitter conect url.
+ */
+-(NSString*)getTWConnectUrl;
+
+/**
+ *This function set the logged in value of current user.
+ */
+-(void)setIsLoggedIn:(BOOL)value;
+
+/**
+ * This function return the value of current logged in user
+ */
+-(BOOL)getIsLoggedIn;
+
+
+/**
+ *This function sets the contact access permission flag. 
+ */
+-(void)setContactAccessPermissionFlag:(BOOL)permissionFlag;
+
+/**
+ *This function gets the contact access permission flag.
+ */
+-(BOOL) getContactAccessPermissionFlag;
+
+/**
+ * This function is used to set the last after msg id.
+ */
+-(void)setAfterMsgId:(long)value;
+
+/**
+ * This function return last after msg id.
+ */
+-(long)getAfterMsgId;
+
+-(void) setLastBlogId:(long) value;
+-(long) getLastBlogId;
+
+-(NSString*)getPassword;
+-(void)setPassword:(NSString*)pwd withTime: (NSDate*)time;
+
+#ifdef REACHME_APP
+- (NSDate*)getPasswordChangeTime;
+- (void)setNotificationSound:(NSDictionary<NSString* ,NSString*> *)info;
+- (NSDictionary<NSString*, NSString*> *)getNotificationSoundInfo;
+- (void)setRingtone:(BOOL)set;
+- (BOOL)isRingtoneSet;
+#endif
+
+/**
+ * This function is used to get The FB Connection.
+ */
+-(BOOL)isFBConnected;
+/**
+ * This function is used to get TW Connection\.
+ */
+-(BOOL)isTWConnected;
+/**
+ * This function is used to set The FB Connection.
+ */
+-(void)setIsFBConnected:(BOOL)value;
+/**
+ * This function is used to set The TW Connection.
+ */
+-(void)setIsTWConnected:(BOOL)value;
+
+/**
+ * This function is used to get Device UUID.
+ */
+-(NSString*)getDeviceUUID;
+/**
+ * This function is used to set Device UUID.
+ */
+-(void)setDeviceUUID:(NSString*)str;
+
+/**
+ * This function is used to get The SIGN UP info.
+ */
+-(BOOL)isSignUp;
+/**
+ * This function is used to set The SIGN UP info.
+ */
+-(void)setISSignUp:(BOOL)value;
+
+/**
+ * This function is used to get last Message Activity ID.
+ */
+-(long)getAfterMsgActivityId;
+/**
+ * This function is used to set last Message Activity ID.
+ */
+-(void)setAfterMsgActivityId:(long)value;
+
+/**
+ * This function is used to set SIM ISD CODE.
+ */
+-(void)setSIMIsdCode:(NSString*)value;
+/**
+ * This function is used to get SIM ISD CODE.
+ */
+-(NSString*)getSIMIsdCode;
+
+/**
+ * This function is used to set Info about set_device_info done with sever or not.
+ */
+//REMOVE -(void)setDeviceInfoSync:(BOOL)value;
+
+/**
+ * This function is used to get Info about set_device_info done with sever or not.
+ */
+//REMOVE -(BOOL)getDeviceInfoSync;
+
+// for possible number
+
+-(void) setPossibleNumber:(NSString*)status;
+
+
+-(NSString*)getPossibleNumber;
+
+-(void) setMobileNumber:(NSString*)status;
+
+
+-(NSString*)getMobileNumber;
+
+
+/**
+ * This function is used to set Info about set_device_info done with sever or not.
+ */
+-(void)setContactPermissionAlertFlag:(BOOL)value;
+
+/**
+ * This function is used to get Info about set_device_info done with sever or not.
+ */
+-(BOOL)getContactPermissionAlertFlag;
+
+/**
+ * This function is used to get volume mode.
+ */
+-(int)getVolumeMode;
+/**
+ * This function is used to set volume mode.
+ */
+-(void)setVolumeMode:(int)mode;
+
+/**
+ * This function is used set the default network data
+ */
+-(void)setDefaultNetworkData:(NSDictionary *)network;
+
+/**
+ * This function is used get the default network data
+ */
+-(NSDictionary *)getDefaultNetworkData;
+
+//CMP
+-(void)setNetworkData:(NSArray*)networkList;
+-(NSArray*)getNetworkData;
+//
+
+/**
+ * This function is used get VSMS Limit.
+ */
+-(int)getVsmsLimit;
+/**
+ * This function is used set VSMS Limit.
+ */
+-(void)setVsmsLimit:(int)limt;
+
+-(NSString *)getFormattedUserName;
+/**
+ 
+ */
+-(void)setFormattedUserName:(NSString*)UserName;
+
+
+/**
+ * This function is get the info about branding screen to be shown or not.
+ */
+-(BOOL)getShowBrandingScreen;
+
+/**
+ * This function is set the info about branding screen to be shown or not.
+ */
+-(void)setShowBrandingScreen:(BOOL)value;
+
+-(void)setUserLocationAccess:(BOOL)locationFlag;
+
+-(BOOL)getUserLocationAccess;
+
+-(void) setTotalContact:(NSNumber *) totalContact;
+-(NSNumber *) getTotalContact;
+
+-(void) setTotalContactValues:(NSNumber *) totalContact;
+-(NSNumber*) getTotalContactValues;
+
+-(void) setTotalIVContact:(NSNumber *) totalIVContact;
+-(NSNumber *) getTotalIVContact;
+- (void)removeValueForKey:(NSString *)key;
+
+-(NSNumber*)getFBLastFetchTime;
+-(void)setFBLastFetchTime:(NSNumber*)fbTime;
+-(NSNumber*)getABLastSyncTime;
+-(void)setABLastSyncTime:(NSNumber*)abTime;
+
+-(NSNumber*)getLastMsgUpdateFromContactTime;
+-(void)setLastMsgUpdateFromContactTime:(NSNumber*)msgUpdateTime;
+
+-(NSString*)getClientAppBuildNumber;
+-(void)setClientAppBuildNumber:(NSString*)buildNo;
+
+
+-(BOOL) getEnableLogFlag;
+-(void)setEnableLogFlag:(BOOL) paramBool;
+
+-(NSNumber*)getGroupUpdateLastTransNo;
+-(void)setGroupUpdateLastTransNo:(NSNumber*)transNo;
+
+-(BOOL)getClearAddressBookFlag;
+-(void)setClearAddressBookFlag:(BOOL)flag;
+
+//SEP 27, 2016
+-(BOOL)getABChangeSynced;
+-(void)setABChangeSynced:(BOOL)flag;
+//
+
+-(void)setObject:(id)obj forTheKey:(NSString*)key;
+-(id)getObjectForTheKey:(NSString*)key;
+-(void)removeObjectForTheKey:(NSString*)key;
+
+-(NSString*)getCarrierName;
+-(NSDate*)getLastPurgeDate;
+-(void)setLastPurgeDate:(NSDate*)date;
+
+//Added by Nivedita - Date Apr 28th
+- (void)setCurrentLoggedInPhoneNumber:(NSString *)withPhoneNumber;
+- (NSString *)getCurrentLoggedInPhoneNumber;
+
+//Added by Nivedita - CloudKey Sync status related - date May 2
+/* REMOVE
+- (void)setCloudKeySyncToServerStatus:(BOOL)withSyncStatus;
+- (BOOL)getCloudKeySyncToServerStatus;
+ */
+
+//Added by Nivedita - To know login is fresh user or not.
+- (void)setIsFreshSignUpStatus:(BOOL)isFreshSignUp;
+- (BOOL)isFreshSignUp;
+
+-(int)getRingExpiryTime;
+-(void)setRingExpiryTime:(int)time;
+
+-(void)setFetchGroupInfoFromServer:(BOOL)flag;
+-(BOOL)getFetchGroupInfoFromServer;
+
+//Added by Nivedita - To know the first launch status
+- (void)setHasLaunchedOnceStatus:(BOOL)hasLaunchedOnceStatus;
+- (BOOL)getHasLaunchedOnceStatus;
+
+- (NSString *)getLatestCarrierThemeColor;
+- (void)setLatestCarrierThemeColor:(NSString *)currentThemeColor;
+
+
+- (BOOL)didInAppPromoImageShown;
+- (void)setInAppPromoImageShownStatus:(BOOL)inAppPromoImageShownStatus;
+
+-(BOOL)getVoicemailSupportedFlag;
+-(void)setVoicemailSupportedFlag:(BOOL)isSupported;
+
+-(BOOL)getVoipSettingFetched;
+-(void)setVoipSettingFetched:(BOOL)isFetched;
+//OTP Verification Flag
+-(void)setOTPVerified:(BOOL)verifiedOTP;
+-(BOOL)getVerifiedOTP;
+-(void)setOTPVerifiedNumber:(NSString *)phoneNumber;
+-(NSString *)getVerifiedOTPNumber;
+
+//Voip Status for individual Number
+-(void)setReachMeVoipStatus:(BOOL)reachMeStatus forNumber:(NSString *)forNumber;
+-(BOOL)reachMeVoipStatus:(NSString *)forNumber;
+
+#ifdef REACHME_APP
+-(void)setHelpChatIvId:(NSInteger)ivid;
+-(NSInteger)getHelpChatIvId;
+
+-(void)setSuggestionChatIvId:(NSInteger)ivid;
+-(NSInteger)getSuggestionChatIvId;
+
+-(void)setOnBoardingStatus:(BOOL)onBoardingStatus;
+-(BOOL)getOnBoardingStatus;
+
+-(void)setClassName:(NSString *)className;
+-(NSString *)getClassName;
+
+- (void)setActiveForNumber:(NSString *)phoneNumber reachMeType:(NSString *)rmType;
+- (NSString *)getActiveStringForNumber:(NSString *)phoneNumber;
+
+-(NSString*)getMissedCallReasonForTheNumber:(NSString*)phoneNumber;
+
+-(void)setCallLogFileSuffix:(int)number;
+-(int)getCallLogFileSuffix;
+
+- (void)setIsRMFreshSignUpStatus:(BOOL)isFreshSignUp;
+- (BOOL)isRMFreshSignUp;
+
+//For No Internet connection carrier info status update
+-(void)setCarrierInfoUpdateStatus:(BOOL)carrierInfoStatus;
+-(BOOL)getCarrierInfoUpdateStatus;
+
+//Save Usage Summary for particular number
+- (void)setUsageSummaryForNumber:(NSString *)phoneNumber usageSummary:(NSDictionary *)summary;
+- (NSDictionary *)getUsageSummaryForNumber:(NSString *)phoneNumber;
+
+//Update Misscall reason for particular number
+- (void)setMissedCallReasonForNumber:(NSString *)phoneNumber shouldUpdate:(BOOL )update;
+- (BOOL )getMissedCallReasonForNumber:(NSString *)phoneNumber;
+
+#endif
+
+@end
