@@ -10,9 +10,6 @@ import UIKit
 
 class StoreViewController: UIViewController {
 
-    @IBOutlet weak var segmentControl: UISegmentedControl!
-    @IBOutlet weak var availableCreditLabel: UILabel!
-
     lazy var pageViewController: UIPageViewController = {
         let pageVC = childViewControllers.first as! UIPageViewController
         pageVC.delegate = self
@@ -23,6 +20,10 @@ class StoreViewController: UIViewController {
         return [newVc(viewController: "SubscribeNumberViewController"),
                 newVc(viewController: "PurchaseHistoryViewController")]
     }()
+    
+    @IBOutlet weak var segmentControl: UISegmentedControl!
+    @IBOutlet weak var availableCreditLabel: UILabel!
+    
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
@@ -38,7 +39,11 @@ class StoreViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationController?.setNavigationBarHidden(!Constants.appDelegate.confgReader.getOnBoardingStatus(), animated: true)
+        if Constants.appDelegate.confgReader.getOnBoardingStatus() {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+        } else {
+            navigationController?.setNavigationBarHidden(true, animated: true)
+        }
         
         //Display available credits as $ format
         let availableCredits = Double(Constants.appDelegate.confgReader.getVsmsLimit()) / 100

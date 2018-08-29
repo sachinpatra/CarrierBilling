@@ -503,34 +503,16 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
 
 - (void)helpAction
 {
-//    CarrierInfo *carrierDetails = [[Setting sharedSetting]customCarrierInfoForPhoneNumber:self.phoneNumber];
-//
-//    if (self.voiceMailInfo.countryVoicemailSupport && !self.voiceMailInfo.isVoiceMailEnabled && self.isCarrierSupportedForVoiceMailSetup) {
-//        self.helpText = [NSString stringWithFormat:@"I'm having problems in activating ReachMe Voicemail & Missed Call Service. My carrier is %@ and the activation number is %@", [self currentCarrierName:self.phoneNumber withCarrierList:self.currentCarrierList], self.activationDialNumber];
-//    }else if (!self.isValidCarrierName || !self.voiceMailInfo.countryVoicemailSupport) {
-//        self.helpText = kCarrierNotSupporttedHelpText;
-//    }else if (self.voiceMailInfo.isVoiceMailEnabled) {
-//        if ((isInternationalActive || isReachMeVMActive || isReachMeHomeActive) && carrierDetails) {
-//            self.helpText = @"";
-//        }else if (self.voiceMailInfo.countryVoicemailSupport && self.isCarrierSupportedForVoiceMailSetup){
-//            self.helpText = [NSString stringWithFormat:@"I'm having problems in activating ReachMe Voicemail & Missed Call Service. My carrier is %@ and the activation number is %@", [self currentCarrierName:self.phoneNumber withCarrierList:self.currentCarrierList], self.activationDialNumber];
-//        }else if (!self.isValidCarrierName || !self.voiceMailInfo.countryVoicemailSupport || !carrierDetails) {
-//            self.helpText = kCarrierNotSupporttedHelpText;
-//        }else{
-//            if ([carrierDetails.networkId isEqualToString:@"-1"] && [carrierDetails.countryCode isEqualToString:@"-1" ] && [carrierDetails.vSMSId integerValue] == -1) {
-//                self.helpText = kCarrierNotSupporttedHelpText;
-//            }else{
-//                self.helpText = [NSString stringWithFormat:@"%@ %@",kCarrierNotSupporttedHelpText,[self currentCarrierName:self.phoneNumber withCarrierList:self.currentCarrierList]];
-//            }
-//
-//        }
-//    }else{
-//
-//        self.helpText = [NSString stringWithFormat:@"%@ %@",kCarrierNotSupporttedHelpText,[self currentCarrierName:self.phoneNumber withCarrierList:self.currentCarrierList]];
-//    }
-    self.helpText = @"";
-    [self showHelpMessage];
+    UITableViewController *buyPackVC = [[UIStoryboard storyboardWithName:@"CarrierCharge" bundle:[NSBundle mainBundle]]instantiateInitialViewController];
+    [self.navigationController pushViewController:buyPackVC animated:true];
+
+    /*UIAlertController* alert = [[UIAlertController alloc] initWithStyle: UIAlertControllerStyleAlert source: nil title: nil message: nil tintColor: nil];
+    [alert addActionWithImage: nil title: @"Not Now" color: [UIColor colorWithRed:210/255.0 green:0 blue:0 alpha:1.0] style:UIAlertActionStyleDefault isEnabled:true handler:^(UIAlertAction* alertAction) { }];
     
+    [alert addActionWithImage: nil title: @"BUY" color: [UIColor colorWithRed:210/255.0 green:0 blue:0 alpha:1.0] style:  UIAlertActionStyleDefault isEnabled: true handler:^(UIAlertAction* alertAction) {
+    }];
+    [alert addPopoverController];
+    [alert showWithAnimated:true completion:nil];*/
 }
 
 - (void)configureHelpAndSuggestion

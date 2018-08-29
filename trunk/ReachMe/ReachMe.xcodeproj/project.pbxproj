@@ -498,6 +498,9 @@
 		8C9DB19B202C695900BB65C6 /* RatingFeedbackTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9DB198202C695900BB65C6 /* RatingFeedbackTableController.swift */; };
 		8C9DB19C202C695900BB65C6 /* RatingFeedbackTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8C9DB199202C695900BB65C6 /* RatingFeedbackTableHeaderView.xib */; };
 		8C9DB19D202C695900BB65C6 /* ReachMeRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9DB19A202C695900BB65C6 /* ReachMeRatingView.swift */; };
+		8CACD32C212FDCFD008F83BC /* CarrierChargePopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CACD32B212FDCFD008F83BC /* CarrierChargePopupViewController.swift */; };
+		8CACD32E212FDEC1008F83BC /* CarrierCharge.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CACD32D212FDEC1008F83BC /* CarrierCharge.storyboard */; };
+		8CACD33021302459008F83BC /* ReachMePackTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CACD32F21302459008F83BC /* ReachMePackTableController.swift */; };
 		8CB1C16D2101B079004823A7 /* CountdownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB1C1642101B079004823A7 /* CountdownTimer.swift */; };
 		8CB1C16E2101B079004823A7 /* CountryNumbersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB1C1652101B079004823A7 /* CountryNumbersViewController.swift */; };
 		8CB1C16F2101B079004823A7 /* CreditSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB1C1662101B079004823A7 /* CreditSelectionViewController.swift */; };
@@ -507,6 +510,7 @@
 		8CB1C1732101B079004823A7 /* SelectCountryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB1C16A2101B079004823A7 /* SelectCountryViewController.swift */; };
 		8CB1C1742101B079004823A7 /* Store.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CB1C16B2101B079004823A7 /* Store.storyboard */; };
 		8CB1C1752101B079004823A7 /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB1C16C2101B079004823A7 /* StoreViewController.swift */; };
+		8CE821B7213587E8003399F4 /* UILabel+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CE821B6213587E8003399F4 /* UILabel+Extention.swift */; };
 		DC25574D207CF3B300AA7ED9 /* TranscriptionRatingAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = DC25574A207CF3B200AA7ED9 /* TranscriptionRatingAPI.m */; };
 		DC25574E207CF3B300AA7ED9 /* TranscriptionAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = DC25574C207CF3B300AA7ED9 /* TranscriptionAPI.m */; };
 		DC59DC0C20E63E6600FA084C /* CountryCallingRatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DC59DC0B20E63E6600FA084C /* CountryCallingRatesViewController.m */; };
@@ -1392,6 +1396,9 @@
 		8C9DB198202C695900BB65C6 /* RatingFeedbackTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingFeedbackTableController.swift; sourceTree = "<group>"; };
 		8C9DB199202C695900BB65C6 /* RatingFeedbackTableHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RatingFeedbackTableHeaderView.xib; sourceTree = "<group>"; };
 		8C9DB19A202C695900BB65C6 /* ReachMeRatingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachMeRatingView.swift; sourceTree = "<group>"; };
+		8CACD32B212FDCFD008F83BC /* CarrierChargePopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarrierChargePopupViewController.swift; sourceTree = "<group>"; };
+		8CACD32D212FDEC1008F83BC /* CarrierCharge.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CarrierCharge.storyboard; sourceTree = "<group>"; };
+		8CACD32F21302459008F83BC /* ReachMePackTableController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachMePackTableController.swift; sourceTree = "<group>"; };
 		8CB1C1642101B079004823A7 /* CountdownTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownTimer.swift; sourceTree = "<group>"; };
 		8CB1C1652101B079004823A7 /* CountryNumbersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryNumbersViewController.swift; sourceTree = "<group>"; };
 		8CB1C1662101B079004823A7 /* CreditSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditSelectionViewController.swift; sourceTree = "<group>"; };
@@ -1401,6 +1408,8 @@
 		8CB1C16A2101B079004823A7 /* SelectCountryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCountryViewController.swift; sourceTree = "<group>"; };
 		8CB1C16B2101B079004823A7 /* Store.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Store.storyboard; sourceTree = "<group>"; };
 		8CB1C16C2101B079004823A7 /* StoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
+		8CC8FDEB2133E26400BF3498 /* ReachMePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ReachMePlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		8CE821B6213587E8003399F4 /* UILabel+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UILabel+Extention.swift"; path = "../../InstaVoice/InstaVoice/Modules/IVSettings/Classes/ViewController/VoiceMailMissedCall_RM/UILabel+Extention.swift"; sourceTree = "<group>"; };
 		DC255749207CF3B000AA7ED9 /* TranscriptionRatingAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TranscriptionRatingAPI.h; path = ../../InstaVoice/InstaVoice/TranscriptionRatingAPI.h; sourceTree = "<group>"; };
 		DC25574A207CF3B200AA7ED9 /* TranscriptionRatingAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TranscriptionRatingAPI.m; path = ../../InstaVoice/InstaVoice/TranscriptionRatingAPI.m; sourceTree = "<group>"; };
 		DC25574B207CF3B200AA7ED9 /* TranscriptionAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TranscriptionAPI.h; path = ../../InstaVoice/InstaVoice/TranscriptionAPI.h; sourceTree = "<group>"; };
@@ -1783,6 +1792,7 @@
 				79D754EE20244507008665BD /* SettingGeneralTableViewController.swift */,
 				79D754ED20244507008665BD /* SingleSelectionTableViewController.swift */,
 				79D754E720244506008665BD /* String+Extention.swift */,
+				8CE821B6213587E8003399F4 /* UILabel+Extention.swift */,
 				79D754E820244506008665BD /* UIAlertController+Extensions.swift */,
 				792C923E20189DC200C8D3A0 /* ActivatereachMeTableViewCell.h */,
 				792C923020189DC100C8D3A0 /* ActivatereachMeTableViewCell.m */,
@@ -2112,6 +2122,7 @@
 		796167982008DE0500E495A2 = {
 			isa = PBXGroup;
 			children = (
+				8CC8FDEB2133E26400BF3498 /* ReachMePlayground.playground */,
 				7954640E2088BA9C0026F418 /* ringback.wav */,
 				7962048420484865005707B5 /* AppsFlyerLib.framework */,
 				79252CB120343C9B000F480F /* InstavoiceNotificationTone.caf */,
@@ -2150,6 +2161,7 @@
 		796167A32008DE0500E495A2 /* ReachMe */ = {
 			isa = PBXGroup;
 			children = (
+				8CACD32A212FDC70008F83BC /* Carrier Charge */,
 				8CB1C1632101B078004823A7 /* Virtual Number */,
 				8C32C8D12031BC79006ECE10 /* AudioResource.bundle */,
 				8C9DB197202C695900BB65C6 /* Rating */,
@@ -2877,6 +2889,16 @@
 			path = Rating;
 			sourceTree = "<group>";
 		};
+		8CACD32A212FDC70008F83BC /* Carrier Charge */ = {
+			isa = PBXGroup;
+			children = (
+				8CACD32B212FDCFD008F83BC /* CarrierChargePopupViewController.swift */,
+				8CACD32D212FDEC1008F83BC /* CarrierCharge.storyboard */,
+				8CACD32F21302459008F83BC /* ReachMePackTableController.swift */,
+			);
+			path = "Carrier Charge";
+			sourceTree = "<group>";
+		};
 		8CB1C1632101B078004823A7 /* Virtual Number */ = {
 			isa = PBXGroup;
 			children = (
@@ -3130,6 +3152,7 @@
 				79252CB220343C9C000F480F /* InstavoiceNotificationTone.caf in Resources */,
 				8C9DB19C202C695900BB65C6 /* RatingFeedbackTableHeaderView.xib in Resources */,
 				791B6B3C2011F2F500B33DC8 /* CountryTableViewController.xib in Resources */,
+				8CACD32E212FDEC1008F83BC /* CarrierCharge.storyboard in Resources */,
 				792C925A2018CBE600C8D3A0 /* IVDropDownView.xib in Resources */,
 				79DE79382010C4F100597BE2 /* ContactTableViewCellNonIv.xib in Resources */,
 				79100028201B3F30009DC490 /* IVChatTableViewCellVMsgReceived.xib in Resources */,
@@ -3253,6 +3276,7 @@
 				79D754F320244507008665BD /* ANLoader.swift in Sources */,
 				791B6B862012186D00B33DC8 /* ShareFriendsListViewController.m in Sources */,
 				79DE78EC2010BD1F00597BE2 /* EZAudioFloatConverter.m in Sources */,
+				8CACD33021302459008F83BC /* ReachMePackTableController.swift in Sources */,
 				79DE79882010CA3500597BE2 /* KAudioSlider.m in Sources */,
 				79DE78E62010BD1F00597BE2 /* EZAudioUtilities.m in Sources */,
 				791B6A2E2011C73500B33DC8 /* IVAccountSettingsManageAccountTableViewCell.m in Sources */,
@@ -3326,6 +3350,7 @@
 				7937372F200E35040040F413 /* VoipSetting.m in Sources */,
 				79DE7A7A2010E49E00597BE2 /* GroupMemberData.m in Sources */,
 				7937373E200E39040040F413 /* IVFastNetworkInfo.m in Sources */,
+				8CE821B7213587E8003399F4 /* UILabel+Extention.swift in Sources */,
 				8C5BDFC02029CFA3000F31D1 /* (null) in Sources */,
 				79DE797F2010C9B100597BE2 /* ConversationTableCellTextReceiver.m in Sources */,
 				791B6A512011C92D00B33DC8 /* IVPrimaryNumberVoiceMailTableViewCell.m in Sources */,
@@ -3536,6 +3561,7 @@
 				8CB1C16E2101B079004823A7 /* CountryNumbersViewController.swift in Sources */,
 				79DE79152010BE0700597BE2 /* SetPasswordViewController.m in Sources */,
 				791B6AFD2011EA7600B33DC8 /* IVSettingsAboutInstaVoiceViewController.m in Sources */,
+				8CACD32C212FDCFD008F83BC /* CarrierChargePopupViewController.swift in Sources */,
 				79373747200E3A810040F413 /* MQTTManager.m in Sources */,
 				79DE79162010BE0700597BE2 /* ForgotPasswordViewController.m in Sources */,
 				793737D9200F506D0040F413 /* BlockUnblockUserAPI.m in Sources */,

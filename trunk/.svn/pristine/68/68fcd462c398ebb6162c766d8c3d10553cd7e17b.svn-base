@@ -1,0 +1,37 @@
+//
+//  UILabel+Extention.swift
+//  ReachMe
+//
+//  Created by Sachin Kumar Patra on 8/28/18.
+//  Copyright © 2018 Kirusa. All rights reserved.
+//
+
+import Foundation
+
+
+extension UILabel {
+    func addOKImage(behindText: Bool) {
+        
+        let attachment = NSTextAttachment()
+        attachment.image = UIImage(named: "Charge_OK")
+        let attachmentString = NSAttributedString(attachment: attachment)
+        attachment.bounds = CGRect(x: 0, y: -3, width: 15, height: 15)
+        
+        guard let txt = self.text else {
+            return
+        }
+        
+        if behindText {
+            let strLabelText = NSMutableAttributedString(string: txt)
+            strLabelText.append(NSAttributedString(string: "  "))
+            strLabelText.append(attachmentString)
+            self.attributedText = strLabelText
+        } else {
+            let strLabelText = NSAttributedString(string: txt)
+            let mutableAttachmentString = NSMutableAttributedString(attributedString: attachmentString)
+            mutableAttachmentString.append(NSAttributedString(string: "  "))
+            mutableAttachmentString.append(strLabelText)
+            self.attributedText = mutableAttachmentString
+        }
+    }
+}
