@@ -93,6 +93,12 @@
         if (withUSSDInfo[@"test"]) {
             self.test = withUSSDInfo[@"test"];
         }
+        
+        //Sachin
+        self.isBundleIntl = [withUSSDInfo[@"bundle_intl"] boolValue];
+        self.isBundleHome = [withUSSDInfo[@"bundle_home"] boolValue];
+        self.isBundleVM = [withUSSDInfo[@"bundle_vm"] boolValue];
+
     }
     
     return self;
@@ -121,7 +127,11 @@
         _test = [aDecoder decodeObjectForKey:@"TEST"];
         _isHLREnabled = [aDecoder decodeBoolForKey:@"IS_HLR_CALLFWD_ENABLED"];
         
-        
+        //Sachin
+        _isBundleIntl = [aDecoder decodeBoolForKey:@"IS_BUNDLE_INTL"];
+        _isBundleHome = [aDecoder decodeBoolForKey:@"IS_BUNDLE_HOME"];
+        _isBundleVM = [aDecoder decodeBoolForKey:@"IS_BUNDLE_VM"];
+
     }
     return  self;
 }
@@ -145,6 +155,11 @@
     [aCoder encodeObject:_skip forKey:@"SKIP"];
     [aCoder encodeObject:_test forKey:@"TEST"];
     [aCoder encodeBool:_isHLREnabled forKey:@"IS_HLR_CALLFWD_ENABLED"];
+    
+    //Sachin
+    [aCoder encodeBool:_isBundleIntl forKey:@"IS_BUNDLE_INTL"];
+    [aCoder encodeBool:_isBundleHome forKey:@"IS_BUNDLE_HOME"];
+    [aCoder encodeBool:_isBundleVM forKey:@"IS_BUNDLE_VM"];
 }
 
 @end

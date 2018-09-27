@@ -42,6 +42,10 @@
 #define kNotListedButtonTitle @"Unknown Carrier"
 #define kCarrierNotSupporttedHelpText @"Hi, I'm interested in ReachMe Voicemail/Missed Call alerts. Please inform me when it's made available for my Carrier:"
 
+//Sachin
+#define kReachMePackSegueID @"showReachMePackSegueID"
+//Sachin
+
 typedef NS_ENUM(NSUInteger, ContactUpdateType) {
     eContactUpdateType = 0,
     eContactAddType,
@@ -503,8 +507,7 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
 
 - (void)helpAction
 {
-    UITableViewController *buyPackVC = [[UIStoryboard storyboardWithName:@"CarrierCharge" bundle:[NSBundle mainBundle]]instantiateInitialViewController];
-    [self.navigationController pushViewController:buyPackVC animated:true];
+    [self performSegueWithIdentifier:kReachMePackSegueID sender:nil];
 
     /*UIAlertController* alert = [[UIAlertController alloc] initWithStyle: UIAlertControllerStyleAlert source: nil title: nil message: nil tintColor: nil];
     [alert addActionWithImage: nil title: @"Not Now" color: [UIColor colorWithRed:210/255.0 green:0 blue:0 alpha:1.0] style:UIAlertActionStyleDefault isEnabled:true handler:^(UIAlertAction* alertAction) { }];
@@ -689,11 +692,11 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
     }else{
         if(isReachMeSupported){
             if([[ConfigurationReader sharedConfgReaderObj] getOnBoardingStatus])
-                return 150.0;
-            else
                 return 180.0;
+            else
+                return 210.0;
         }else
-            return 150.0;
+            return 180.0;
     }
 }
 
@@ -970,6 +973,11 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
     
     if ([cell isKindOfClass:[ActivatereachMeTableViewCell class]]) {
         ActivatereachMeTableViewCell *activateReachMeCell = (ActivatereachMeTableViewCell *)cell;
+        
+        [activateReachMeCell.bundleSubcriptionBtn setImage:[[UIImage imageNamed:@"Charge_OK"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+        [activateReachMeCell.bundleSubcriptionBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 6, 0, 0)];
+        [activateReachMeCell.bundleSubcriptionBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+        [activateReachMeCell.bundleSubcriptionBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         
         //Number Details Section
         NumberInfo *numberDetails = [[Setting sharedSetting]customNumberInfoForPhoneNumber:self.phoneNumber];
@@ -1509,6 +1517,14 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
             return;
         }
         
+        //Sachin
+        IVSettingsCountryCarrierInfo *ccInfo =  [[Setting sharedSetting]supportedCarrierInfoFromCustomSettingsForPhoneNumber:self.phoneNumber];
+        if (ccInfo.ussdInfo.isBundleIntl == TRUE || ccInfo.ussdInfo.isBundleHome == TRUE || ccInfo.ussdInfo.isBundleVM == TRUE) {
+            [self performSegueWithIdentifier:kReachMePackSegueID sender:nil];
+            return;
+        }
+        //Sachin
+
         HowToActivateReachMeViewController *activateReachMe = [[UIStoryboard storyboardWithName:@"IVVoicemailMissedCallSettings_rm" bundle:[NSBundle mainBundle]]instantiateViewControllerWithIdentifier:@"HowActivateReachMe"];
         activateReachMe.phoneNumber = self.phoneNumber;
         activateReachMe.voiceMailInfo = self.voiceMailInfo;
@@ -1533,6 +1549,14 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
         }
         
         [self.navigationController pushViewController:activateReachMe animated:YES];
+    }
+}
+
+#pragma mark - StoryBoard Segue Methods -
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:kReachMePackSegueID]) {
+        ReachMePackTableController *reachMePackVC = segue.destinationViewController;
+        reachMePackVC.phoneNumber = self.phoneNumber;
     }
 }
 

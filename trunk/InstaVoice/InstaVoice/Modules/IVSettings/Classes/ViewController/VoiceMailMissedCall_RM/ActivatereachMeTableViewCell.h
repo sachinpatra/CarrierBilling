@@ -33,4 +33,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *continueToPersonalisation;
 @property (weak, nonatomic) IBOutlet UIButton *activateButton;
 
+//Sachin
+@property (weak, nonatomic) IBOutlet UIButton *bundleSubcriptionBtn;
+
 @end

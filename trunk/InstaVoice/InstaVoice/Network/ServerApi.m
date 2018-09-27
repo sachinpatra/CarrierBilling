@@ -322,6 +322,12 @@
             serverApi = @"vn_sub";
             break;
         }
+        case FETCH_BUNDLE_LIST:
+        {
+            serverApi = @"fetch_opr_bundles";
+            break;
+        }
+            
         default:
         {
             KLog(@"Event Type is not matched");

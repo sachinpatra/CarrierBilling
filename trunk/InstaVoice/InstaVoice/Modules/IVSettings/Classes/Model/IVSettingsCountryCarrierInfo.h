@@ -29,6 +29,11 @@
 @property (nonatomic, assign) BOOL isHLREnabled; // Aug 2017
 - (IVSettingsUSSDInfo *)initWithUSSDInfo:(NSDictionary *)withUSSDInfo;
 
+//Sachin
+@property (nonatomic, assign) BOOL isBundleIntl;
+@property (nonatomic, assign) BOOL isBundleHome;
+@property (nonatomic, assign) BOOL isBundleVM;
+
 @end
 
 
