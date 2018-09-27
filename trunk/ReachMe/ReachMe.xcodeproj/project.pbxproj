@@ -461,6 +461,9 @@
 		79DE7A8F2010E5C200597BE2 /* IVMediaLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DE7A8C2010E5C200597BE2 /* IVMediaLoader.m */; };
 		79DE7A902010E5C200597BE2 /* IVImageProcessingOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DE7A8E2010E5C200597BE2 /* IVImageProcessingOperation.m */; };
 		79FBACA82015FA2A00962D25 /* IVFriendsStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79FBACA72015FA2A00962D25 /* IVFriendsStoryboard.storyboard */; };
+		8C21E51F2154DC8A008E38BE /* ReachMePackDetailTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C21E51E2154DC8A008E38BE /* ReachMePackDetailTableController.swift */; };
+		8C21E5212154FE5F008E38BE /* UIButton+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C21E5202154FE5F008E38BE /* UIButton+Extention.swift */; };
+		8C21E52321552E73008E38BE /* ReachMePackUsageTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C21E52221552E73008E38BE /* ReachMePackUsageTableController.swift */; };
 		8C32C8D22031BC7A006ECE10 /* AudioResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8C32C8D12031BC79006ECE10 /* AudioResource.bundle */; };
 		8C5BDFA3202998BD000F31D1 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		8C5BDFB32029CFA3000F31D1 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -510,7 +513,9 @@
 		8CB1C1732101B079004823A7 /* SelectCountryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB1C16A2101B079004823A7 /* SelectCountryViewController.swift */; };
 		8CB1C1742101B079004823A7 /* Store.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CB1C16B2101B079004823A7 /* Store.storyboard */; };
 		8CB1C1752101B079004823A7 /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB1C16C2101B079004823A7 /* StoreViewController.swift */; };
-		8CE821B7213587E8003399F4 /* UILabel+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CE821B6213587E8003399F4 /* UILabel+Extention.swift */; };
+		8CC7D06B215BA1160001BC4A /* UITableView+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC7D06A215BA1160001BC4A /* UITableView+Extention.swift */; };
+		8CE821BD213920EC003399F4 /* UILabel+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CE821BC213920EC003399F4 /* UILabel+Extention.swift */; };
+		8CE821BF2139487A003399F4 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CE821BE21394879003399F4 /* SwiftyJSON.swift */; };
 		DC25574D207CF3B300AA7ED9 /* TranscriptionRatingAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = DC25574A207CF3B200AA7ED9 /* TranscriptionRatingAPI.m */; };
 		DC25574E207CF3B300AA7ED9 /* TranscriptionAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = DC25574C207CF3B300AA7ED9 /* TranscriptionAPI.m */; };
 		DC59DC0C20E63E6600FA084C /* CountryCallingRatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DC59DC0B20E63E6600FA084C /* CountryCallingRatesViewController.m */; };
@@ -1373,6 +1378,9 @@
 		79DE7A9F2010E64300597BE2 /* RegistrationApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegistrationApi.h; path = ../../InstaVoice/InstaVoice/Constants/RegistrationApi.h; sourceTree = "<group>"; };
 		79FBACA72015FA2A00962D25 /* IVFriendsStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = IVFriendsStoryboard.storyboard; path = ../../InstaVoice/InstaVoice/UI/IVFriendsStoryboard.storyboard; sourceTree = "<group>"; };
 		79FBACA9201621E000962D25 /* ReachMe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ReachMe.entitlements; sourceTree = "<group>"; };
+		8C21E51E2154DC8A008E38BE /* ReachMePackDetailTableController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachMePackDetailTableController.swift; sourceTree = "<group>"; };
+		8C21E5202154FE5F008E38BE /* UIButton+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extention.swift"; sourceTree = "<group>"; };
+		8C21E52221552E73008E38BE /* ReachMePackUsageTableController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachMePackUsageTableController.swift; sourceTree = "<group>"; };
 		8C32C8D12031BC79006ECE10 /* AudioResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AudioResource.bundle; sourceTree = "<group>"; };
 		8C5BDFE2202ACD1A000F31D1 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		8C5BE002202AE9CA000F31D1 /* AppleReceiptValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleReceiptValidator.swift; sourceTree = "<group>"; };
@@ -1408,8 +1416,10 @@
 		8CB1C16A2101B079004823A7 /* SelectCountryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCountryViewController.swift; sourceTree = "<group>"; };
 		8CB1C16B2101B079004823A7 /* Store.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Store.storyboard; sourceTree = "<group>"; };
 		8CB1C16C2101B079004823A7 /* StoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
+		8CC7D06A215BA1160001BC4A /* UITableView+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extention.swift"; sourceTree = "<group>"; };
 		8CC8FDEB2133E26400BF3498 /* ReachMePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ReachMePlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		8CE821B6213587E8003399F4 /* UILabel+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UILabel+Extention.swift"; path = "../../InstaVoice/InstaVoice/Modules/IVSettings/Classes/ViewController/VoiceMailMissedCall_RM/UILabel+Extention.swift"; sourceTree = "<group>"; };
+		8CE821BC213920EC003399F4 /* UILabel+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extention.swift"; sourceTree = "<group>"; };
+		8CE821BE21394879003399F4 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		DC255749207CF3B000AA7ED9 /* TranscriptionRatingAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TranscriptionRatingAPI.h; path = ../../InstaVoice/InstaVoice/TranscriptionRatingAPI.h; sourceTree = "<group>"; };
 		DC25574A207CF3B200AA7ED9 /* TranscriptionRatingAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TranscriptionRatingAPI.m; path = ../../InstaVoice/InstaVoice/TranscriptionRatingAPI.m; sourceTree = "<group>"; };
 		DC25574B207CF3B200AA7ED9 /* TranscriptionAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TranscriptionAPI.h; path = ../../InstaVoice/InstaVoice/TranscriptionAPI.h; sourceTree = "<group>"; };
@@ -1792,8 +1802,9 @@
 				79D754EE20244507008665BD /* SettingGeneralTableViewController.swift */,
 				79D754ED20244507008665BD /* SingleSelectionTableViewController.swift */,
 				79D754E720244506008665BD /* String+Extention.swift */,
-				8CE821B6213587E8003399F4 /* UILabel+Extention.swift */,
 				79D754E820244506008665BD /* UIAlertController+Extensions.swift */,
+				8CE821BC213920EC003399F4 /* UILabel+Extention.swift */,
+				8C21E5202154FE5F008E38BE /* UIButton+Extention.swift */,
 				792C923E20189DC200C8D3A0 /* ActivatereachMeTableViewCell.h */,
 				792C923020189DC100C8D3A0 /* ActivatereachMeTableViewCell.m */,
 				792C923120189DC100C8D3A0 /* ActivateReachMeViewController.h */,
@@ -2892,9 +2903,13 @@
 		8CACD32A212FDC70008F83BC /* Carrier Charge */ = {
 			isa = PBXGroup;
 			children = (
+				8CE821BE21394879003399F4 /* SwiftyJSON.swift */,
 				8CACD32B212FDCFD008F83BC /* CarrierChargePopupViewController.swift */,
 				8CACD32D212FDEC1008F83BC /* CarrierCharge.storyboard */,
 				8CACD32F21302459008F83BC /* ReachMePackTableController.swift */,
+				8C21E51E2154DC8A008E38BE /* ReachMePackDetailTableController.swift */,
+				8C21E52221552E73008E38BE /* ReachMePackUsageTableController.swift */,
+				8CC7D06A215BA1160001BC4A /* UITableView+Extention.swift */,
 			);
 			path = "Carrier Charge";
 			sourceTree = "<group>";
@@ -3306,6 +3321,7 @@
 				792476B220231E350057BFE1 /* IVChatTableViewCellReachMeCallReceivedEx.m in Sources */,
 				793737DA200F506D0040F413 /* FetchCarriersListAPI.m in Sources */,
 				791B6A4E2011C92D00B33DC8 /* IVVoiceMailGreetingsRecordTableViewCell.m in Sources */,
+				8CC7D06B215BA1160001BC4A /* UITableView+Extention.swift in Sources */,
 				79DE79D32010D2D900597BE2 /* MZTransition.m in Sources */,
 				79DE7A872010E52700597BE2 /* BaseDB.m in Sources */,
 				799F0D962017224100A07536 /* NBPhoneNumberUtil.m in Sources */,
@@ -3330,6 +3346,7 @@
 				793737D4200F506D0040F413 /* RegisterUserAPI.m in Sources */,
 				7937371F200E34AB0040F413 /* UserProfileModel.m in Sources */,
 				79DE79702010C8CA00597BE2 /* ConversationTableCellAudioReceived.m in Sources */,
+				8C21E52321552E73008E38BE /* ReachMePackUsageTableController.swift in Sources */,
 				79D754F020244507008665BD /* String+Extention.swift in Sources */,
 				796167B72008DE0500E495A2 /* main.m in Sources */,
 				8C5BDFBE2029CFA3000F31D1 /* (null) in Sources */,
@@ -3340,6 +3357,7 @@
 				793737DD200F506D0040F413 /* DisconnectFBTwitterApi.m in Sources */,
 				DCE56D89207F617100BE661A /* DialPadViewController.m in Sources */,
 				791B6A722011CAC200B33DC8 /* IVVoiceMailActivateTableViewCell.m in Sources */,
+				8C21E5212154FE5F008E38BE /* UIButton+Extention.swift in Sources */,
 				79DE798A2010CA3500597BE2 /* IVMediaZoomDisplayViewController.m in Sources */,
 				79DE7A422010D82500597BE2 /* UIDataMgt.m in Sources */,
 				79DE7A7C2010E49E00597BE2 /* ContactDetailData.m in Sources */,
@@ -3350,7 +3368,7 @@
 				7937372F200E35040040F413 /* VoipSetting.m in Sources */,
 				79DE7A7A2010E49E00597BE2 /* GroupMemberData.m in Sources */,
 				7937373E200E39040040F413 /* IVFastNetworkInfo.m in Sources */,
-				8CE821B7213587E8003399F4 /* UILabel+Extention.swift in Sources */,
+				8CE821BD213920EC003399F4 /* UILabel+Extention.swift in Sources */,
 				8C5BDFC02029CFA3000F31D1 /* (null) in Sources */,
 				79DE797F2010C9B100597BE2 /* ConversationTableCellTextReceiver.m in Sources */,
 				791B6A512011C92D00B33DC8 /* IVPrimaryNumberVoiceMailTableViewCell.m in Sources */,
@@ -3542,6 +3560,7 @@
 				79DE7A412010D82500597BE2 /* UIStateMachine.m in Sources */,
 				793736B5200E2F600040F413 /* IVInAppPromoViewController.m in Sources */,
 				793737E9200F506D0040F413 /* DownloadProfilePic.m in Sources */,
+				8C21E51F2154DC8A008E38BE /* ReachMePackDetailTableController.swift in Sources */,
 				791B6B3B2011F2F500B33DC8 /* CountryTableViewController.m in Sources */,
 				79DE79E72010D34C00597BE2 /* BaseWebViewScreen.m in Sources */,
 				79DE7A892010E52700597BE2 /* Database.m in Sources */,
@@ -3565,6 +3584,7 @@
 				79373747200E3A810040F413 /* MQTTManager.m in Sources */,
 				79DE79162010BE0700597BE2 /* ForgotPasswordViewController.m in Sources */,
 				793737D9200F506D0040F413 /* BlockUnblockUserAPI.m in Sources */,
+				8CE821BF2139487A003399F4 /* SwiftyJSON.swift in Sources */,
 				79DE7A6D2010E3BF00597BE2 /* Contacts.m in Sources */,
 				793736C9200E30C20040F413 /* Logger.m in Sources */,
 				8CB1C16D2101B079004823A7 /* CountdownTimer.swift in Sources */,

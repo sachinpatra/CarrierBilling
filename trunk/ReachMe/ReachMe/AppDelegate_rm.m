@@ -633,9 +633,9 @@ static NSManagedObjectContext* _privateQueueContext=nil;
      setViewControllers:@[callsNavController,
                           voiceMailNavController,
                           dialPadNavController,
+                          settingsNavController,
                           storeNavVC,
                           inviteFriendsNavController,
-                          settingsNavController,
                           helpChatNavController,
                           aboutHelpNavController]];
     

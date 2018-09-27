@@ -6,32 +6,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ReachMe/Virtual Number/TestViewController.swift"
-            timestampString = "555935337.085914"
+            filePath = "../InstaVoice/InstaVoice/AppCore/API/FetchCarriersListAPI.m"
+            timestampString = "559557943.097315"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
-            landmarkName = "collectionView(_:numberOfItemsInSection:)"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "-callNetworkRequest:withSuccess:failure:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ReachMe/Virtual Number/TestViewController.swift"
-            timestampString = "555935337.085978"
+            filePath = "../InstaVoice/InstaVoice/Modules/IVSettings/Classes/ViewController/VoiceMailMissedCall_RM/ActivateReachMeViewController.m"
+            timestampString = "559665120.9518009"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "25"
-            endingLineNumber = "25"
-            landmarkName = "collectionView(_:cellForItemAt:)"
+            startingLineNumber = "1521"
+            endingLineNumber = "1521"
+            landmarkName = "-tableView:didSelectRowAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

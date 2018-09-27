@@ -10,9 +10,56 @@ import UIKit
 
 class ReachMePackTableController: UITableViewController {
 
+    @objc var phoneNumber: String!
+    var bundleList = [[String: Any]]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+    
+    //MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
+        refreshControl?.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
+
+        tableView.beginRefreshing()
+    }
+    
+    // MARK: Custom Methods
+    @IBAction func notNowButtonAction(_ sender: UIBarButtonItem) {
+        tableView.addSubview(refreshControl!)
+        tableView.beginRefreshing()
+    }
+    
+    @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+        fetchBundleList()
+    }
+    
+    func fetchBundleList() {
+        guard Common.isNetworkAvailable() == NETWORK_AVAILABLE else {
+            ReachMeUtility.showAlert(withMessage: "NET_NOT_AVAILABLE".localized)
+            return
+        }
+        
+        let reqDisc: NSMutableDictionary = ["phone_num": phoneNumber]
+        NetworkCommon.addData(reqDisc, eventType: FETCH_BUNDLE_LIST)
+        NetworkCommon.shared()?.callNetworkRequest(reqDisc, withSuccess: { (_, responseDisc) in
+            self.refreshControl?.endRefreshing()
+            self.refreshControl?.removeFromSuperview()
+            guard let bundles = responseDisc?["bundles"] as? [[String:Any]], bundles.count > 0 else {
+                ReachMeUtility.showAlert(withMessage: "Bundle pack not availabel", completion: {
+                    self.navigationController?.popViewController(animated: true)
+                })
+                return
+            }
+            self.bundleList = bundles
+            
+        }, failure: { (_, error) in
+            self.refreshControl?.endRefreshing()
+            self.refreshControl?.removeFromSuperview()
+            ReachMeUtility.showAlert(withMessage: error!.localizedDescription)
+        })
     }
 }
 
@@ -20,33 +67,24 @@ class ReachMePackTableController: UITableViewController {
 extension ReachMePackTableController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return bundleList.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReachMePackTableCell.identifier, for: indexPath) as! ReachMePackTableCell
         
-        let myLabel = UILabel()
-        myLabel.textAlignment = .left
-        myLabel.font = UIFont.systemFont(ofSize: 12)
-        myLabel.text = "Free incoming calls on International Roaming."
-        myLabel.addOKImage(behindText: false)
-        cell.myStack.addArrangedSubview(myLabel)
+        let bundle = bundleList[indexPath.row]
         
-        let myLabel1 = UILabel()
-        myLabel1.textAlignment = .left
-        myLabel1.font = UIFont.systemFont(ofSize: 12)
-        myLabel1.text = "50 minutes of outgoing calls to Philippines"
-        myLabel1.addOKImage(behindText: false)
-        cell.myStack.addArrangedSubview(myLabel1)
-        
-        let myLabel2 = UILabel()
-        myLabel2.textAlignment = .left
-        myLabel2.font = UIFont.systemFont(ofSize: 12)
-        myLabel2.text = "1 GB Bundled Roaming Data for General use."
-        myLabel2.addOKImage(behindText: false)
-        cell.myStack.addArrangedSubview(myLabel2)
+        cell.bundleNameLabel.text = bundle["bundle_name"] as? String
+        cell.bundleDescLabel.text = bundle["bundle_desc"] as? String
+        cell.bundleValueLabel.text = "\(bundle["currency_sym"] as! String) \(bundle["price"] as! Double)"
 
+        for feature in (bundle["feature_info"] as! [[String: Any]]) {
+            let featureLabel = UILabel()
+            featureLabel.text = feature["description"] as? String
+            featureLabel.addOKImage(behindText: false)
+            cell.stackView.addArrangedSubview(featureLabel)
+        }
         
         return cell
     }
@@ -65,11 +103,13 @@ class ReachMePackTableCell: UITableViewCell {
     
     static let identifier = String(describing: ReachMePackTableCell.self)
     
-    @IBOutlet weak var myStack: UIStackView!
+    @IBOutlet weak var bundleNameLabel: UILabel!
+    @IBOutlet weak var bundleDescLabel: UILabel!
+    @IBOutlet weak var bundleValueLabel: UILabel!
+    @IBOutlet weak var stackView: UIStackView!
     
     // MARK: Configure Selection
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
 }
-
