@@ -101,4 +101,5 @@ extension Hero: CustomPlaygroundDisplayConvertible {
 
 let thor = Hero(name: "Sachin", mainPower: "Thunder")
 let ironMan = Hero(name: "Bapi", mainPower: "Brain")
+print("Hello\(print("2"))")
 

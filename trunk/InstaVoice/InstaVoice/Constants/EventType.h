@@ -140,7 +140,9 @@
 #define VIRTUALNUMBER_SUBSCRIPTION      136
 
 //Sachin
-#define FETCH_BUNDLE_LIST      140
+#define FETCH_BUNDLE_LIST       140
+#define BUNDLE_STATUS           141
+#define BUNDLE_PURCHASE         142
 //Sachin
 
 

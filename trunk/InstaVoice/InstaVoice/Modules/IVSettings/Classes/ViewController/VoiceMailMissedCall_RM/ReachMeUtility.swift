@@ -45,4 +45,20 @@ class ReachMeUtility: NSObject {
         dateFormatter.dateStyle = .medium
         return (date, dateFormatter.string(from: date))
     }
+    
+    //Sachin
+    @objc class func convertUTCNumberToDateString(_ UTCNumber: Any) -> String {
+        var date: Date!
+        if let utcNumber = UTCNumber as? Int64 {
+            let value = Double(utcNumber) / 1000
+            date = Date(timeIntervalSince1970: value)
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        //dateFormatter.timeStyle = .none
+        dateFormatter.dateStyle = .medium
+        return dateFormatter.string(from: date)
+    }
+    //Sachin
 }

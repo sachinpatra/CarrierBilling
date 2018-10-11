@@ -124,6 +124,21 @@
     return [[self getMediaContactNativeDirectory]stringByAppendingPathComponent:[fileName lastPathComponent]];
 }
 
+//Sachin
+#pragma mark - Contact Directory /Library/Media/Bundle
++(NSString*)getBundleDirectory {
+    NSString* path = [[self getMediaDirectory]stringByAppendingPathComponent:DIR_BUNDLE];
+    [self checkAndCreateDirectoryIfNotExist:path];
+    return path;
+}
++(NSString*)getBundlePicPath:(NSString*)fileName {
+    if(fileName == Nil || fileName.length == 0)
+        return @"";
+    return [[self getBundleDirectory]stringByAppendingPathComponent:[fileName lastPathComponent]];
+}
+
+//Sachin
+
 #pragma mark - Contact Directory /Library/Media/Contact/MyProfile
 +(NSString*)getMediaContactMyProfileDirectory
 {

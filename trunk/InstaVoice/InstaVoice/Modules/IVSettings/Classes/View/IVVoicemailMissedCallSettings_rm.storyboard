@@ -898,26 +898,6 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_number" translatesAutoresizingMaskIntoConstraints="NO" id="EKb-Yg-RT6">
                                                     <rect key="frame" x="0.0" y="-0.6666666666666714" width="414" height="180.33333333333337"/>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j8P-24-cWc">
-                                                    <rect key="frame" x="139.66666666666666" y="140" width="134.99999999999997" height="33"/>
-                                                    <color key="backgroundColor" red="0.14951820199999999" green="0.53933241389999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="33" id="CbZ-kg-XOp"/>
-                                                        <constraint firstAttribute="width" constant="135" id="wCG-KU-csb"/>
-                                                    </constraints>
-                                                    <state key="normal" title="ReachMe Silver">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    </state>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                            <integer key="value" value="2"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <connections>
-                                                        <segue destination="0TF-Vr-5wk" kind="show" id="LKy-eH-oWm"/>
-                                                    </connections>
-                                                </button>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="India" translatesAutoresizingMaskIntoConstraints="NO" id="vmH-tJ-Id7">
                                                     <rect key="frame" x="21" y="44" width="60" height="60"/>
                                                     <constraints>
@@ -964,8 +944,27 @@
                                                     <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="16"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Roaming Pack (Valid till 12 Jun 2018)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="do2-zO-4FL">
-                                                    <rect key="frame" x="282.66666666666669" y="144.66666666666666" width="116.33333333333331" height="24"/>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j8P-24-cWc">
+                                                    <rect key="frame" x="102.33333333333333" y="140" width="209.33333333333337" height="33"/>
+                                                    <color key="backgroundColor" red="0.14951820199999999" green="0.53933241389999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="33" id="CbZ-kg-XOp"/>
+                                                    </constraints>
+                                                    <state key="normal" title="ReachMe Silver" image="Telcom_Dummy">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="2"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <segue destination="0TF-Vr-5wk" kind="show" id="LKy-eH-oWm"/>
+                                                    </connections>
+                                                </button>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ReachMe Pack (Valid till 12 Jun 2018)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="do2-zO-4FL">
+                                                    <rect key="frame" x="319.66666666666669" y="138.66666666666666" width="79.333333333333314" height="36"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -996,6 +995,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="bundleSubcriptionBtn" destination="j8P-24-cWc" id="NVV-Sl-EaM"/>
+                                            <outlet property="bundleSubscriptionValidLabel" destination="do2-zO-4FL" id="ex8-Rz-xcZ"/>
                                             <outlet property="carrierName" destination="31B-gu-qcn" id="EmE-q7-DsJ"/>
                                             <outlet property="editDetailsButton" destination="Pf5-k8-IGD" id="zcD-GZ-ckk"/>
                                             <outlet property="flagImage" destination="vmH-tJ-Id7" id="B04-bC-4dc"/>
@@ -1624,7 +1624,7 @@ https://metropcs.com/value.</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="**002*918066732740#" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vyY-V9-Z22">
-                                                    <rect key="frame" x="84.333333333333329" y="-0.33333333333333215" width="245.66666666666669" height="43"/>
+                                                    <rect key="frame" x="84.333333333333329" y="-0.66666666666666785" width="245.66666666666669" height="43.333333333333343"/>
                                                     <color key="backgroundColor" red="0.90196078430000004" green="0.90980392160000001" blue="0.92156862750000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="280" id="Gmg-aw-2M2"/>
@@ -2095,6 +2095,7 @@ https://metropcs.com/value.</string>
     </scenes>
     <resources>
         <image name="India" width="21" height="15"/>
+        <image name="Telcom_Dummy" width="50" height="50"/>
         <image name="bg_number" width="375" height="153"/>
         <image name="bulb" width="34" height="38"/>
         <image name="copy" width="17" height="21"/>
@@ -2207,7 +2208,7 @@ FyMXJxcuFzYXQxdIF0oXTBdRF1kXXBdhF2kXbBd+F4EXhgAAAAAAAAIBAAAAAAAAAEEAAAAAAAAAAAAA
 AAAAABeIA
 </mutableData>
         </image>
-        <image name="info-settings" width="21" height="21"/>
+        <image name="info-settings" width="21.333333969116211" height="21.333333969116211"/>
         <image name="info-settings.png" width="25" height="25"/>
         <image name="reachMe_ok" width="36" height="36"/>
         <image name="reach_me" width="31" height="21"/>

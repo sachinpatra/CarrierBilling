@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.18" systemVersion="18A391" minimumToolsVersion="Xcode 4.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="1.0.3">
+    <entity name="BundlePurchase" representedClassName="BundlePurchase" syncable="YES" codeGenerationType="class">
+        <attribute name="bundleName" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ContactData" representedClassName="ContactData" syncable="YES">
+        <attribute name="contactId" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="contactName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contactPic" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contactPicURI" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contactType" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="groupId" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="isInvited" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isIV" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="isNewJoinee" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="localSyncTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="picDownloadState" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="removeFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="contactIdDetailRelation" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ContactDetailData" inverseName="contactIdParentRelation" inverseEntity="ContactDetailData" syncable="YES"/>
+    </entity>
+    <entity name="ContactDetailData" representedClassName="ContactDetailData" syncable="YES">
+        <attribute name="contactDataId" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="contactDataSubType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contactDataType" attributeType="String" defaultValueString="tel" syncable="YES"/>
+        <attribute name="contactDataValue" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="contactId" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="hideBlockContact" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="ivJoinedTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="ivUserId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="localSync" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="serverSync" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="vsmsUser" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="contactIdParentRelation" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="ContactData" inverseName="contactIdDetailRelation" inverseEntity="ContactData" syncable="YES"/>
+    </entity>
+    <entity name="DebitRates" syncable="YES">
+        <attribute name="debit_rates" optional="YES" attributeType="Transformable" syncable="YES"/>
+    </entity>
+    <entity name="FacebookData" representedClassName="FacebookData" syncable="YES">
+        <attribute name="facebookId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="facebookLocalPicPath" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="facebookName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="facebookPicURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fbIvId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <entity name="GroupMemberData" representedClassName="GroupMemberData" syncable="YES">
+        <attribute name="groupId" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="isAdmin" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isAgent" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isMember" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isOwner" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="joiningDate" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="memberContactDataValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="memberDisplayName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="memberId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="memberIvUserId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="memberType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="picLocalPath" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="picRemoteUri" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ContactData" positionX="0" positionY="0" width="128" height="270"/>
+        <element name="ContactDetailData" positionX="0" positionY="0" width="128" height="240"/>
+        <element name="DebitRates" positionX="27" positionY="135" width="128" height="60"/>
+        <element name="FacebookData" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="GroupMemberData" positionX="0" positionY="0" width="128" height="255"/>
+        <element name="BundlePurchase" positionX="18" positionY="117" width="128" height="60"/>
+    </elements>
+</model>

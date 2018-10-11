@@ -35,5 +35,6 @@
 
 //Sachin
 @property (weak, nonatomic) IBOutlet UIButton *bundleSubcriptionBtn;
+@property (weak, nonatomic) IBOutlet UILabel *bundleSubscriptionValidLabel;
 
 @end

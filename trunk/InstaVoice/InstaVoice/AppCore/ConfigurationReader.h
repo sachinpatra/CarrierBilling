@@ -35,12 +35,18 @@
 
     //#define VOIP_INFO                        @"https://stagingchannels.instavoice.com/iv"
 //@"https://stagingblogs.instavoice.com/voip/b2ff398f8db492c19ef89b548b04889c"
+
     #define SERVER_URL                       @"https://stagingchannels.instavoice.com/iv"
     #define SERVER_PIC_URL                   @"http://stagingchannels.instavoice.com"
     #define MQTT_SERVER_URL                  @"pn-staging14.instavoice.com"
-
     #define MQTT_SERVER_PORT                 8883
- 
+
+//Devblogs
+//#define SERVER_URL                       @"https://devblogs.instavoice.com/iv"
+//#define SERVER_PIC_URL                   @"http://devblogs.instavoice.com"
+//#define MQTT_SERVER_URL                  @"pn-staging14.instavoice.com"
+//#define MQTT_SERVER_PORT                 8883
+
 #else
     #define SERVER_URL                       @"https://blogs.instavoice.com/iv"
     #define SERVER_PIC_URL                   @"http://blogs.instavoice.com"

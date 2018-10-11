@@ -27,6 +27,7 @@
 #import "CountryCallingRatesViewController.h"
 #import "ReachMeStatusViewController.h"
 #import "ReachMe-Swift.h"
+#import "NetworkCommon.h"
 
 #define kReachMeNumberTitleCellIdentifier @"ReachMeNumberTitleCell"
 #define kReachMeNumberEnableCellIdentifier @"ReachMeNumberEnableCell"
@@ -80,6 +81,9 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
 @property (nonatomic, strong) ActivatereachMeTableViewCell *activateReachMeCell;
 @property (nonatomic, strong) NSDictionary *usageSummary;
 
+//Sachin
+@property (nonatomic, strong) NSDictionary *purchaseData;
+
 @end
 
 @implementation ActivateReachMeViewController
@@ -101,7 +105,6 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
     if(callSummary)
         self.usageSummary = callSummary;
     
-    // Do any additional setup after loading the view from its nib.
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -185,6 +188,7 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
         [self showProgressBar];
         [[Setting sharedSetting]getUserSettingFromServer];
         [[Profile sharedUserProfile] getProfileDataFromServer];
+        [self fetchBundleInfo];//Sachin
         [self configureHelpAndSuggestion];
     }
     self.titleName = [self titleName];
@@ -218,6 +222,26 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
         self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     }
 }
+
+//Sachin
+- (void)fetchBundleInfo {
+    NSMutableDictionary *requestDic = [NSMutableDictionary dictionary];
+    //[requestDic setObject:146 forKey:@"tx_ids"];
+    [NetworkCommon addCommonData:requestDic eventType:BUNDLE_STATUS];
+    [[NetworkCommon sharedNetworkCommon] callNetworkRequest:requestDic withSuccess:^(NetworkCommon *req, NSMutableDictionary* responseObject) {
+        NSArray *purchaseList = responseObject[@"purchase_data"];
+        self.purchaseData = [purchaseList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(msisdn == %@)", self.phoneNumber]].firstObject;
+        if (self.purchaseData) {
+            [self.activateReachMeTable beginUpdates];
+            [self.activateReachMeTable reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.activateReachMeTable endUpdates];
+        }
+    } failure:^(NetworkCommon *req, NSError *error) {
+        printf("Error in fetch Bundle Status");
+    }];
+
+}
+//Sachin
 
 - (void)reachMeServiceActiveWithUpdateStatus
 {
@@ -689,15 +713,17 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
             }
             return neededSize.height + 15.0;
         }
+        //Sachin
     }else{
         if(isReachMeSupported){
             if([[ConfigurationReader sharedConfgReaderObj] getOnBoardingStatus])
-                return 180.0;
+                return (self.purchaseData) ? 180.0 : 150;
             else
-                return 210.0;
+                return (self.purchaseData) ? 210.0 : 180;
         }else
-            return 180.0;
+            return (self.purchaseData) ? 180.0 : 150;
     }
+    //sachin
 }
 
 - (CGFloat)calculateHeightForConfiguredSizingCell:(UITableViewCell *)sizingCell {
@@ -974,10 +1000,40 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
     if ([cell isKindOfClass:[ActivatereachMeTableViewCell class]]) {
         ActivatereachMeTableViewCell *activateReachMeCell = (ActivatereachMeTableViewCell *)cell;
         
-        [activateReachMeCell.bundleSubcriptionBtn setImage:[[UIImage imageNamed:@"Charge_OK"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-        [activateReachMeCell.bundleSubcriptionBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 6, 0, 0)];
-        [activateReachMeCell.bundleSubcriptionBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-        [activateReachMeCell.bundleSubcriptionBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        //Sachin
+        if (self.purchaseData) {
+            activateReachMeCell.bundleSubcriptionBtn.hidden = false;
+            activateReachMeCell.bundleSubscriptionValidLabel.hidden = false;
+            __block UIImage *telcomImage = [UIImage imageNamed:@"Telcom_Dummy"];
+            
+            NSString *bundleLogoFilePath = [IVFileLocator getBundlePicPath:self.purchaseData[@"logo"]];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:bundleLogoFilePath]) {
+                [[NetworkCommon sharedNetworkCommon] downloadDataWithURLString:self.purchaseData[@"logo_url"] withSuccess:^(NetworkCommon *req, id responseObject) {
+                    telcomImage = [UIImage imageWithData:(NSData *)responseObject];
+                    UIImage *scaledImage = [telcomImage scaleToSize:CGSizeMake(30.0, 30.0) squared:false];
+                    [activateReachMeCell.bundleSubcriptionBtn setImage:[scaledImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+
+                    [((NSData *)responseObject) writeToFile:bundleLogoFilePath atomically:true];
+                    
+                } failure:^(NetworkCommon *req, NSError *error) {
+                    printf("Error in download bundle Image");
+                }];
+            } else {
+                telcomImage = [UIImage imageWithContentsOfFile:bundleLogoFilePath];
+            }
+            
+            UIImage *scaledImage = [telcomImage scaleToSize:CGSizeMake(30.0, 30.0) squared:false];
+            [activateReachMeCell.bundleSubcriptionBtn setImage:[scaledImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+            [activateReachMeCell.bundleSubcriptionBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 6, 0, 0)];
+            [activateReachMeCell.bundleSubcriptionBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+            [activateReachMeCell.bundleSubcriptionBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+            [activateReachMeCell.bundleSubcriptionBtn setTitle:self.purchaseData[@"bundle_name"] forState:UIControlStateNormal];
+            activateReachMeCell.bundleSubscriptionValidLabel.text = [NSString stringWithFormat:@"ReachMe pack (Valid till %@)", [ReachMeUtility convertUTCNumberToDateString:self.purchaseData[@"expiry_dt_long"]]];
+        } else {
+            activateReachMeCell.bundleSubcriptionBtn.hidden = true;
+            activateReachMeCell.bundleSubscriptionValidLabel.hidden = true;
+        }
+        //Sachin
         
         //Number Details Section
         NumberInfo *numberDetails = [[Setting sharedSetting]customNumberInfoForPhoneNumber:self.phoneNumber];
@@ -1391,7 +1447,6 @@ typedef NS_ENUM(NSUInteger, ContactUpdateType) {
             [activateReachMeCell.unLinkNumber setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             activateReachMeCell.unlinkNumberTopConstraint.constant = -20.0;
         }
-        
     }
     
 }

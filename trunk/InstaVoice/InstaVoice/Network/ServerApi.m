@@ -322,12 +322,23 @@
             serverApi = @"vn_sub";
             break;
         }
+            //Sachin
         case FETCH_BUNDLE_LIST:
         {
             serverApi = @"fetch_opr_bundles";
             break;
         }
-            
+        case BUNDLE_STATUS:
+        {
+            serverApi = @"opr_bundle_status";
+            break;
+        }
+        case BUNDLE_PURCHASE:
+        {
+            serverApi = @"opr_bundle_purchase";
+            break;
+        }
+                //Sachin
         default:
         {
             KLog(@"Event Type is not matched");

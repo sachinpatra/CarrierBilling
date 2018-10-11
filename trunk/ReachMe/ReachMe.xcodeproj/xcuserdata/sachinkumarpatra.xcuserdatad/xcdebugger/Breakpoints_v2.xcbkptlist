@@ -9,13 +9,109 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../InstaVoice/InstaVoice/AppCore/API/FetchCarriersListAPI.m"
-            timestampString = "559557943.097315"
+            filePath = "../InstaVoice/InstaVoice/AppCore/Profile.m"
+            timestampString = "560958741.215993"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "-callNetworkRequest:withSuccess:failure:"
+            startingLineNumber = "260"
+            endingLineNumber = "260"
+            landmarkName = "-downloadProfilePic:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ReachMe/Carrier Charge/ReachMePackTableController.swift"
+            timestampString = "560959012.884708"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
+            landmarkName = "bundle"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ReachMe.ReachMePackTableCell.bundle.didset : Swift.Optional&lt;ReachMe.JSON&gt;"
+                  moduleName = "ReachMe"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sachinkumarpatra/Desktop/Sachin/Src/CarrierBilling/trunk/ReachMe/ReachMe/Carrier%20Charge/ReachMePackTableController.swift"
+                  timestampString = "560785478.082438"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "146"
+                  endingLineNumber = "146"
+                  offsetFromSymbolStart = "1080">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.NetworkCommon&gt;, Swift.Optional&lt;Any&gt;) -&gt; () in ReachMe.ReachMePackTableCell.bundle.didset : Swift.Optional&lt;ReachMe.JSON&gt;"
+                  moduleName = "ReachMe"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sachinkumarpatra/Desktop/Sachin/Src/CarrierBilling/trunk/ReachMe/ReachMe/Carrier%20Charge/ReachMePackTableController.swift"
+                  timestampString = "560785478.086302"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "147"
+                  endingLineNumber = "147"
+                  offsetFromSymbolStart = "60">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ReachMe/Carrier Charge/ReachMePackTableController.swift"
+            timestampString = "560959012.885488"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ReachMe/Carrier Charge/ReachMePackTableController.swift"
+            timestampString = "560959012.885657"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "fetchBundleList()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../InstaVoice/InstaVoice/Network/MQTT/MQTTManager.m"
+            timestampString = "560959012.8858629"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "503"
+            endingLineNumber = "503"
+            landmarkName = "-mqttClientDidReceiveSubscriptionData:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,12 +122,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../InstaVoice/InstaVoice/Modules/IVSettings/Classes/ViewController/VoiceMailMissedCall_RM/ActivateReachMeViewController.m"
-            timestampString = "559665120.9518009"
+            timestampString = "560959012.886544"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1521"
-            endingLineNumber = "1521"
-            landmarkName = "-tableView:didSelectRowAtIndexPath:"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
+            landmarkName = "-fetchBundleInfo"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../InstaVoice/InstaVoice/Modules/IVSettings/Classes/ViewController/VoiceMailMissedCall_RM/ActivateReachMeViewController.m"
+            timestampString = "560959012.888435"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1003"
+            endingLineNumber = "1003"
+            landmarkName = "-configureCell:forRowAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

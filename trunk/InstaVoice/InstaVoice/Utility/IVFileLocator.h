@@ -28,6 +28,9 @@
 #define DIR_MEDIA_CONTACT_NATIVE         @"Native"
 #define DIR_MEDIA_CONTACT_PROFILE        @"MyProfile"
 #define DIR_MEDIA_CONTACT_CHAT_GRID      @"ChatGrid"
+//Sachin
+#define DIR_BUNDLE                          @"Bundle"
+//Sachin
 
 #define DIR_MEDIA_AUDIO                  @"Audio"
 
@@ -60,6 +63,9 @@
 +(NSString*)getMediaImageProcessedDirectory;
 +(NSString*)getMediaImagePath:(NSString*)fileName;
 
+//Sachin
++(NSString*)getBundlePicPath:(NSString*)fileName;
+//Sachin
 
 +(unsigned long long int)folderSize:(NSString *)folderPath;
 +(BOOL)deleteDirAndSubDir:(NSString*)dirPath;

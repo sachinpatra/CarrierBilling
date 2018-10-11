@@ -105,31 +105,31 @@ ReachMe Roaming service on your number.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ReachMePackTableCell" rowHeight="152" id="OTn-WQ-Ko5" customClass="ReachMePackTableCell" customModule="ReachMe" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ReachMePackTableCell" rowHeight="152" id="OTn-WQ-Ko5" customClass="ReachMePackTableCell" customModule="ReachMe" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="152"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OTn-WQ-Ko5" id="IZe-Sd-cdK">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="151.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_number_icon" translatesAutoresizingMaskIntoConstraints="NO" id="5WL-R9-YpD">
-                                            <rect key="frame" x="16" y="19" width="35" height="50"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Telcom_Dummy" translatesAutoresizingMaskIntoConstraints="NO" id="5WL-R9-YpD">
+                                            <rect key="frame" x="16" y="19" width="50" height="50"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="50" id="Eex-ZF-HcE"/>
-                                                <constraint firstAttribute="width" constant="35" id="Vs4-qt-epe"/>
+                                                <constraint firstAttribute="width" constant="50" id="Vs4-qt-epe"/>
                                             </constraints>
                                         </imageView>
                                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XqW-ef-qhd">
-                                            <rect key="frame" x="59" y="33" width="300" height="22"/>
+                                            <rect key="frame" x="74" y="33" width="285" height="22"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Roam Like Home" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaM-wx-jdH">
-                                                    <rect key="frame" x="0.0" y="0.0" width="273.5" height="22"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="258.5" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v1n-sR-rtu">
-                                                    <rect key="frame" x="273.5" y="0.0" width="26.5" height="22"/>
+                                                    <rect key="frame" x="258.5" y="0.0" width="26.5" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                     <color key="textColor" red="0.85490196080000003" green="0.26274509800000001" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -140,16 +140,16 @@ ReachMe Roaming service on your number.</string>
                                             </constraints>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="zTg-Pg-4kP">
-                                            <rect key="frame" x="59" y="60" width="300" height="30.5"/>
+                                            <rect key="frame" x="74" y="60" width="285" height="30.5"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Valid for 7 days (Post activation)" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KQU-6z-uB1">
-                                                    <rect key="frame" x="0.0" y="0.0" width="300" height="13.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="13.5"/>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="11"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Basic Roaming plan for mobile no. +63 786 778-7876" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozT-WF-czr">
-                                                    <rect key="frame" x="0.0" y="17.5" width="300" height="13"/>
+                                                    <rect key="frame" x="0.0" y="17.5" width="285" height="13"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -162,7 +162,7 @@ ReachMe Roaming service on your number.</string>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pjg-PM-Ci1">
                                                     <rect key="frame" x="0.0" y="0.0" width="22" height="40"/>
                                                     <connections>
-                                                        <segue destination="iMG-t0-Atu" kind="show" id="idr-Jb-bj0"/>
+                                                        <action selector="infoBtnAction:" destination="OTn-WQ-Ko5" eventType="touchUpInside" id="CF2-vU-JDa"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3nB-HF-GsH" customClass="DesignableButton" customModule="ReachMe" customModuleProvider="target">
@@ -180,6 +180,9 @@ ReachMe Roaming service on your number.</string>
                                                             <real key="value" value="20"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="buyActivateBtnAction:" destination="OTn-WQ-Ko5" eventType="touchUpInside" id="jTe-0R-fXI"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mgA-dW-Wri" customClass="DesignableButton" customModule="ReachMe" customModuleProvider="target">
                                                     <rect key="frame" x="192" y="0.0" width="106" height="40"/>
@@ -196,6 +199,9 @@ ReachMe Roaming service on your number.</string>
                                                             <real key="value" value="20"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="activateBtnAction:" destination="OTn-WQ-Ko5" eventType="touchUpInside" id="BbR-Op-vcS"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -218,10 +224,14 @@ ReachMe Roaming service on your number.</string>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="activateBtn" destination="mgA-dW-Wri" id="6KN-bj-K9f"/>
                                     <outlet property="bundleDescLabel" destination="ozT-WF-czr" id="TkG-6c-gud"/>
+                                    <outlet property="bundleImageView" destination="5WL-R9-YpD" id="Mdh-Mp-AAi"/>
                                     <outlet property="bundleNameLabel" destination="XaM-wx-jdH" id="rwZ-Zo-OW9"/>
                                     <outlet property="bundleValueLabel" destination="v1n-sR-rtu" id="JnF-E6-wV2"/>
+                                    <outlet property="buyActivateBtn" destination="3nB-HF-GsH" id="vql-hh-4jY"/>
                                     <outlet property="stackView" destination="zTg-Pg-4kP" id="9TJ-Qf-dsg"/>
+                                    <outlet property="validityLabel" destination="KQU-6z-uB1" id="y4C-OI-NNe"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -241,38 +251,263 @@ ReachMe Roaming service on your number.</string>
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </refreshControl>
+                    <connections>
+                        <segue destination="iMG-t0-Atu" kind="show" identifier="showPackDetailSegue" id="KTt-We-2Bk"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DGP-nJ-9eF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="869.60000000000002" y="784.85757121439292"/>
         </scene>
-        <!--Reach Me Pack Detail Table Controller-->
+        <!--View Pack Details-->
         <scene sceneID="cTT-Ga-gTi">
             <objects>
                 <tableViewController id="iMG-t0-Atu" customClass="ReachMePackDetailTableController" customModule="ReachMe" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="haN-zj-DXt">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" id="haN-zj-DXt">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="separatorInset" minX="25" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="PPp-pA-zD1">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PackDetailHeaderTableCell" rowHeight="280" id="PPp-pA-zD1" customClass="PackDetailHeaderTableCell" customModule="ReachMe" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="280"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PPp-pA-zD1" id="OfL-7T-lNo">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="279.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Je6-7E-Irb">
+                                            <rect key="frame" x="25" y="20" width="325" height="254.5"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agU-UL-SiD" customClass="DesignableView" customModule="ReachMe" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="0.0" width="325" height="118.5"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Telcom_Dummy" translatesAutoresizingMaskIntoConstraints="NO" id="b8C-Q8-8NK">
+                                                            <rect key="frame" x="20" y="34.5" width="50" height="50"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="50" id="Bb0-1w-Pr2"/>
+                                                                <constraint firstAttribute="height" constant="50" id="DEI-Rf-wGO"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ReachMe Silver" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4eg-Wq-5Na">
+                                                            <rect key="frame" x="93" y="25" width="174" height="31.5"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                                            <color key="textColor" red="0.12941176469999999" green="0.12941176469999999" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 5" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dNY-Y6-rFA">
+                                                            <rect key="frame" x="93" y="70" width="37.5" height="31.5"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Valid for 7 days" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ggf-YP-la2">
+                                                            <rect key="frame" x="210.5" y="76" width="104.5" height="18"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" red="0.95686274509803915" green="0.95686274509803915" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="Ggf-YP-la2" secondAttribute="trailing" constant="10" id="0Bx-Ex-HXe"/>
+                                                        <constraint firstAttribute="height" constant="118.5" id="C2n-sh-cHT"/>
+                                                        <constraint firstItem="b8C-Q8-8NK" firstAttribute="centerY" secondItem="agU-UL-SiD" secondAttribute="centerY" id="IaE-pB-cnY"/>
+                                                        <constraint firstItem="b8C-Q8-8NK" firstAttribute="leading" secondItem="agU-UL-SiD" secondAttribute="leading" constant="20" id="N9U-RW-Wci"/>
+                                                        <constraint firstItem="dNY-Y6-rFA" firstAttribute="leading" secondItem="b8C-Q8-8NK" secondAttribute="trailing" constant="23" id="NJH-5N-8oQ"/>
+                                                        <constraint firstItem="dNY-Y6-rFA" firstAttribute="top" secondItem="4eg-Wq-5Na" secondAttribute="bottom" constant="13.5" id="c5A-1i-OiY"/>
+                                                        <constraint firstItem="Ggf-YP-la2" firstAttribute="top" secondItem="4eg-Wq-5Na" secondAttribute="bottom" constant="19.5" id="jfx-UA-7J6"/>
+                                                        <constraint firstItem="4eg-Wq-5Na" firstAttribute="leading" secondItem="b8C-Q8-8NK" secondAttribute="trailing" constant="23" id="lKS-Gk-ivN"/>
+                                                        <constraint firstItem="4eg-Wq-5Na" firstAttribute="top" secondItem="agU-UL-SiD" secondAttribute="top" constant="25" id="lsd-Pg-m5j"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="18"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                                            <color key="value" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="size" keyPath="shadowOffset">
+                                                            <size key="value" width="5" height="10"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                            <real key="value" value="10"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                            <real key="value" value="4"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aOU-Dz-0U1">
+                                                    <rect key="frame" x="0.0" y="140.5" width="325" height="72"/>
+                                                    <string key="text">Roam Like Home plan for your AirTel Nigeria number.
+You will get following benefits on this ReachMe Silver Pack. 
+To view home calling rates to other countries, go to 
+Home Calling Rates</string>
+                                                    <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
+                                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="REACHME SILVER BENEFITS" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u0m-U8-dSb">
+                                                    <rect key="frame" x="0.0" y="234" width="325" height="20.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Je6-7E-Irb" firstAttribute="leading" secondItem="OfL-7T-lNo" secondAttribute="leading" constant="25" id="Lze-kN-HA5"/>
+                                        <constraint firstItem="Je6-7E-Irb" firstAttribute="top" secondItem="OfL-7T-lNo" secondAttribute="top" constant="20" id="USt-qM-bBK"/>
+                                        <constraint firstAttribute="trailing" secondItem="Je6-7E-Irb" secondAttribute="trailing" constant="25" id="fo2-TW-mIA"/>
+                                        <constraint firstAttribute="bottom" secondItem="Je6-7E-Irb" secondAttribute="bottom" constant="5" id="mlF-17-wrv"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="benifitDescLabel" destination="aOU-Dz-0U1" id="noH-Ep-qTN"/>
+                                    <outlet property="benifitTitleLabel" destination="u0m-U8-dSb" id="ARE-XK-Jx6"/>
+                                    <outlet property="bundleImageView" destination="b8C-Q8-8NK" id="1Wv-zH-GaH"/>
+                                    <outlet property="bundleName" destination="4eg-Wq-5Na" id="0Il-kq-vky"/>
+                                    <outlet property="priceLabel" destination="dNY-Y6-rFA" id="gbT-TT-cau"/>
+                                    <outlet property="validityLabel" destination="Ggf-YP-la2" id="0L0-Fr-yoP"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="PackDetailFeatureTextCell" textLabel="z3J-yC-8wk" detailTextLabel="hwR-r1-ZJg" style="IBUITableViewCellStyleValue1" id="TX1-iA-dRS">
+                                <rect key="frame" x="0.0" y="308" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TX1-iA-dRS" id="SKG-cm-u6w">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="ReachMe Out calls  (International)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="z3J-yC-8wk">
+                                            <rect key="frame" x="25" y="14" width="196" height="15.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Home Rates" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hwR-r1-ZJg">
+                                            <rect key="frame" x="287" y="14" width="72" height="15.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                            <color key="textColor" red="0.0" green="0.60784313725490191" blue="0.54509803921568623" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PackDetailFeatureYesCell" textLabel="viD-PL-Cog" style="IBUITableViewCellStyleDefault" id="g8J-rx-O8Z">
+                                <rect key="frame" x="0.0" y="352" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="g8J-rx-O8Z" id="31Y-5W-sCt">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Free incoming calls while Roaming." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="viD-PL-Cog">
+                                            <rect key="frame" x="25" y="0.0" width="334" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="accessoryView" destination="UUE-lD-gTq" id="jhP-o7-ORc"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PackDetailFeatureNoCell" textLabel="15q-0E-d1k" style="IBUITableViewCellStyleDefault" id="ZeL-U6-lYT">
+                                <rect key="frame" x="0.0" y="396" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZeL-U6-lYT" id="j8C-S9-RWH">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Free ReachMe Out calls to Home Country" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="15q-0E-d1k">
+                                            <rect key="frame" x="25" y="0.0" width="334" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="accessoryView" destination="beO-RS-ygh" id="Eui-Gs-sDu"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PackDetailTermsCell" rowHeight="50" id="Own-KQ-MIU" customClass="PackDetailTermsCell" customModule="ReachMe" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="440" width="375" height="50"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Own-KQ-MIU" id="73H-c0-5x2">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Wi9-m0-XGX">
+                                            <rect key="frame" x="25" y="20" width="325" height="24.5"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="TERMS &amp; CONDITIONS" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g53-mX-zTV">
+                                                    <rect key="frame" x="0.0" y="0.0" width="325" height="24.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="Wi9-m0-XGX" secondAttribute="bottom" constant="5" id="DtA-ye-6cb"/>
+                                        <constraint firstItem="Wi9-m0-XGX" firstAttribute="top" secondItem="73H-c0-5x2" secondAttribute="top" constant="20" id="JxG-qQ-3cK"/>
+                                        <constraint firstAttribute="trailing" secondItem="Wi9-m0-XGX" secondAttribute="trailing" constant="25" id="QCy-gc-BHA"/>
+                                        <constraint firstItem="Wi9-m0-XGX" firstAttribute="leading" secondItem="73H-c0-5x2" secondAttribute="leading" constant="25" id="aN3-HN-jRY"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="stackView" destination="Wi9-m0-XGX" id="Y65-GJ-ezg"/>
+                                    <outlet property="titleLabel" destination="g53-mX-zTV" id="1Yj-v8-jQC"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                <real key="value" value="5"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                <real key="value" value="5"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="size" keyPath="shadowOffset">
+                                <size key="value" width="2" height="11"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                <color key="value" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                         <connections>
                             <outlet property="dataSource" destination="iMG-t0-Atu" id="lHb-NP-rYQ"/>
                             <outlet property="delegate" destination="iMG-t0-Atu" id="S1v-cp-Ia1"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="View Pack Details" id="ALk-Ed-z9P"/>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="eSN-8f-XQa">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="handleRefresh:" destination="iMG-t0-Atu" eventType="valueChanged" id="K2B-1O-S2R"/>
+                        </connections>
+                    </refreshControl>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Eme-7d-mRK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Charge_OK" id="UUE-lD-gTq">
+                    <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cancel-circle" id="beO-RS-ygh">
+                    <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
             </objects>
-            <point key="canvasLocation" x="1746" y="786"/>
+            <point key="canvasLocation" x="1742" y="785"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="2T4-gH-iXy">
@@ -302,31 +537,26 @@ ReachMe Roaming service on your number.</string>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Qts-Go-MKZ">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="97c-yx-XFH">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="97c-yx-XFH">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="607"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PackUsageHeaderTableCell" rowHeight="194" id="UDK-mV-6HV" customClass="PackUsageHeaderTableCell" customModule="ReachMe" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="28" width="375" height="194"/>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PackUsageHeaderTableCell" rowHeight="180" id="UDK-mV-6HV" customClass="PackUsageHeaderTableCell" customModule="ReachMe" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="28" width="375" height="180"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UDK-mV-6HV" id="afi-TQ-fFz">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="193.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_number" translatesAutoresizingMaskIntoConstraints="NO" id="vaJ-4e-eU9">
-                                                            <rect key="frame" x="0.0" y="0.0" width="375" height="194"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="375" height="180.5"/>
                                                         </imageView>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="India" translatesAutoresizingMaskIntoConstraints="NO" id="BVb-AP-hz5">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Bundle_logo" translatesAutoresizingMaskIntoConstraints="NO" id="YFN-RR-Yk3">
                                                             <rect key="frame" x="26" y="50" width="50" height="50"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="50" id="N5r-uq-qlD"/>
-                                                                <constraint firstAttribute="height" constant="50" id="aH5-yC-Sg3"/>
+                                                                <constraint firstAttribute="height" constant="50" id="FJT-YZ-VeZ"/>
+                                                                <constraint firstAttribute="width" constant="50" id="HRb-0N-Dou"/>
                                                             </constraints>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                    <integer key="value" value="25"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                            </userDefinedRuntimeAttributes>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Roaming Silver" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pmf-uH-hLe">
                                                             <rect key="frame" x="104.5" y="29" width="166.5" height="31.5"/>
@@ -341,7 +571,7 @@ ReachMe Roaming service on your number.</string>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vodafone Karnataka   " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7BE-Jn-JxC">
-                                                            <rect key="frame" x="108" y="106.5" width="159" height="26.5"/>
+                                                            <rect key="frame" x="108" y="95.5" width="159" height="26.5"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="26.5" id="vwg-lP-Zbw"/>
@@ -351,13 +581,13 @@ ReachMe Roaming service on your number.</string>
                                                             <nil key="highlightedColor"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                    <real key="value" value="15"/>
+                                                                    <integer key="value" value="12"/>
                                                                 </userDefinedRuntimeAttribute>
                                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Valid till 06 Oct 2018" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kSb-eT-Nx6">
-                                                            <rect key="frame" x="108" y="160.5" width="159" height="20.5"/>
+                                                            <rect key="frame" x="108" y="147" width="159" height="20.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             <nil key="highlightedColor"/>
@@ -370,29 +600,29 @@ ReachMe Roaming service on your number.</string>
                                                         <constraint firstAttribute="bottom" secondItem="kSb-eT-Nx6" secondAttribute="bottom" constant="12.5" id="D9r-kh-O8O"/>
                                                         <constraint firstItem="vaJ-4e-eU9" firstAttribute="trailing" secondItem="afi-TQ-fFz" secondAttribute="trailing" id="I8W-Vj-bGK"/>
                                                         <constraint firstItem="pmf-uH-hLe" firstAttribute="centerX" secondItem="afi-TQ-fFz" secondAttribute="centerX" id="J1r-no-1aQ"/>
-                                                        <constraint firstItem="BVb-AP-hz5" firstAttribute="leading" secondItem="afi-TQ-fFz" secondAttribute="leading" constant="26" id="PJI-Y0-WJC"/>
+                                                        <constraint firstItem="YFN-RR-Yk3" firstAttribute="top" secondItem="afi-TQ-fFz" secondAttribute="top" constant="50" id="UaV-K0-iBH"/>
                                                         <constraint firstAttribute="top" secondItem="pmf-uH-hLe" secondAttribute="bottom" constant="-60.5" id="Z0H-10-nEs"/>
-                                                        <constraint firstItem="BVb-AP-hz5" firstAttribute="top" secondItem="afi-TQ-fFz" secondAttribute="top" constant="50" id="gpZ-WC-yzA"/>
-                                                        <constraint firstItem="kSb-eT-Nx6" firstAttribute="top" secondItem="7BE-Jn-JxC" secondAttribute="bottom" constant="27.5" id="k7W-30-rwX"/>
+                                                        <constraint firstItem="kSb-eT-Nx6" firstAttribute="top" secondItem="7BE-Jn-JxC" secondAttribute="bottom" constant="25" id="k7W-30-rwX"/>
                                                         <constraint firstAttribute="bottom" secondItem="vaJ-4e-eU9" secondAttribute="bottom" constant="-0.5" id="mut-Ze-uJ0"/>
                                                         <constraint firstItem="VeU-KI-hVa" firstAttribute="top" secondItem="pmf-uH-hLe" secondAttribute="bottom" constant="5.5" id="s2Q-6G-7Oz"/>
+                                                        <constraint firstItem="YFN-RR-Yk3" firstAttribute="leading" secondItem="afi-TQ-fFz" secondAttribute="leading" constant="26" id="uV2-81-YOj"/>
                                                         <constraint firstItem="vaJ-4e-eU9" firstAttribute="top" secondItem="afi-TQ-fFz" secondAttribute="top" id="v8Z-Q7-2UV"/>
                                                         <constraint firstItem="vaJ-4e-eU9" firstAttribute="leading" secondItem="afi-TQ-fFz" secondAttribute="leading" id="yGT-sd-bYf"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                             </tableViewCell>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PackUsageTitleCell" id="A6D-xe-5pH" customClass="ActivateReachMeSelectModeCell">
-                                                <rect key="frame" x="0.0" y="222" width="375" height="44"/>
+                                                <rect key="frame" x="0.0" y="208" width="375" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="A6D-xe-5pH" id="Z9X-kA-ViD">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="reach_me" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tIm-ud-2qA">
-                                                            <rect key="frame" x="26" y="17" width="31" height="20.5"/>
+                                                            <rect key="frame" x="26" y="17" width="31" height="21"/>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Usage" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z9n-tk-nnR">
-                                                            <rect key="frame" x="70" y="17" width="49" height="20.5"/>
+                                                            <rect key="frame" x="70" y="17" width="49" height="21"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <color key="textColor" red="0.31764705879999999" green="0.31372549020000001" blue="0.31372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -406,6 +636,106 @@ ReachMe Roaming service on your number.</string>
                                                         <constraint firstAttribute="bottom" secondItem="tIm-ud-2qA" secondAttribute="bottom" constant="6" id="Eue-Ia-3mu"/>
                                                         <constraint firstItem="tIm-ud-2qA" firstAttribute="leading" secondItem="Z9X-kA-ViD" secondAttribute="leading" constant="26" id="FSX-9l-8af"/>
                                                         <constraint firstItem="z9n-tk-nnR" firstAttribute="leading" secondItem="tIm-ud-2qA" secondAttribute="trailing" constant="13" id="IjA-tr-fNJ"/>
+                                                    </constraints>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PackUsageDataCell" rowHeight="70" id="3bi-th-kdA" customClass="PackUsageDataCell" customModule="ReachMe" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="252" width="375" height="70"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3bi-th-kdA" id="Wca-xk-DZr">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="yFy-D6-glz">
+                                                            <rect key="frame" x="26" y="12" width="323" height="53"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Incoming Calls" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IYn-Hs-nfa">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="323" height="21"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 mins used of 50 mins" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eUJ-to-ErH">
+                                                                    <rect key="frame" x="0.0" y="24" width="323" height="16"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                                    <color key="textColor" red="0.85490196080000003" green="0.26274509800000001" blue="0.21176470589999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8a6-s6-uD1" customClass="TCProgressBar" customModule="ReachMe" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="43" width="323" height="10"/>
+                                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="10" id="izh-4u-WFd"/>
+                                                                    </constraints>
+                                                                    <userDefinedRuntimeAttributes>
+                                                                        <userDefinedRuntimeAttribute type="number" keyPath="spacing">
+                                                                            <real key="value" value="1"/>
+                                                                        </userDefinedRuntimeAttribute>
+                                                                        <userDefinedRuntimeAttribute type="color" keyPath="outlineColor">
+                                                                            <color key="value" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        </userDefinedRuntimeAttribute>
+                                                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                                                            <real key="value" value="0.5"/>
+                                                                        </userDefinedRuntimeAttribute>
+                                                                        <userDefinedRuntimeAttribute type="number" keyPath="outlineWidth">
+                                                                            <real key="value" value="1"/>
+                                                                        </userDefinedRuntimeAttribute>
+                                                                        <userDefinedRuntimeAttribute type="color" keyPath="progressColor">
+                                                                            <color key="value" red="0.85490196080000003" green="0.26274509800000001" blue="0.21176470589999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                                        </userDefinedRuntimeAttribute>
+                                                                    </userDefinedRuntimeAttributes>
+                                                                </view>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="bottom" secondItem="yFy-D6-glz" secondAttribute="bottom" constant="5" id="SaB-3O-cbW"/>
+                                                        <constraint firstItem="yFy-D6-glz" firstAttribute="leading" secondItem="Wca-xk-DZr" secondAttribute="leading" constant="26" id="jCn-xK-SPh"/>
+                                                        <constraint firstItem="yFy-D6-glz" firstAttribute="top" secondItem="Wca-xk-DZr" secondAttribute="top" constant="12" id="sgf-K1-npl"/>
+                                                        <constraint firstAttribute="trailing" secondItem="yFy-D6-glz" secondAttribute="trailing" constant="26" id="xkQ-5x-LSx"/>
+                                                    </constraints>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PackUsageUnlimitedCell" rowHeight="54" id="8J8-CW-A3o">
+                                                <rect key="frame" x="0.0" y="322" width="375" height="54"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8J8-CW-A3o" id="9uq-KN-Zp6">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="54"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="zkk-88-9R6">
+                                                            <rect key="frame" x="26" y="12" width="323" height="37"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Incoming Data" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="84w-yr-lnm">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="323" height="22"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unlimited" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cyp-YV-p36" customClass="DesignableLabel" customModule="ReachMe" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="25" width="323" height="12"/>
+                                                                    <color key="backgroundColor" red="0.85490196080000003" green="0.26274509800000001" blue="0.21176470589999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="12" id="Sgj-gS-nEw"/>
+                                                                    </constraints>
+                                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
+                                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                    <userDefinedRuntimeAttributes>
+                                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                            <real key="value" value="6"/>
+                                                                        </userDefinedRuntimeAttribute>
+                                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                                                    </userDefinedRuntimeAttributes>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="zkk-88-9R6" firstAttribute="top" secondItem="9uq-KN-Zp6" secondAttribute="top" constant="12" id="04z-ud-dhh"/>
+                                                        <constraint firstItem="zkk-88-9R6" firstAttribute="leading" secondItem="9uq-KN-Zp6" secondAttribute="leading" constant="26" id="OoW-EM-da7"/>
+                                                        <constraint firstAttribute="bottom" secondItem="zkk-88-9R6" secondAttribute="bottom" constant="5" id="RvJ-UL-dQc"/>
+                                                        <constraint firstAttribute="trailing" secondItem="zkk-88-9R6" secondAttribute="trailing" constant="26" id="ndX-Vy-QMe"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                             </tableViewCell>
@@ -479,9 +809,11 @@ ReachMe Roaming service on your number.</string>
         </scene>
     </scenes>
     <resources>
-        <image name="India" width="21" height="15"/>
+        <image name="Bundle_logo" width="40" height="38"/>
+        <image name="Charge_OK" width="14" height="14"/>
+        <image name="Telcom_Dummy" width="50" height="50"/>
         <image name="bg_number" width="375" height="153"/>
-        <image name="check_number_icon" width="14" height="14"/>
+        <image name="cancel-circle" width="25" height="25"/>
         <image name="reach_me" width="31" height="21"/>
         <image name="wallet_store" width="36" height="34"/>
     </resources>

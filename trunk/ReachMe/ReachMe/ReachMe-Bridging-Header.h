@@ -14,3 +14,4 @@
 #import "Setting.h"
 #import "Profile.h"
 #import "GetDeviceModel.h"
+#import "IVFileLocator.h"
